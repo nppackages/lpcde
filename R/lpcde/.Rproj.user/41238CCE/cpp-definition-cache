@@ -1,0 +1,89 @@
+[
+    {
+        "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+        "file_last_write": 1640261014.0,
+        "definitions": [
+            {
+                "usr": "c:@F@rcpp_sum#$@N@arma@S@Col>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "rcpp_sum(arma::colvec)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 30,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@print_all_sum_rec#I#I#I#&$@N@std@N@__1@S@vector>#$@N@std@N@__1@S@vector>#I#$@N@std@N@__1@S@allocator>#I#$@N@std@N@__1@S@allocator>#S2_#&S2_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "print_all_sum_rec(int, int, int, vector<vector<int>> &, vector<int> &)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 39,
+                "column": 6
+            },
+            {
+                "usr": "c:@F@print_all_sumC#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "print_all_sumC(int)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 69,
+                "column": 31
+            },
+            {
+                "usr": "c:@F@kernel_evalC#$@N@arma@S@Col>#d#$@N@Rcpp@S@String#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "kernel_evalC(arma::vec, Rcpp::String)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 87,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@poly_baseC#$@N@arma@S@Col>#d#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "poly_baseC(arma::vec, int)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 125,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@basis_vecC#$@N@arma@S@Col>#d#I#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "basis_vecC(arma::vec, int, int)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 142,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@SxmatC#$@N@arma@S@Mat>#d#I#$@N@Rcpp@S@String#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "SxmatC(arma::mat, int, Rcpp::String)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 178,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@rowSums#&1$@N@arma@S@Mat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "rowSums(const arma::mat &)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 187,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@int_valC#I#d#d#$@N@Rcpp@S@String#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "int_valC(int, double, double, Rcpp::String)",
+                "file": "/Users/rajitachandak/Dropbox (Princeton)/research/personal/software/lpcde/lpcde/src/utilsC.cpp",
+                "line": 207,
+                "column": 8
+            }
+        ]
+    }
+]

@@ -16,7 +16,9 @@ install.packages('lpcde')
 ```
 - Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/package=lpcde).
 
-- Replication: [R-script](R/lpcde_illustration.R).
+- A simple replication file: [R-script](R/lpcde_illustration.R).
+
+- Additional simulations using this package: [Technical Paper](https://github.com/nppackages-replication/CCJM_2022_LPCondDen), [R Journal Article replication script](https://github.com/nppackages-replication/CCJM_2022_lpcde)
 
 
 ## References
