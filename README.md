@@ -31,8 +31,6 @@ library("lpcde")
 
 - Help: [R Manual](https://github.com/nppackages/lpcde/blob/main/R/lpcde.pdf)
 
-[//]: <> (, [CRAN repository](https://cran.r-project.org/package=lpcde).)
-
 - A simple replication file: [R-script](https://github.com/nppackages/lpcde/blob/main/R/lpcde_illustration.R).
 
 - Additional simulations using this package: [Technical Paper replication script](https://github.com/nppackages-replication/CCJM_2022_LPCondDen), [R Journal Article replication script](https://github.com/nppackages-replication/CCJM_2022_lpcde)
