@@ -12,15 +12,10 @@ https://nppackages.github.io/lpcde
 
 ### Install from source
 
-Download the tar.gz file from the [Github repository](https://github.com/nppackages/lpcde/tree/main/R).
-Run the following in terminal to install the package locally.
-```
-R CMD INSTALL path/to/*.tar.gz
-```
-Load the package into current R session by running
+Install the development version of the package by running
 
 ```
-library("lpcde")
+devtools::install_github('nppackages/lpcde/R/lpcde')
 ```
 
 ### Install from CRAN

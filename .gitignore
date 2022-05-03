@@ -2,3 +2,6 @@ R/lpcde/.Rproj.user/
 R/lpcde/.RData
 R/lpcde/.Rbuildignore
 R/lpcde/.Rhistory
+
+#dont include tar
+R/*.tar.gz
