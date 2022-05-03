@@ -11,9 +11,6 @@
 
 \item{...}{Other arguments.}
 }
-\value{
-\item{}{A matrix containing y_grid points and selected bandwidths.}
-}
 \description{
 The coef method for local polynomial density bandwidth selection objects.
 }

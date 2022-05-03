@@ -219,8 +219,6 @@ summary.lpcde = function(object, ...){
 #' @param object Class "lpcde" object, obtained by calling \code{\link{lpcde}}.
 #' @param ... Additional options.
 #'
-#' @return
-#' \item{}{A matrix containing grid points and density estimates using p- and q-th order local polynomials.}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
@@ -299,11 +297,6 @@ vcov.lpcde = function(object, ...) {
 #'   (\code{FALSE}, default) or
 #'   the uniform confidence band (\code{TRUE}); (iv) \code{CIsimul} specifies the number of
 #'   simulations used to construct critical values (default is 2000).
-#'
-#' @return
-#' \item{}{A matrix containing grid points, estimates and confidence interval end points using p- and q-th order local polynomials
-#' as well as bias-corrected estimates and corresponding confidence intervals.}
-#' \item{}{the critical value used in computing the confidence interval end points.}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
@@ -412,6 +405,7 @@ confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CI
 #' @title Plot Method for Local Polynomial Density Conditional Estimation and Inference
 #'
 #' @description The plot method for local polynomial density objects.
+#' A standard \code{ggplot2} object is returned, hence can be used for further customization.
 #'
 #' @param ... Class "lpcde" object, obtained from calling \code{\link{lpcde}}.
 #' @param alpha Numeric scalar between 0 and 1, specifies the significance level for plotting
@@ -469,8 +463,6 @@ confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CI
 #' @param legendTitle String, specifies the legend title.
 #' @param legendGroups String vector, specifies the group names used in legend.
 #'
-#' @return
-#' \item{}{A standard \code{ggplot2} object is returned, hence can be used for further customization.}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.

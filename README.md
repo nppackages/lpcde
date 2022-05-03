@@ -10,15 +10,32 @@ https://nppackages.github.io/lpcde
 
 ## R Implementation
 
-To install/update in R type:
-```
-install.packages('lpcde')
-```
-- Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/package=lpcde).
+### Install from source
 
-- A simple replication file: [R-script](R/lpcde_illustration.R).
+Download the tar.gz file from the [Github repository](https://github.com/nppackages/lpcde/tree/main/R).
+Run the following in terminal to install the package locally.
+```
+R CMD INSTALL path/to/*.tar.gz
+```
+Load the package into current R session by running
 
-- Additional simulations using this package: [Technical Paper](https://github.com/nppackages-replication/CCJM_2022_LPCondDen), [R Journal Article replication script](https://github.com/nppackages-replication/CCJM_2022_lpcde)
+```
+library("lpcde")
+```
+
+### Install from CRAN
+*Coming soon.*
+
+
+## Additional Information
+
+- Help: [R Manual](https://github.com/nppackages/lpcde/blob/main/R/lpcde.pdf)
+
+[//]: <> (, [CRAN repository](https://cran.r-project.org/package=lpcde).)
+
+- A simple replication file: [R-script](https://github.com/nppackages/lpcde/blob/main/R/lpcde_illustration.R).
+
+- Additional simulations using this package: [Technical Paper replication script](https://github.com/nppackages-replication/CCJM_2022_LPCondDen), [R Journal Article replication script](https://github.com/nppackages-replication/CCJM_2022_lpcde)
 
 
 ## References

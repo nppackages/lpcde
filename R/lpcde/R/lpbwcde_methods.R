@@ -6,8 +6,6 @@
 #' @param x Class "lpbwcde" object, obtained by calling \code{\link{lpbwcde}}.
 #' @param ... Other arguments.
 #'
-#' @return
-#' \item{}{A list of specified options provided to the function.}
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
 #'
@@ -49,9 +47,6 @@ print.lpbwcde <- function(x, ...) {
 #'   to display the bandwidth; (ii) \code{gridIndex} specifies the indices of y_grid points
 #'   to display the bandwidth.
 #'
-#' @return
-#' \item{}{A list of specified options.}
-#' \item{}{A matrix of grid points, bandwidth, and effective sample size.}
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
 #'
@@ -150,9 +145,6 @@ summary.lpbwcde = function(object, ...) {
 #'
 #' @param object Class "lpbwcde" object, obtained by calling \code{\link{lpbwcde}}.
 #' @param ... Other arguments.
-#'
-#' @return
-#' \item{}{A matrix containing y_grid points and selected bandwidths.}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.

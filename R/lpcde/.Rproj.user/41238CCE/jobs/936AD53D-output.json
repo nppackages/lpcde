@@ -1,1 +1,0 @@
-[2,"Error in colSums(object[[l]]) : \n  'x' must be an array of at least two dimensions\nCalls: sourceWithProgress -> eval -> eval -> colSums\nIn addition: Warning message:\nIn mclapply(1:num_sims, simtest, mc.cores = numCores) :\n  scheduled cores 7, 5, 2 encountered errors in user code, all values of the jobs will be affected\nExecution halted\n"]

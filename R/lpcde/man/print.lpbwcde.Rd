@@ -11,9 +11,6 @@
 
 \item{...}{Other arguments.}
 }
-\value{
-\item{}{A list of specified options provided to the function.}
-}
 \description{
 The print method for local polynomial conditional density bandwidth selection objects.
 }

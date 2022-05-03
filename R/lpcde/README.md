@@ -4,9 +4,9 @@ point estimation and inference for local polynomial conditional distribution
 and density methods.
 
 This work was supported by National Science Foundation through grant
-[SES-1947662](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1947805)
+SES-1947662
 and the National Institute of Health through grant 
-[R01 GM072611-16](https://reporter.nih.gov/search/YBEpYmGEfUaRBbtIC4SIrg/project-details/10093056).
+R01 GM072611-16.
 
 ## Website
 https://nppackages.github.io/lpcde

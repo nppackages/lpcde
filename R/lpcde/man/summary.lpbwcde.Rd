@@ -13,10 +13,6 @@
 to display the bandwidth; (ii) \code{gridIndex} specifies the indices of y_grid points
 to display the bandwidth.}
 }
-\value{
-\item{}{A list of specified options.}
-\item{}{A matrix of grid points, bandwidth, and effective sample size.}
-}
 \description{
 The summary method for local polynomial conditional density bandwidth selection objects.
 }

@@ -15,9 +15,6 @@ normal_dgps(x, v, mean, sd)
 
 \item{sd}{Strictly positive scalar, the standard deviation of the normal distribution.}
 }
-\value{
-\item{}{Scalar.}
-}
 \description{
 Calculates density and higher order derivatives for Gaussian models.
 }
