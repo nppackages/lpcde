@@ -5,3 +5,5 @@ R/lpcde/.Rhistory
 
 #dont include tar
 R/*.tar.gz
+
+*.html

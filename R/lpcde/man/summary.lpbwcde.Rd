@@ -13,8 +13,22 @@
 to display the bandwidth; (ii) \code{gridIndex} specifies the indices of y_grid points
 to display the bandwidth.}
 }
+\value{
+\item{Display output}{A list of specified options and a matrix of grid points, bandwidth, and effective sample size.}
+}
 \description{
 The summary method for local polynomial conditional density bandwidth selection objects.
+}
+\examples{
+n=100
+x_data = as.matrix(rnorm(n, mean=0, sd=1))
+y_data = as.matrix(rnorm(n, mean=0, sd=1))
+y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+# bandwidth selection
+y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+model2 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid, bw_type = "mse-rot")
+summary(model2)
+
 }
 \seealso{
 \code{\link{lpbwcde}} for data-driven bandwidth selection.

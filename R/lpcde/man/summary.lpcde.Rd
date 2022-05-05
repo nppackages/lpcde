@@ -17,8 +17,21 @@ to display results; (iii) \code{alpha} specifies the significance level; (iv)
 the uniform confidence band (\code{TRUE}); (v) \code{CIsimul} specifies the number of simulations used
 to construct critical values (default is \code{2000}).}
 }
+\value{
+\item{Display output}{A list of specified options and a matrix of grid points and estimates.}
+}
 \description{
 The summary method for local polynomial conditional density objects.
+}
+\examples{
+n=100
+x_data = as.matrix(rnorm(n, mean=0, sd=1))
+y_data = as.matrix(rnorm(n, mean=0, sd=1))
+y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+# density estimation
+model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+summary(model1)
+
 }
 \seealso{
 \code{\link{lpcde}} for local polynomial conditional density estimation.

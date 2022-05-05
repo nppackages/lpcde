@@ -11,6 +11,9 @@
 
 \item{...}{Additional options.}
 }
+\value{
+\item{Display output}{summary of inputs to \code{lpcde}}
+}
 \description{
 The print method for local polynomial conditional density objects.
 }

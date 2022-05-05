@@ -6,6 +6,9 @@
 #' @param x Class "lpbwcde" object, obtained by calling \code{\link{lpbwcde}}.
 #' @param ... Other arguments.
 #'
+#' @return
+#' \item{Display output}{A list of specified options provided to the function.}
+#'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
 #'
@@ -47,6 +50,9 @@ print.lpbwcde <- function(x, ...) {
 #'   to display the bandwidth; (ii) \code{gridIndex} specifies the indices of y_grid points
 #'   to display the bandwidth.
 #'
+#' @return
+#' \item{Display output}{A list of specified options and a matrix of grid points, bandwidth, and effective sample size.}
+#'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
 #'
@@ -59,6 +65,16 @@ print.lpbwcde <- function(x, ...) {
 #' @seealso \code{\link{lpbwcde}} for data-driven bandwidth selection.
 #'
 #' Supported methods: \code{\link{coef.lpbwcde}}, \code{\link{print.lpbwcde}}, \code{\link{summary.lpbwcde}}.
+#'
+#' @examples
+#' n=100
+#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' # bandwidth selection
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' model2 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid, bw_type = "mse-rot")
+#' summary(model2)
 #'
 #' @export
 summary.lpbwcde = function(object, ...) {
@@ -145,6 +161,9 @@ summary.lpbwcde = function(object, ...) {
 #'
 #' @param object Class "lpbwcde" object, obtained by calling \code{\link{lpbwcde}}.
 #' @param ... Other arguments.
+#'
+#' @return
+#' \item{Matrix}{A matrix containing y_grid points and selected bandwidths.}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.

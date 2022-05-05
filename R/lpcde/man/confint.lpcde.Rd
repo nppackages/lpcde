@@ -39,6 +39,11 @@ to display the bandwidth (this is the same as \code{parm});(iii)
 the uniform confidence band (\code{TRUE}); (iv) \code{CIsimul} specifies the number of
 simulations used to construct critical values (default is 2000).}
 }
+\value{
+\item{Estimate}{A matrix containing grid points, estimates and confidence interval end points using p- and q-th order local polynomials
+as well as bias-corrected estimates and corresponding confidence intervals.}
+\item{crit_val}{the critical value used in computing the confidence interval end points.}
+}
 \description{
 The confint method for local polynomial conditional density objects.
 }

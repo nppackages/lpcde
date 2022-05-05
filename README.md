@@ -19,8 +19,11 @@ devtools::install_github('nppackages/lpcde/R/lpcde')
 ```
 
 ### Install from CRAN
-*Coming soon.*
+To install/update in R type:
 
+```
+install.packages('lpcde')
+```
 
 ## Additional Information
 
