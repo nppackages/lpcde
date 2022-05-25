@@ -726,9 +726,6 @@ dmvnorm_deriv1 = function(X, mu=rep(0,ncol(X)), sigma=diag(ncol(X))) {
 #' @param mean Scalar, the mean of the normal distribution.
 #' @param sd Strictly positive scalar, the standard deviation of the normal distribution.
 #'
-#' @return
-#' \item{}{Scalar.}
-#'
 #' @keywords internal
 
 normal_dgps <- function(x, v, mean, sd) {

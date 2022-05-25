@@ -14,15 +14,28 @@ Please email: [lpcde@googlegroups.com](mailto:lpcde@googlegroups.com)
 
 ## R Implementation
 
+### Install from source
+
+Install the development version of the package by running
+
+```
+devtools::install_github('nppackages/lpcde/R/lpcde')
+```
+
+### Install from CRAN
 To install/update in R type:
+
 ```
 install.packages('lpcde')
 ```
-- Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/package=lpcde).
 
-- A simple replication file: [R-script](R/lpcde_illustration.R).
+## Additional Information
 
-- Additional simulations using this package: [Technical Paper](https://github.com/nppackages-replication/CCJM_2022_LPCondDen), [R Journal Article replication script](https://github.com/nppackages-replication/CCJM_2022_lpcde)
+- Help: [R Manual](https://github.com/nppackages/lpcde/blob/main/R/lpcde.pdf)
+
+- A simple replication file: [R-script](https://github.com/nppackages/lpcde/blob/main/R/lpcde_illustration.R).
+
+- Additional simulations using this package: [Technical Paper replication script](https://github.com/nppackages-replication/CCJM_2022_LPCondDen), [R Journal Article replication script](https://github.com/nppackages-replication/CCJM_2022_lpcde)
 
 
 ## References

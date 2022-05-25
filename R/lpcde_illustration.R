@@ -1,6 +1,5 @@
 # A simple replication file that illustrates how to use the lpcde package
-#Install package
-install.packages("lpcde")
+
 # load package
 library("lpcde")
 

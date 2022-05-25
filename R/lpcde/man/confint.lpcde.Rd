@@ -40,9 +40,9 @@ the uniform confidence band (\code{TRUE}); (iv) \code{CIsimul} specifies the num
 simulations used to construct critical values (default is 2000).}
 }
 \value{
-\item{}{A matrix containing grid points, estimates and confidence interval end points using p- and q-th order local polynomials
+\item{Estimate}{A matrix containing grid points, estimates and confidence interval end points using p- and q-th order local polynomials
 as well as bias-corrected estimates and corresponding confidence intervals.}
-\item{}{the critical value used in computing the confidence interval end points.}
+\item{crit_val}{the critical value used in computing the confidence interval end points.}
 }
 \description{
 The confint method for local polynomial conditional density objects.

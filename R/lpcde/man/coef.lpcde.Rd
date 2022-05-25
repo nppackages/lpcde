@@ -12,7 +12,7 @@
 \item{...}{Additional options.}
 }
 \value{
-\item{}{A matrix containing grid points and density estimates using p- and q-th order local polynomials.}
+\item{outputs}{A matrix containing the estimates}
 }
 \description{
 The coef method for local polynomial conditional density objects.

@@ -104,10 +104,11 @@ accordingly.}
 \item{legendGroups}{String vector, specifies the group names used in legend.}
 }
 \value{
-\item{}{A standard \code{ggplot2} object is returned, hence can be used for further customization.}
+\item{Figure}{A standard \code{ggplot2} object is returned, hence can be used for further customization.}
 }
 \description{
 The plot method for local polynomial density objects.
+A standard \code{ggplot2} object is returned, hence can be used for further customization.
 }
 \seealso{
 \code{\link{lpcde}} for local polynomial density estimation.

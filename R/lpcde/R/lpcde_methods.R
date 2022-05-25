@@ -6,6 +6,9 @@
 #' @param x Class "lpcde" object, obtained from calling \code{\link{lpcde}}.
 #' @param ... Additional options.
 #'
+#' @return
+#' \item{Display output}{summary of inputs to \code{lpcde}}
+#'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
 #'
@@ -52,6 +55,9 @@ print.lpcde = function(x, ...){
 #'   the uniform confidence band (\code{TRUE}); (v) \code{CIsimul} specifies the number of simulations used
 #'   to construct critical values (default is \code{2000}).
 #'
+#' @return
+#' \item{Display output}{A list of specified options and a matrix of grid points and estimates.}
+#'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
 #'
@@ -65,6 +71,16 @@ print.lpcde = function(x, ...){
 #' Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
 #' \code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
+#'
+#' @examples
+#' n=100
+#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' # density estimation
+#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' summary(model1)
+#'
 #' @export
 summary.lpcde = function(object, ...){
   x = object
@@ -220,7 +236,7 @@ summary.lpcde = function(object, ...){
 #' @param ... Additional options.
 #'
 #' @return
-#' \item{}{A matrix containing grid points and density estimates using p- and q-th order local polynomials.}
+#' \item{outputs}{A matrix containing the estimates}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
@@ -301,9 +317,9 @@ vcov.lpcde = function(object, ...) {
 #'   simulations used to construct critical values (default is 2000).
 #'
 #' @return
-#' \item{}{A matrix containing grid points, estimates and confidence interval end points using p- and q-th order local polynomials
+#' \item{Estimate}{A matrix containing grid points, estimates and confidence interval end points using p- and q-th order local polynomials
 #' as well as bias-corrected estimates and corresponding confidence intervals.}
-#' \item{}{the critical value used in computing the confidence interval end points.}
+#' \item{crit_val}{the critical value used in computing the confidence interval end points.}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
@@ -412,6 +428,7 @@ confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CI
 #' @title Plot Method for Local Polynomial Density Conditional Estimation and Inference
 #'
 #' @description The plot method for local polynomial density objects.
+#' A standard \code{ggplot2} object is returned, hence can be used for further customization.
 #'
 #' @param ... Class "lpcde" object, obtained from calling \code{\link{lpcde}}.
 #' @param alpha Numeric scalar between 0 and 1, specifies the significance level for plotting
@@ -470,7 +487,7 @@ confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CI
 #' @param legendGroups String vector, specifies the group names used in legend.
 #'
 #' @return
-#' \item{}{A standard \code{ggplot2} object is returned, hence can be used for further customization.}
+#' \item{Figure}{A standard \code{ggplot2} object is returned, hence can be used for further customization.}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
