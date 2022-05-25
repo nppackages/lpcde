@@ -31,7 +31,7 @@ install.packages('lpcde')
 
 ## Additional Information
 
-- Help: [R Manual](https://github.com/nppackages/lpcde/blob/main/R/lpcde.pdf)
+- Help: [R Manual](https://github.com/nppackages/lpcde/blob/main/R/lpcde.pdf), [CRAN repository](https://cran.r-project.org/web/packages/lpcde/index.html).
 
 - A simple replication file: [R-script](https://github.com/nppackages/lpcde/blob/main/R/lpcde_illustration.R).
 
