@@ -8,6 +8,10 @@ This work was supported by the National Science Foundation through grant [SES-19
 
 https://nppackages.github.io/lpcde
 
+## Queries and Requests
+
+Please email: [lpcde@googlegroups.com](mailto:lpcde@googlegroups.com)
+
 ## R Implementation
 
 To install/update in R type:
