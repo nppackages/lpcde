@@ -7,3 +7,4 @@ R/lpcde/.Rhistory
 R/*.tar.gz
 
 *.html
+.Rproj.user

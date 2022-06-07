@@ -230,7 +230,7 @@ kernel_eval = function(x, kernel_type){
   }else if (kernel_type == "epanechnikov"){
     k = 0.75*(1-x^2)*ifelse(abs(x)<=1, 1, 0)
   }
-  # k = prod(k)
+  k = prod(k)
   return(k)
 }
 
