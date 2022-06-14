@@ -145,7 +145,6 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
     idx = which(rowSums(abs(sweep(x_data, 2, x))<=h^d)==d)
 
     x_idx = as.matrix(x_data[idx, ])
-    print(x_idx)
     y_idx = y_data[idx]
 
     # idx of ordering wrt y
@@ -275,22 +274,22 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
   if(length(unique(h))==1){
     h = h[1]
     # localization for x
-    idx = which(abs(x_data-x)<=h)
+    idx = which(rowSums(abs(sweep(x_data, 2, x))<=h^d)==d)
 
-    x_data = x_data[idx]
-    y_data = y_data[idx]
+    x_idx = as.matrix(x_data[idx, ])
+    y_idx = y_data[idx]
 
     # idx of ordering wrt y
-    sort_idx = sort(y_data, index.return=TRUE)$ix
+    sort_idx = sort(y_idx, index.return=TRUE)$ix
 
     # sorting datasets
-    y_data = as.matrix(y_data[sort_idx])
-    x_data = as.matrix(x_data[sort_idx])
+    y_sorted = as.matrix(y_idx[sort_idx])
+    x_sorted = as.matrix(x_idx[sort_idx, ])
 
-    # x constants
-    x_scaled = (x_data-x)/(h^d)
-    sx_mat = solve(S_x(as.matrix(x_scaled), q, kernel_type)/(n*h^d))
-    bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
+                                        # x constants
+    x_scaled = sweep(x_sorted, 2,x)/(h^d)
+    sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+    bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
 
     # initialize matrix
     c_hat = matrix(0L, nrow=ng, ncol=ng)
@@ -307,7 +306,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         elems = intersect(y_elems, yp_elems)
 
         if ( length(elems) <= 5){
-          c_hat[i, j] = c_hat[i, j]
+          c_hat[i, j] = 0
         } else{
           if (mu==0){
             sx_mat = solve(S_x(as.matrix(x_scaled[y_elems]), q, kernel_type)/(n*h^d))
@@ -330,8 +329,8 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
             syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))
 
             # computing y and yprime vectors
-            a_y = b_x(y_scaled[elems], sy_mat, e_mu, p, kernel_type)
-            a_yp =  b_x(yp_scaled[elems], syp_mat, e_mu, p, kernel_type)
+            a_y = b_x(as.matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
+            a_yp =  b_x(as.matrix(yp_scaled[elems]), syp_mat, e_mu, p, kernel_type)
 
             # part 1 of the sum
             aj = cumsum(a_y)
@@ -364,7 +363,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         # filling matrix, using symmetry
         c_hat[i, j] = c_hat[i, j]/(n*(n-1)^2) - theta_y*theta_yp/n^2
         c_hat[j, i] = c_hat[i, j]
-
+        print(c_hat)
 
       }
     }
