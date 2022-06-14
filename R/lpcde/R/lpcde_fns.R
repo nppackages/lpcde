@@ -334,15 +334,15 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
           c_hat[j, i] = 0
         } else{
           if (mu==0){
-            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems]), q, kernel_type)/(n*h^d))
+            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type)/(n*h^d))
             bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
             # sy matrix
             sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
             syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))
 
             # computing y and yprime vectors
-            a_y = b_x(y_scaled[elems], sy_mat, e_mu, p, kernel_type)
-            a_yp =  b_x(yp_scaled[elems], syp_mat, e_mu, p, kernel_type)
+            a_y = b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
+            a_yp =  b_x(matrix(yp_scaled[elems]), syp_mat, e_mu, p, kernel_type)
 
             # part 1 of the sum
             aj = cumsum(a_y)
@@ -350,8 +350,8 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
           }else{
             # sy matrix
-            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
-            syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))
+            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h^d))
+            syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h^d))
 
             # computing y and yprime vectors
             a_y = b_x(as.matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -433,7 +433,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         yp_elems = which(abs(yp_scaled)<=1)
         elems = intersect(y_elems, yp_elems)
 
-        if ( length(elems) == 0){
+        if ( length(elems) =< 5){
           c_hat[i, j] = c_hat[i, j]
         } else{
           if (mu==0){

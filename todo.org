@@ -1,8 +1,10 @@
 #+title: lpcde
 #+author: Rajita Chandak
 
+* TODO Add code coverage github action
+
 * Multivariate extension
-** TODO est function
+** DONE est function
 *** single h
 **** DONE mu=0
 **** DONE mu>0
@@ -11,7 +13,7 @@
 **** DONE mu>0
 ** TODO cov function
 *** single h
-**** TODO mu=0
+**** DONE mu=0
 **** DONE mu>0
 *** TODO varying h
 **** TODO mu=0
@@ -23,5 +25,6 @@
 *** mse
 **** TODO mu=0
 **** TODO mu>0
+** TODO add warning on output for small nh
 
 * Nonnegative constraint
