@@ -129,6 +129,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
   n = length(y_data)
   d = ncol(x_data)
   ng = length(y_grid)
+  x = matrix(x, ncol=d)
 
   # x basis vector
   e_nu = basis_vec(x, q, nu)
@@ -142,9 +143,9 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
   if (length(unique(h))==1){
     h = h[1]
     # localization for x
-    idx = which(rowSums(abs(sweep(x_data, 2, x))<=h^d)==d)
+    idx = which(rowSums(abs(sweep(x_data, 2, x))<=h)==d)
 
-    x_idx = as.matrix(x_data[idx, ])
+    x_idx = matrix(x_data[idx, ], ncol=d)
     y_idx = y_data[idx]
 
     # idx of ordering wrt y
@@ -152,10 +153,10 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # sorting datasets
     y_sorted = as.matrix(y_idx[sort_idx])
-    x_sorted = as.matrix(x_idx[sort_idx, ])
+    x_sorted = matrix(x_idx[sort_idx, ], ncol=d)
 
     # x constants
-    x_scaled = sweep(x_sorted, 2,x)/(h^d)
+    x_scaled = sweep(x_sorted, 2, x)/(h^d)
     sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
     bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
 
@@ -169,7 +170,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         nh_vec [j] = length(y_elems)
       } else {
         if (mu==0){
-          sx_mat = solve(S_x(as.matrix(x_scaled[y_elems]), q, kernel_type)/(n*h^d))
+          sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type)/(n*h^d))
           bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
           # sy matrix
           sy_mat = solve(S_x(as.matrix(y_scaled), p, kernel_type)/(n*h))
@@ -205,38 +206,61 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
       # localization for x
       idx = which(rowSums(abs(sweep(x_data, 2, x))<=h[j])==d)
 
-      x_data_loc = x_data[idx, ]
+      x_data_loc = matrix(x_data[idx, ], ncol=d)
       y_data_loc = y_data[idx]
 
       # idx of ordering wrt y
       sort_idx = sort(y_data_loc, index.return=TRUE)$ix
 
       # sorting datasets
-      y_data_loc = as.matrix(y_data_loc[sort_idx])
-      x_data_loc = as.matrix(x_data_loc[sort_idx, ])
+      y_data_loc = matrix(y_data_loc[sort_idx])
+      x_data_loc = matrix(x_data_loc[sort_idx, ], ncol=d)
 
       # x constants
-      x_scaled = (x_data_loc-x)/(h[j]^d)
-      sx_mat = solve(S_x(as.matrix(x_scaled), q, kernel_type)/(n*h[j]^d))
+      x_scaled = sweep(x_data_loc, 2, x)/(h^d)
+      sx_mat = solve(S_x(as.matrix(x_scaled/(n*h^d)), q, kernel_type))
       bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
 
       y = y_grid[j]
       y_scaled = (y_data_loc-y)/h[j]
       y_elems = which(abs(y_scaled)<=1)
 
-      # sy matrix
-      sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))
+      if (length(y_elems)<=5){
+        f_hat[j] = 0
+        nh_vec [j] = length(y_elems)
+      } else {
+        if (mu==0){
+          sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))
+          bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
+          # sy matrix
+          sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))
 
-      # y constants
-      ax = b_x(y_scaled[y_elems], sy_mat, e_mu, p, kernel_type)
+         # y constants
+          ax = b_x(matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
 
-      # adding and multiplying
-      f_hat[j] = ax %*% cumsum(bx[y_elems])
+         # adding and multiplying
+          f_hat[j] = ax %*% cumsum(bx[y_elems])
 
-      # scaling
-      f_hat[j] = f_hat[j]/(n^2*h[j]^(d+mu+nu+1))
-      # number of datapoints used
-      nh_vec[j] = length(y_elems)
+         # scaling
+          f_hat[j] = f_hat[j]/(n^2*h[j]^(d+mu+nu+1))
+         # number of datapoints used
+          nh_vec[j] = length(y_elems)
+        } else{
+         # sy matrix
+          sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))
+
+         # y constants
+          ax = b_x(matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
+
+         # adding and multiplying
+          f_hat[j] = ax %*% cumsum(bx[y_elems])
+
+         # scaling
+          f_hat[j] = f_hat[j]/(n^2*h[j]^(d+mu+nu+1))
+         # number of datapoints used
+          nh_vec[j] = length(y_elems)
+        }
+      }
     }
   }
   return(list("est" = f_hat, "eff.n" = nh_vec))
@@ -274,7 +298,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
   if(length(unique(h))==1){
     h = h[1]
     # localization for x
-    idx = which(rowSums(abs(sweep(x_data, 2, x))<=h^d)==d)
+    idx = which(rowSums(abs(sweep(x_data, 2, x))<=h)==d)
 
     x_idx = as.matrix(x_data[idx, ])
     y_idx = y_data[idx]
