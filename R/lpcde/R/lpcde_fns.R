@@ -286,10 +286,10 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
     y_sorted = as.matrix(y_idx[sort_idx])
     x_sorted = as.matrix(x_idx[sort_idx, ])
 
-                                        # x constants
-    x_scaled = sweep(x_sorted, 2,x)/(h^d)
+    # x constants
+    x_scaled = sweep(x_sorted, 2, x)/(h^d)
     sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
-    bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
+    bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
 
     # initialize matrix
     c_hat = matrix(0L, nrow=ng, ncol=ng)
@@ -299,14 +299,15 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         # relevant entries wrt y and y_prime
         y = y_grid[i]
         y_prime = y_grid[j]
-        y_scaled = (y_data - y)/h
-        yp_scaled = (y_data-y_prime)/h
+        y_scaled = (y_sorted - y)/h
+        yp_scaled = (y_sorted-y_prime)/h
         y_elems = which(abs(y_scaled)<=1)
         yp_elems = which(abs(yp_scaled)<=1)
         elems = intersect(y_elems, yp_elems)
 
         if ( length(elems) <= 5){
           c_hat[i, j] = 0
+          c_hat[j, i] = 0
         } else{
           if (mu==0){
             sx_mat = solve(S_x(as.matrix(x_scaled[y_elems]), q, kernel_type)/(n*h^d))
@@ -343,7 +344,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
             t_2 = (n-k) * a_yp[k] * aj[k]
             t_3 = (n-k) * a_y[k] * ak[k]
             t_4 = (n-k)^2 * a_y[k] * a_yp[k]
-            c_hat[i, j] = c_hat[i, j] + bx[elems[k]]^2 * (t_1 + t_2 + t_3 + t_4)
+            c_hat[i, j] = c_hat[i, j] + bx[1, elems[k]]^2 * (t_1 + t_2 + t_3 + t_4)
           }
         }
         # estimated means
@@ -363,7 +364,6 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         # filling matrix, using symmetry
         c_hat[i, j] = c_hat[i, j]/(n*(n-1)^2) - theta_y*theta_yp/n^2
         c_hat[j, i] = c_hat[i, j]
-        print(c_hat)
 
       }
     }
