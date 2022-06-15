@@ -157,7 +157,13 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # x constants
     x_scaled = sweep(x_sorted, 2, x)/(h^d)
-    sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+    #sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+    sx_mat = tryCatch({
+      solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+    }, error = function(e){
+      sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+    }
+    )
     bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
 
     for (j in 1:ng){
@@ -170,7 +176,12 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         nh_vec [j] = length(y_elems)
       } else {
         if (mu==0){
-          sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type)/(n*h^d))
+          sx_mat = tryCatch({
+            solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type)/(n*h^d))
+          }, error = function(e){
+            sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+          }
+          )
           bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
           # sy matrix
           sy_mat = solve(S_x(as.matrix(y_scaled), p, kernel_type)/(n*h))
@@ -203,8 +214,9 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
     f_hat = f_hat/(n^2*h^(d+mu+nu+1))
   } else {
     for (j in 1:ng){
+      hx = mean(h)
       # localization for x
-      idx = which(rowSums(abs(sweep(x_data, 2, x))<=h[j])==d)
+      idx = which(rowSums(abs(sweep(x_data, 2, x))<=hx)==d)
 
       x_data_loc = matrix(x_data[idx, ], ncol=d)
       y_data_loc = y_data[idx]
@@ -217,8 +229,8 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
       x_data_loc = matrix(x_data_loc[sort_idx, ], ncol=d)
 
       # x constants
-      x_scaled = sweep(x_data_loc, 2, x)/(h^d)
-      sx_mat = solve(S_x(as.matrix(x_scaled/(n*h^d)), q, kernel_type))
+      x_scaled = sweep(x_data_loc, 2, x)/(hx^d)
+      sx_mat = solve(S_x(as.matrix(x_scaled/(n*hx^d)), q, kernel_type))
       bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
 
       y = y_grid[j]
@@ -230,7 +242,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         nh_vec [j] = length(y_elems)
       } else {
         if (mu==0){
-          sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))
+          sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type))
           bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
           # sy matrix
           sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))
@@ -312,7 +324,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # x constants
     x_scaled = sweep(x_sorted, 2, x)/(h^d)
-    sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+    sx_mat = solve(S_x(x_scaled/(n*hx^d), q, kernel_type))
     bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
 
     # initialize matrix
@@ -334,7 +346,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
           c_hat[j, i] = 0
         } else{
           if (mu==0){
-            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type)/(n*h^d))
+            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))
             bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
             # sy matrix
             sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
@@ -406,23 +418,24 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     for (i in 1:ng){
       for (j in 1:i){
+        hx = mean(h)
         # localization for x
-        idx = which(abs(x_data-x)<=h[i])
+        idx = which(rowSums(abs(sweep(x_data, 2, x))<=hx)==d)
 
-        x_data_loc = x_data[idx]
+        x_data_loc = matrix(x_data[idx, ], ncol=d)
         y_data_loc = y_data[idx]
 
         # idx of ordering wrt y
         sort_idx = sort(y_data_loc, index.return=TRUE)$ix
 
         # sorting datasets
-        y_data_loc = as.matrix(y_data_loc[sort_idx])
-        x_data_loc = as.matrix(x_data_loc[sort_idx])
+        y_data_loc = matrix(y_data_loc[sort_idx])
+        x_data_loc = matrix(x_data_loc[sort_idx, ], ncol=d)
 
         # x constants
-        x_scaled = (x_data_loc-x)/(h[i]^d)
-        sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h[i]^d))
-        bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
+        x_scaled = sweep(x_data_loc, 2, x)/(hx^d)
+        sx_mat = solve(S_x(matrix(x_scaled/(n*hx^d), ncol=d), q, kernel_type))
+        bx = b_x(matrix(x_scaled, ncol=d), sx_mat, e_nu, q, kernel_type)
 
         # relevant entries wrt y and y_prime
         y = y_grid[i]
@@ -433,19 +446,20 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         yp_elems = which(abs(yp_scaled)<=1)
         elems = intersect(y_elems, yp_elems)
 
-        if ( length(elems) =< 5){
-          c_hat[i, j] = c_hat[i, j]
+        if ( length(elems) <= 5){
+          c_hat[i, j] = 0
+          c_hat[j, i] = 0
         } else{
           if (mu==0){
-            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems]), q, kernel_type)/(n*h[i]^d))
+            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type))
             bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
             # sy matrix
             sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[i]))
             syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h[j]))
 
             # computing y and yprime vectors
-            a_y = b_x(y_scaled[elems], sy_mat, e_mu, p, kernel_type)
-            a_yp =  b_x(yp_scaled[elems], syp_mat, e_mu, p, kernel_type)
+            a_y = b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
+            a_yp =  b_x(matrix(yp_scaled[elems]), syp_mat, e_mu, p, kernel_type)
 
             # part 1 of the sum
             aj = cumsum(a_y)
@@ -457,8 +471,8 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
             syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h[j]))
 
             # computing y and yprime vectors
-            a_y = b_x(y_scaled[elems], sy_mat, e_mu, p, kernel_type)
-            a_yp =  b_x(yp_scaled[elems], syp_mat, e_mu, p, kernel_type)
+            a_y = b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
+            a_yp =  b_x(matrix(yp_scaled[elems]), syp_mat, e_mu, p, kernel_type)
 
             # part 1 of the sum
             aj = cumsum(a_y)
@@ -471,21 +485,28 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
             t_2 = (n-k) * a_yp[k] * aj[k]
             t_3 = (n-k) * a_y[k] * ak[k]
             t_4 = (n-k)^2 * a_y[k] * a_yp[k]
-            c_hat[i, j] = c_hat[i, j] + bx[elems[k]]^2 * (t_1 + t_2 + t_3 + t_4)
+            c_hat[i, j] = c_hat[i, j] + bx[1, elems[k]]^2 * (t_1 + t_2 + t_3 + t_4)
           }
         }
         # estimated means
-        theta_y = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y, p=p, q=q,
-                       mu=mu, nu=nu, h=h[i], kernel_type=kernel_type)$est
-        theta_yp = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_prime, p=p,
-                        q=q, mu=mu, nu=nu, h=h[j], kernel_type=kernel_type)$est
+        if (mu==0){
+          theta_y = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y, p=2,
+                         q=1, mu=0, nu=0, h=h[i], kernel_type=kernel_type)$est
+          theta_yp = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_prime,
+                          p=2, q=1, mu=0, nu=0, h=h[j], kernel_type=kernel_type)$est
+
+        }else{
+          theta_y = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y, p=p,
+                         q=q, mu=mu, nu=nu, h=h[i], kernel_type=kernel_type)$est
+          theta_yp = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_prime,
+                          p=p, q=q, mu=mu, nu=nu, h=h[j], kernel_type=kernel_type)$est
+        }
 
         # filling matrix, using symmetry
-        c_hat[i, j] = c_hat[i, j]/(n*(n-1)^2) - theta_y*theta_yp/n
+        c_hat[i, j] = c_hat[i, j]/(n*(n-1)^2) - theta_y*theta_yp/n^2
         c_hat[j, i] = c_hat[i, j]
       }
     }
-    # c_hat = c_hat/(n^2*h^(2*d+2*mu+2*nu+2))
 
     if(mu==0){
       c_hat = sweep(sweep(c_hat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+mu+nu))),

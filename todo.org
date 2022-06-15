@@ -11,13 +11,13 @@
 *** varying h
 **** DONE mu=0
 **** DONE mu>0
-** TODO cov function
+** DONE cov function
 *** single h
 **** DONE mu=0
 **** DONE mu>0
-*** TODO varying h
-**** TODO mu=0
-**** TODO mu>0
+*** varying h
+**** DONE mu=0
+**** DONE mu>0
 ** TODO bw function
 *** imse
 **** TODO mu=0
