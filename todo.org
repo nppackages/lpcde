@@ -25,6 +25,12 @@
 *** mse
 **** TODO mu=0
 **** TODO mu>0
-** TODO add warning on output for small nh
+** DONE add warning on output for small nh
+** TODO add warning for singular matrices
+** TODO add singular matrix check
+*** DONE est function
+*** DONE cov function
+*** TODO bw functions
+** TODO CI default computation
 
 * Nonnegative constraint

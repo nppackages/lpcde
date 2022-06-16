@@ -34,6 +34,7 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
                    mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
   est = f_hat_val$est
   eff.n = f_hat_val$eff.n
+  singular_flag = f_hat_val$singular_flag
 
   # covariance matrix
 
@@ -42,15 +43,6 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
     covMat = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
                    mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
     se = sqrt(abs(diag(covMat)))
-  # }else if (var_type == "simul"){
-  #   covMat = simul_cov(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
-  #                  mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
-  #   se = sqrt(abs(diag(covMat$covMat)))
-  # }else if (var_type == "asymp"){
-    # covMat = asymp_var(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
-                       # mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
-    # se = sqrt(abs(diag(covMat)))
-  # }
 
   if (rbc){
     est_rbc = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -72,15 +64,6 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
                            p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
                            kernel_type=kernel_type)
         se_rbc = sqrt(abs(diag(covMat_rbc)))
-      # }else if (var_type == "simul"){
-      #   covMat_rbc = simul_cov(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p_RBC, q=q_RBC,
-      #                  mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
-      #   se_rbc = sqrt(abs(diag(covMat$covMat)))
-      # }else if (var_type == "asymp"){
-        # covMat_rbc = asymp_var(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p_RBC, q=q_RBC,
-                           # mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
-        # se_rbc = sqrt(abs(diag(covMat_rbc)))
-      # }
     }
 
     # with rbc results
@@ -90,7 +73,7 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
     est_result = list("est" = estimate,
                       "CovMat" = list("CovMat" = covMat,
                                       "CovMat_RBC" = covMat_rbc),
-                      "x" = x, "eff_n" = eff.n)
+                      "x" = x, "eff_n" = eff.n, "singular_flag" = singular_flag)
   } else{
     # without rbc results
     # setting rbc values to be the same as non-rbc values
@@ -104,7 +87,7 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
     est_result = list("est" = estimate,
                       "CovMat" = list("CovMat" = covMat,
                                       "CovMat_RBC" = covMat_rbc),
-                      "x" = x, "eff_n" = eff.n)
+                      "x" = x, "eff_n" = eff.n, "singular_flag" = singular_flag)
   }
 
   return(est_result)
@@ -130,6 +113,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
   d = ncol(x_data)
   ng = length(y_grid)
   x = matrix(x, ncol=d)
+  singular_flag=FALSE
 
   # x basis vector
   e_nu = basis_vec(x, q, nu)
@@ -157,13 +141,12 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # x constants
     x_scaled = sweep(x_sorted, 2, x)/(h^d)
-    #sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
-    sx_mat = tryCatch({
-      solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
-    }, error = function(e){
+    if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
+      sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+    } else{
+      singular_flag = TRUE
       sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
     }
-    )
     bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
 
     for (j in 1:ng){
@@ -176,15 +159,20 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         nh_vec [j] = length(y_elems)
       } else {
         if (mu==0){
-          sx_mat = tryCatch({
-            solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type)/(n*h^d))
-          }, error = function(e){
+          if(check_inv(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type)/(n*h^d))[1]== TRUE){
+            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type)/(n*h^d))
+          } else{
+            singular_flag = TRUE
             sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
           }
-          )
           bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
           # sy matrix
-          sy_mat = solve(S_x(as.matrix(y_scaled), p, kernel_type)/(n*h))
+          if(check_inv(S_x(as.matrix(y_scaled), p, kernel_type)/(n*h))[1]== TRUE){
+            sy_mat = solve(S_x(as.matrix(y_scaled), p, kernel_type)/(n*h))
+          } else{
+            singular_flag = TRUE
+            sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+          }
 
           # y constants
           ax = b_x(y_scaled, sy_mat, e_mu, p, kernel_type)
@@ -196,7 +184,12 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
           nh_vec[j] = length(y_elems)
         } else {
           # sy matrix
-          sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
+          if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
+          } else{
+            singular_flag = TRUE
+            sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+          }
 
           # y constants
           ax = b_x(as.matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -230,7 +223,12 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
       # x constants
       x_scaled = sweep(x_data_loc, 2, x)/(hx^d)
-      sx_mat = solve(S_x(as.matrix(x_scaled/(n*hx^d)), q, kernel_type))
+      if(check_inv(S_x(as.matrix(x_scaled/(n*hx^d)), q, kernel_type))[1]== TRUE){
+        sx_mat = solve(S_x(as.matrix(x_scaled/(n*hx^d)), q, kernel_type))
+      } else{
+        singular_flag = TRUE
+        sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      }
       bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
 
       y = y_grid[j]
@@ -242,10 +240,20 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         nh_vec [j] = length(y_elems)
       } else {
         if (mu==0){
-          sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type))
+          if(check_inv(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type))[1]== TRUE){
+            sx_mat = solve(S_x(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type)))
+          } else{
+            singular_flag = TRUE
+            sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+          }
           bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
           # sy matrix
-          sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))
+          if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))[1]== TRUE){
+            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))
+          } else{
+            singular_flag = TRUE
+            sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+          }
 
          # y constants
           ax = b_x(matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -259,7 +267,12 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
           nh_vec[j] = length(y_elems)
         } else{
          # sy matrix
-          sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))
+          if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))[1]== TRUE){
+            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[j]))
+          } else{
+            singular_flag = TRUE
+            sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+          }
 
          # y constants
           ax = b_x(matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -275,7 +288,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
       }
     }
   }
-  return(list("est" = f_hat, "eff.n" = nh_vec))
+  return(list("est" = f_hat, "eff.n" = nh_vec, "singular_flag" = singular_flag))
 
 }
 
@@ -324,7 +337,12 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # x constants
     x_scaled = sweep(x_sorted, 2, x)/(h^d)
-    sx_mat = solve(S_x(x_scaled/(n*hx^d), q, kernel_type))
+    if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
+      sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+    } else{
+      singular_flag = TRUE
+      sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+    }
     bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
 
     # initialize matrix
@@ -346,11 +364,26 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
           c_hat[j, i] = 0
         } else{
           if (mu==0){
-            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))
+            if(check_inv(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))[1]== TRUE){
+              sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))
+            } else{
+              singular_flag = TRUE
+              sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+            }
             bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
             # sy matrix
-            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
-            syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))
+            if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+              sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
+            } else{
+              singular_flag = TRUE
+              sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+            }
+            if(check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+              syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))
+            } else{
+              singular_flag = TRUE
+              syp_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+            }
 
             # computing y and yprime vectors
             a_y = b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
@@ -362,8 +395,18 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
           }else{
             # sy matrix
-            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h^d))
-            syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h^d))
+            if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+              sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
+            } else{
+              singular_flag = TRUE
+              sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+            }
+            if(check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+              syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))
+            } else{
+              singular_flag = TRUE
+              syp_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+            }
 
             # computing y and yprime vectors
             a_y = b_x(as.matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -434,7 +477,12 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
         # x constants
         x_scaled = sweep(x_data_loc, 2, x)/(hx^d)
-        sx_mat = solve(S_x(matrix(x_scaled/(n*hx^d), ncol=d), q, kernel_type))
+        if(check_inv(S_x(matrix(x_scaled/(n*hx^d), ncol=d), q, kernel_type))[1]== TRUE){
+          sx_mat = solve(S_x(matrix(x_scaled/(n*hx^d), ncol=d), q, kernel_type))
+        } else{
+          singular_flag = TRUE
+          sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+        }
         bx = b_x(matrix(x_scaled, ncol=d), sx_mat, e_nu, q, kernel_type)
 
         # relevant entries wrt y and y_prime
@@ -451,11 +499,26 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
           c_hat[j, i] = 0
         } else{
           if (mu==0){
-            sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type))
+            if(check_inv(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type))[1]== TRUE){
+              sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type))
+            } else{
+              singular_flag = TRUE
+              sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+            }
             bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
             # sy matrix
-            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[i]))
-            syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h[j]))
+            if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[i]))[1]== TRUE){
+              sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[i]))
+            } else{
+              singular_flag = TRUE
+              sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+            }
+            if(check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h[j]))[1]== TRUE){
+              syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h[j]))
+            } else{
+              singular_flag = TRUE
+              syp_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+            }
 
             # computing y and yprime vectors
             a_y = b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
@@ -467,8 +530,18 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
           }else{
             # sy matrix
-            sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[i]))
-            syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h[j]))
+            if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[i]))[1]== TRUE){
+              sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h[i]))
+            } else{
+              singular_flag = TRUE
+              sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+            }
+            if(check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h[j]))[1]== TRUE){
+              syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h[j]))
+            } else{
+              singular_flag = TRUE
+              syp_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+            }
 
             # computing y and yprime vectors
             a_y = b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)

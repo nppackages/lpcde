@@ -273,6 +273,14 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
                    x_data_min=min(x_data), x_data_max=max(x_data),
                    grid_min=min(y_grid), grid_max=max(y_grid)
                  ))
+
+  if(any(lpcdest$eff_n<=5)) {
+    warning("Some evaluation points do not have enough data to produce reliable results.")
+  }
+  if(lpcdest$singular_flag == TRUE){
+    warning("Singular matrices encountered. May affect estimates.")
+  }
+
   class(Result) <- c("lpcde")
   return(Result)
 }
