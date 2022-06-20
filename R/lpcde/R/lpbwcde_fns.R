@@ -15,11 +15,11 @@
 #' @keywords internal
 bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   sd_y = stats::sd(y_data)
-  sd_x = stats::sd(x_data)
-  mx = mean(x_data)
+  sd_x = apply(x_data, 2, stats::sd)
+  mx = apply(x_data, 2, mean)
   my = mean(y_data)
   y_data = (y_data - my)/sd_y
-  x_data = (x_data - mx)/sd_x
+  x_data = sweep(x_data, 2, mx)/sd_x
   d = ncol(x_data)
   n = length(y_data)
   ng = length(y_grid)
@@ -31,12 +31,13 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
     # f_dprime = function(y) exp(-0.5*y^2)*(-1 + y^2)/sqrt(2*pi)
 
     # bias estimate, no rate added, DGP constant
+    #TODO:calculate initial x bw
     bx = 0.5
     bias_dgp = matrix(NA, ncol=3, nrow=ng)
     for (j in 1:ng) {
-      lower_x = min(x_data)-x
+      lower_x = sweep(apply(x_data, 2, min), 2, x)
       lower_y = min(y_data) - y_grid[j]
-      upper_x = max(x_data) - x
+      upper_x = sweep(apply(x_data, 2, max), 2, x)
       upper_y = max(y_data) - y_grid[j]
       # using equation from the matrix cookbook
       bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * normal_dgps(x, 2, mx, sd_x)
@@ -100,13 +101,10 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
     h = sd_y*sd_x*h
 
   } else {
-    rho = t(stats::cor(y_data, x_data))
-    sigma_mat = t(rho)%*%diag(d)%*%rho
-    joint_sigma = matrix(c(1, rho), nrow=1)
-    joint_sigma = rbind(joint_sigma, cbind(rho, diag(d)))
+    rho = stats::cor(data)
 
     #pdf of multivariate norm
-    mvnorm_pdf = function(x) mvtnorm::dmvnorm(t(x), mean=rep(0, nrow(joint_sigma)), sigma=joint_sigma)
+    mvnorm_pdf = function(x) mvtnorm::dmvnorm(t(x), mean=rep(0, nrow(rho)), sigma=rho)
 
     # theta_(2,0) expression
     theta_dd = stats::D(expression(exp(-0.5*(y-mu)^2/sigma^2)/sqrt(2*pi*sigma^2)), "y")
@@ -191,11 +189,11 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 #' @keywords internal
 bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   sd_y = stats::sd(y_data)
-  sd_x = stats::sd(x_data)
-  mx = mean(x_data)
+  sd_x = apply(x_data, 2, stats::sd)
+  mx = apply(x_data, 2, mean)
   my = mean(y_data)
   y_data = (y_data - my)/sd_y
-  x_data = (x_data - mx)/sd_x
+  x_data = sweep(x_data, 2, mx)/sd_x
   d = ncol(x_data)
   n = length(y_data)
   ng = length(y_grid)
@@ -371,17 +369,18 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 #' @keywords internal
 bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   #centering and scaling data
-  mx = mean(x_data)
-  my = mean(y_data)
   sd_y = stats::sd(y_data)
-  sd_x = stats::sd(x_data)
-  y_data = as.matrix((y_data - my)/sd_y)
-  x_data = as.matrix((x_data - mx)/sd_x)
+  sd_x = apply(x_data, 2, stats::sd)
+  mx = apply(x_data, 2, mean)
+  my = mean(y_data)
+  y_data = (y_data - my)/sd_y
+  x_data = sweep(x_data, 2, mx)/sd_x
 
   d = ncol(x_data)
   n = length(y_data)
   ng = length(y_grid)
 
+  #TODO:check mvt formula
   bx = (4/(d+1))^(1/(d+4))*n^(-1/(d+4))*sd_x
   # bx = 1.06*sd_x*n^(-1/5)
   by = 1.06*sd_y*n^(-1/5)
@@ -728,14 +727,14 @@ dmvnorm_deriv1 = function(X, mu=rep(0,ncol(X)), sigma=diag(ncol(X))) {
 #'
 #' @keywords internal
 
-normal_dgps <- function(x, v, mean, sd) {
+normal_dgps = function(x, v, mean, sd) {
   if (v == 0) {
     return(stats::pnorm(x, mean=mean, sd=sd))
   } else {
-    temp <- expression(exp(-(x-mean)^2/(2*sd^2))/sqrt(2*pi*sd^2))
+    temp = expression(exp(-(x-mean)^2/(2*sd^2))/sqrt(2*pi*sd^2))
     while(v > 1) {
-      temp <- stats::D(temp, "x")
-      v <- v - 1
+      temp = stats::D(temp, "x")
+      v = v - 1
     }
     return(eval(temp, list(x=x, mean=mean, sd=sd)))
   }

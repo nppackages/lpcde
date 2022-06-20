@@ -4,33 +4,26 @@
 * TODO Add code coverage github action
 
 * Multivariate extension
-** DONE est function
-*** single h
-**** DONE mu=0
-**** DONE mu>0
-*** varying h
-**** DONE mu=0
-**** DONE mu>0
-** DONE cov function
-*** single h
-**** DONE mu=0
-**** DONE mu>0
-*** varying h
-**** DONE mu=0
-**** DONE mu>0
+** bw in est and cov
+*** TODO keep bw same for x and y
 ** TODO bw function
-*** imse
+*** TODO normal dgps
+*** TODO s_exact
+*** TODO c_exact
+*** TODO t_exact
+*** i/rot
 **** TODO mu=0
 **** TODO mu>0
 *** mse
 **** TODO mu=0
 **** TODO mu>0
 ** DONE add warning on output for small nh
-** TODO add warning for singular matrices
+** DONE add warning for singular matrices
 ** TODO add singular matrix check
 *** DONE est function
 *** DONE cov function
 *** TODO bw functions
+** TODO add mvtnorm derivatives function
 ** TODO CI default computation
 
 * Nonnegative constraint
