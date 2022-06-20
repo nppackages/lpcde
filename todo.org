@@ -19,11 +19,14 @@
 **** TODO mu>0
 ** DONE add warning on output for small nh
 ** DONE add warning for singular matrices
-** TODO add singular matrix check
-*** DONE est function
-*** DONE cov function
-*** TODO bw functions
+** add singular matrix check
+*** TODO Add flag output from bw and cov fns
 ** TODO add mvtnorm derivatives function
-** TODO CI default computation
+*** NOTE can probably on add up to nu=2 manually
+** TODO CI default computation check
 
 * Nonnegative constraint
+
+* Integrates to 1 constraint
+
+* Add tutorial for lpcde
