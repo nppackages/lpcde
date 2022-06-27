@@ -34,15 +34,17 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
                    mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
   est = f_hat_val$est
   eff.n = f_hat_val$eff.n
-  singular_flag = f_hat_val$singular_flag
+  est_flag = f_hat_val$singular_flag
 
   # covariance matrix
 
   # standard errors
   # if(var_type=="ustat"){
-    covMat = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
+  covmat = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
                    mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
-    se = sqrt(abs(diag(covMat)))
+  covMat = covmat$cov
+  c_flag = covmat$singular_flag
+  se = sqrt(abs(diag(covMat)))
 
   if (rbc){
     est_rbc = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -53,20 +55,29 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
       covMat_rbc = covMat
     }else{
       # estimate
-      est_rbc = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p_RBC,
-                     q=q_RBC, mu=mu, nu=nu, h=bw, kernel_type=kernel_type)$est
+      f_hat_rbc = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p_RBC,
+                    q=q_RBC, mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
 
+      est_rbc =  f_hat_rbc$est
+      rbc_flag = f_hat_rbc$singular_flag
       # covariance matrix
 
       # standard errors
       # if(var_type=="ustat"){
-        covMat_rbc = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
-                           p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
-                           kernel_type=kernel_type)
-        se_rbc = sqrt(abs(diag(covMat_rbc)))
+      covmat_rbc = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
+                       p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
+                       kernel_type=kernel_type)
+      covMat_rbc = covmat_rbc$cov
+      c_rbc_flag = covmat_rbc$singular_flag
+      se_rbc = sqrt(abs(diag(covMat_rbc)))
     }
 
     # with rbc results
+    if (est_flag==TRUE | c_flag==TRUE | rbc_flag==TRUE | c_rbc_flag==TRUE){
+      singular_flag = TRUE
+    }else{
+      singular_flag=FALSE
+    }
     estimate = cbind(y_grid, bw, est, est_rbc, se, se_rbc)
     colnames(estimate) = c("y_grid","bw", "est","est_RBC", "se", "se_RBC")
     rownames(estimate) = c()
@@ -207,9 +218,8 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
     f_hat = f_hat/(n^2*h^(d+mu+nu+1))
   } else {
     for (j in 1:ng){
-      hx = mean(h)
       # localization for x
-      idx = which(rowSums(abs(sweep(x_data, 2, x))<=hx)==d)
+      idx = which(rowSums(abs(sweep(x_data, 2, x))<=h[j])==d)
 
       x_data_loc = matrix(x_data[idx, ], ncol=d)
       y_data_loc = y_data[idx]
@@ -222,9 +232,9 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
       x_data_loc = matrix(x_data_loc[sort_idx, ], ncol=d)
 
       # x constants
-      x_scaled = sweep(x_data_loc, 2, x)/(hx^d)
-      if(check_inv(S_x(as.matrix(x_scaled/(n*hx^d)), q, kernel_type))[1]== TRUE){
-        sx_mat = solve(S_x(as.matrix(x_scaled/(n*hx^d)), q, kernel_type))
+      x_scaled = sweep(x_data_loc, 2, x)/(h[j]^d)
+      if(check_inv(S_x(as.matrix(x_scaled/(n*h[j]^d)), q, kernel_type))[1]== TRUE){
+        sx_mat = solve(S_x(as.matrix(x_scaled/(n*h[j]^d)), q, kernel_type))
       } else{
         singular_flag = TRUE
         sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
@@ -240,8 +250,8 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         nh_vec [j] = length(y_elems)
       } else {
         if (mu==0){
-          if(check_inv(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type))[1]== TRUE){
-            sx_mat = solve(S_x(S_x(as.matrix(x_scaled[y_elems, ]/(n*hx^d)), q, kernel_type)))
+          if(check_inv(S_x(as.matrix(x_scaled[y_elems, ]/(n*h[j]^d)), q, kernel_type))[1]== TRUE){
+            sx_mat = solve(S_x(S_x(as.matrix(x_scaled[y_elems, ]/(n*h[j]^d)), q, kernel_type)))
           } else{
             singular_flag = TRUE
             sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
@@ -314,6 +324,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
   d = ncol(x_data)
   ng = length(y_grid)
 
+  singular_flag = FALSE
   # x basis vector
   e_nu = basis_vec(x, q, nu)
 
@@ -461,7 +472,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     for (i in 1:ng){
       for (j in 1:i){
-        hx = mean(h)
+        hx = mean(h[i], h[j])
         # localization for x
         idx = which(rowSums(abs(sweep(x_data, 2, x))<=hx)==d)
 
@@ -591,7 +602,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
     }
   }
 
-  return(c_hat)
+  return(list("cov" = c_hat, "singular_flag" = singular_flag))
 }
 #######################################################################################
 # Supplemental Functions

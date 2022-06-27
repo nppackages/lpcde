@@ -7,6 +7,11 @@ y_data = matrix(rnorm(n, mean=0, sd=1))
 y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
 h = c(rep(0.2, 4), rep(0.4, 5))
 
-# density estimation
-model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=matrix(c(0, 0), ncol=2), bw=0.5)
+#bw estimation
+model1 = lpbwcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=matrix(c(0, 0), ncol=2))
 summary(model1)
+
+# density estimation
+model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=matrix(c(0, 0), ncol=2), bw=0.5)
+summary(model2)
+

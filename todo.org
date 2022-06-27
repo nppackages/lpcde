@@ -3,30 +3,26 @@
 
 * TODO Add code coverage github action
 
-* Multivariate extension
+* TODO Multivariate extension
 ** bw in est and cov
-*** TODO keep bw same for x and y
+*** DONE keep bw same for x and y
 ** TODO bw function
 *** TODO normal dgps
-*** TODO s_exact
+*** TODO add mvtnorm derivatives function
+**** NOTE can probably on add up to nu=2 manually
+*** DONE s_exact
 *** TODO c_exact
-*** TODO t_exact
+*** DONE t_exact
 *** i/rot
 **** TODO mu=0
 **** TODO mu>0
 *** mse
 **** TODO mu=0
 **** TODO mu>0
-** DONE add warning on output for small nh
-** DONE add warning for singular matrices
-** add singular matrix check
-*** TODO Add flag output from bw and cov fns
-** TODO add mvtnorm derivatives function
-*** NOTE can probably on add up to nu=2 manually
 ** TODO CI default computation check
 
-* Nonnegative constraint
+* TODO Nonnegative constraint
 
-* Integrates to 1 constraint
+* TODO Integrates to 1 constraint
 
-* Add tutorial for lpcde
+* TODO Add tutorial for lpcde
