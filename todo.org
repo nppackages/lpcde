@@ -4,15 +4,12 @@
 * TODO Add code coverage github action
 
 * TODO Multivariate extension
-** bw in est and cov
-*** DONE keep bw same for x and y
 ** TODO bw function
-*** TODO normal dgps
-*** TODO add mvtnorm derivatives function
-**** NOTE can probably on add up to nu=2 manually
 *** DONE s_exact
-*** TODO c_exact
-*** DONE t_exact
+*** DONE fix mvec for d>n case
+*** DONE c_exact
+*** TODO bias summation
+*** TODO t_exact
 *** i/rot
 **** TODO mu=0
 **** TODO mu>0

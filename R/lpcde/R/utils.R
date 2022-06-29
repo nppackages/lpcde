@@ -2,6 +2,28 @@
 # This file contains code for basic utility functions used in other computations
 #######################################################################################
 
+#' @title polynomial order vector
+#' @description generates list of all combinations
+#' of length less than or equal to d of numbers that add up to n.
+#' @param n total value of each combination
+#' @param d maximum length of combinations
+#' @examples mvec(4, 2)
+mvec = function(n, d){
+  pvec = print_all_sumC(n)
+  for (j in 1:length(pvec)){
+    if (length(pvec[[j]])<d){
+      pvec[[j]] = append(pvec[[j]], rep(0, d-length(pvec[[j]])))
+    }
+  }
+  v = c()
+  for (i in 1:length(pvec)){
+    v = append(v, combinat::permn(pvec[[i]]))
+  }
+  v = v[lengths(v)<= d]
+  mvec = unique(c(v, combinat::permn(c(n, rep(0, d-1)))))
+  return(mvec)
+}
+
 #' @title  Polynomial basis vector expansion
 #' @description Generate polynomial basis vector up to order p.
 #' has multivariate functionality as described in the main paper

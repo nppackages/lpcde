@@ -95,15 +95,15 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
     h = sd_y*sd_x*h
 
   } else {
-    rho = stats::cor(data)
 
     bx = (4/(d+1))^(1/(d+4))*n^(-1/(d+4))*sd_x
     #pdf of multivariate norm
-    #TODO:check if this is the right expression to evaluate
-    mvnorm_pdf = function(x) mvtnorm::dmvnorm(t(x), mean=rep(0, nrow(rho)), sigma=rho)
+    sigma_hat = cov(x_data)
 
-    # theta_(2,0) expression
-    theta_dd = stats::D(expression(exp(-0.5*(y-mu)^2/sigma^2)/sqrt(2*pi*sigma^2)), "y")
+    mvt_deriv = mvtnorm::dmvnorm(t(x), mean=rep(0, nrow(sigma_hat)), sigma=sigma_hat)*(solve(sigma_hat)%*%(x-mx)%*%t(x-mx)%*%solve(sigma_hat) - solve(sigma_hat))
+
+    # theta_(3,0) expression
+    theta_dd = stats::D(stats::D(expression(exp(-0.5*(y-mu)^2/sigma^2)/sqrt(2*pi*sigma^2)), "y"), "y")
 
     # bias estimate, no rate added, DGP constant
     bias_dgp = matrix(NA, ncol=3, nrow=ng)
@@ -112,21 +112,41 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
       mu_hat = t(stats::cor(x_data))%*%diag(d)%*%x
 
       # using equation from the matrix cookbook
-      bias_dgp[j, 1] = exp(-0.5*(y_grid[j]-mu_hat)^2/rho)/(sqrt(2*pi)*rho) * (y_grid[j]-mu_hat)/rho
-      bias_dgp[j, 2] = eval(theta_dd, list(y=y_grid[j], mu=mu_hat, sigma=rho))
+      #theta_3,0 eval
+      bias_dgp[j, 2] = eval(theta_dd, list(y=y_grid[j], mu=my, sigma=sd_y)) *
+        mvtnorm::pmvnorm(upper=x, corr = stats::cor(x_data))
 
       Sx = solve(S_exact(eval_pt=x, p=q, kernel_type=kernel_type))
       Sy = solve(S_exact(eval_pt=y_grid[j], p=p, kernel_type=kernel_type))
       # cx = c_exact(eval_pt=x_grid[,j], m=q+1, p=q, kernel_type=kernel_type)
-      cx = c_x(x_data=x_data, eval_pt = x, m=q+1, q=q, h=bx, kernel_type = kernel_type)
       cy = c_exact(eval_pt=y_grid[j], m=p+1, p=p, kernel_type=kernel_type)
       Ty = T_y_exact(eval_pt=y_grid[j], p=p)
       # need to substitute exact Tx function
       Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
 
-      bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
+      mv = mvec(q+1, d)
+      #theta_1,2 eval
+      b1 = exp(-0.5*(y_grid[j]-my)^2/sd_y)/(sqrt(2*pi)*sd_y) * (y_grid[j]-my)/sd_y * mvt_deriv
+      diag_elems = diag(b1)
+      b1[lower.tri(b1, diag=TRUE)] = NA
+      pxy = as.vector(b1)[!is.na(b1)]
+      print(mv)
+      #NOTE: THE CODE BELOW ONLY WORKS FOR q=1 CURRENTLY
+      for(i in 1:(length(mv)-d)){
+        cx = c_x(x_data=x_data, eval_pt = x, m=mv[[i]], q=q, h=bx, kernel_type = kernel_type)
+        print(cx)
+        print(Sx)
+        bias_dgp[j, 1] = bias_dgp[j, 1] + pxy[i]*(t(cx)%*%Sx)[nu+1]
+      }
+      print(bias_dgp[j, 1])
+      for (i in 1:d){
+        cx = c_x(x_data=x_data, eval_pt = x, m=mv[[length(mv)-d+i]], q=q, h=bx, kernel_type = kernel_type)
+        bias_dgp[j, 1] = bias_dgp[j, 1] + diag_elems[i]*(t(cx)%*%Sx)[nu+1]
+      }
+      print(bias_dgp[j, 1])
+#      bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
       bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
-      bias_dgp[j, 3] = mvnorm_pdf(z)*(bias_dgp[j, 1] + bias_dgp[j, 2])^2
+      bias_dgp[j, 3] = mvtnorm::dmvnorm(t(z), mean=rep(0, nrow(cov(data))), sigma=cov(data))*(bias_dgp[j, 1] + bias_dgp[j, 2])^2
     }
 
     # variance estimate. See Lemma 7 in the Appendix.
@@ -142,7 +162,7 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
         # need to substitute exact Tx function
         Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)/bx^d
 
-        v_dgp[j, 1] = mvtnorm::dmvnorm(matrix(c(y_grid[j],x), nrow=1), mean=rep(0, d+1), sigma=joint_sigma)^2
+        v_dgp[j, 1] = mvtnorm::dmvnorm(matrix(c(y_grid[j],x), nrow=1), mean=rep(0, d+1), sigma=cov(data))^2
       }
       v_dgp [ , 1] = v_dgp * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
     }else {
@@ -577,7 +597,7 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 #' @param kernel_type String, kernel type
 #' @return a (p+1)-by-(p+1) matrix
 #' @keywords internal
-S_exact = function(lower, upper, eval_pt, p, kernel_type){
+S_exact = function(lower=-1, upper=1, eval_pt, p, kernel_type){
   if(length(eval_pt)==1){
     # generating upper and lower limits of integration
     lower_lim = max(lower, -1)
@@ -625,7 +645,7 @@ S_exact = function(lower, upper, eval_pt, p, kernel_type){
     }
   # matrix with all the denominators (factorials)
   #fact_mat = factorial(c(0:p))%*%t(factorial(c(0:p)))
-   s_y = stats::dnorm(eval_pt)*poly_mat/fact_mat
+    s_y = poly_mat
   }
   # return the S matrix
   return(s_y)
@@ -639,7 +659,7 @@ S_exact = function(lower, upper, eval_pt, p, kernel_type){
 #' @param kernel_type String, kernel type
 #' @return a (p+1)-by-(p+1) matrix
 #' @keywords internal
-T_y_exact = function(lower, upper, eval_pt, p, kernel_type = "uniform"){
+T_y_exact = function(lower=-1, upper=1, eval_pt, p, kernel_type = "uniform"){
   # ##########################################
   # TODO: need to adapt for other kernels
   # ##########################################
@@ -686,7 +706,7 @@ T_y_exact = function(lower, upper, eval_pt, p, kernel_type = "uniform"){
 #' @param kernel_type String, kernel type
 #' @return a (p+1)-by-1 matrix
 #' @keywords internal
-c_exact = function(lower, upper, eval_pt, m, p, kernel_type){
+c_exact = function(lower=-1, upper=-1, eval_pt, m, p, kernel_type){
   if(length(eval_pt)==1){
     # initialize empty array for filling with integrated values
     v = matrix(0L, nrow = p+1, ncol = 1)
@@ -701,7 +721,6 @@ c_exact = function(lower, upper, eval_pt, m, p, kernel_type){
     }
   } else {
     v = sum(basis_vec(eval_pt, p, i))
-
   }
 return(v)
 }

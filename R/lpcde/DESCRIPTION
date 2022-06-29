@@ -21,6 +21,7 @@ Imports:
     purrr,
     MASS,
     mvtnorm,
+    combinat
     stats
 LinkingTo: 
     Rcpp,

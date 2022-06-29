@@ -30,42 +30,6 @@ S_x = function(x_data, q, kernel_type){
   return(sx_mat)
 }
 
-# #' @title Sy Matrix (Internal Function)
-# #' @description S_y matrix constructed as described in *ref main paper*.
-# #' @param y_data dataset.
-# #' @param eval_pt evaluation point.
-# #' @param p polynomial order.
-# #' @param h bandwidth.
-# #' @param kernel_type type of kernel function.
-# #' @return S_y matrix
-# #' @keywords internal
-# S_y = function(y_data, eval_pt, p, h, kernel_type){
-#   ymin = (min(y_data))
-#   ymax = (max(y_data))
-#   # generating upper and lower limits of integration
-#   lower_lim = max((ymin-eval_pt)/h, -1)
-#   upper_lim = min((ymax-eval_pt)/h, 1)
-#   # looping over range of polynomials for which we need to evaluate integral
-#   poly_list = matrix(0L, nrow = 2*p+1, ncol = 1)
-#   if (lower_lim <= upper_lim){
-#     for (i in 0:(2*p)){
-#       # evaluating integral
-#       poly_list[i+1, 1] = int_val(i, lower_lim, upper_lim, kernel_type)
-#     }
-#   }
-#   # initialize matrix of polynomials to be filled
-#   poly_mat = matrix(0L, nrow = (p+1), ncol = (p+1))
-#   for (j in 1:(p+1)){
-#     # fill matrix by selecting (p+1) consecutive elemnts of vector to fill each column
-#     poly_mat[, j] = poly_list[j:(j+p)]
-#   }
-#   # matrix with all the denominators (factorials)
-#   fact_mat = factorial(c(0:p))%*%t(factorial(c(0:p)))
-#   # completing the S_y matrix
-#   s_y = poly_mat/fact_mat
-#   # return the S_y matrix
-#   return(s_y)
-# }
 
 #' @title c_x vector (Internal Function)
 #' @description c_x vector generated as described in main paper.
@@ -88,6 +52,7 @@ c_x = function(x_data, eval_pt, m, q, h, kernel_type){
   c = matrix(0L, nrow = 1, ncol = length(e_base))
 
   # center and scale data
+  #TODO: vectorize
   v = (x_data - eval_pt)/h
   x_pol = x_data - eval_pt
 
