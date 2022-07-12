@@ -54,14 +54,14 @@ c_x = function(x_data, eval_pt, m, q, h, kernel_type){
   # center and scale data
   #TODO: vectorize
   v = (x_data - eval_pt)/h
-  x_pol = x_data - eval_pt
+  x_pol = x_data - eval_pt/h
 
   # simplify polynomial basis function
   poly_fun = function(v){poly_base(v, q)}
 
   # comput basis for all center and scaled data
   r = apply(v, 1, poly_fun)
-  m_poly = x_pol^m/factorial(m)
+  m_poly = rowSums(x_pol^m/factorial(m))/h*d
 
   # evaluate kernel
   k_fun = function(x){kernel_eval(x, kernel_type)}
@@ -70,7 +70,7 @@ c_x = function(x_data, eval_pt, m, q, h, kernel_type){
   k = apply(v, 1, k_fun)
 
   # compute sum
-  c = (t(t(r)*k)%*%m_poly)/(n*h^d)
+  c = (t(t(r)*k)%*%m_poly)/n
 
   return(c)
 }
@@ -126,13 +126,14 @@ T_x = function(x_data, eval_pt, q, h, kernel_type){
   poly_fun = function(v){poly_base(v, q)}
 
   # comput basis for all center and scaled data
-  r = apply(x_data, 1, poly_fun)
+  x_pol = (x_data - eval_pt[1])/h
+  r = apply(x_pol, 1, poly_fun)
 
   # creater kernel function
   k_fun = function(x){kernel_eval(x, kernel_type)}
 
   # compute kernel value for all data points
-  k = apply(x_data, 1, k_fun)
+  k = apply(x_pol, 1, k_fun)
 
   t =  (t(t(r)*k)%*%(t(r)*k))/(n)
 

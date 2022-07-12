@@ -8,14 +8,21 @@
 *** DONE s_exact
 *** DONE fix mvec for d>n case
 *** DONE c_exact
-*** TODO bias summation
-*** TODO t_exact
-*** i/rot
-**** TODO mu=0
-**** TODO mu>0
+*** DONE bias summation
+*** DONE t_exact
+*** DONE rot
+**** DONE mu=0
+**** DONE mu>0
+*** DONE irot
+**** DONE mu=0
+**** DONE mu>0
 *** mse
 **** TODO mu=0
 **** TODO mu>0
+*** imse
+**** TODO mu=0
+**** TODO mu>0
+*** TODO eff n
 ** TODO CI default computation check
 
 * TODO Nonnegative constraint
