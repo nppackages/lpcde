@@ -5,11 +5,6 @@
 
 * TODO Multivariate extension
 ** TODO bw function
-*** DONE s_exact
-*** DONE fix mvec for d>n case
-*** DONE c_exact
-*** DONE bias summation
-*** DONE t_exact
 *** DONE rot
 **** DONE mu=0
 **** DONE mu>0
@@ -22,7 +17,7 @@
 *** imse
 **** TODO mu=0
 **** TODO mu>0
-*** TODO eff n
+*** DONE eff n
 ** TODO CI default computation check
 
 * TODO Nonnegative constraint
