@@ -1,7 +1,7 @@
 Package: lpcde
 Type: Package
 Title: Boundary Adaptive Local Polynomial Conditional Density Estimator
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: person(given = "Rajita",
            family = "Chandak",
            role = c("aut", "cre"),
@@ -21,11 +21,12 @@ Imports:
     purrr,
     MASS,
     mvtnorm,
-    combinat
+    combinat,
     stats
 LinkingTo: 
     Rcpp,
     RcppArmadillo
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    covr
 Config/testthat/edition: 3

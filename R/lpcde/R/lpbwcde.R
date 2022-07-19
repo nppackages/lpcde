@@ -198,11 +198,18 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
     bw = bw_irot(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
 
   }else if(bw_type == "mse-dpi"){
-  bw = bw_mse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
-  # stop("this method is not implementable yet")
+    if(d ==1){
+      bw = bw_mse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
+    }else{
+      stop("this method is not implementable yet")
+    }
 
   }else if(bw_type == "imse-dpi"){
-   bw = bw_imse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
+    if(d==1){
+      bw = bw_imse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
+    }else{
+      stop("this method is not implementable yet")
+    }
     # stop("this method is not implementable yet")
   }else {
     stop("Invalid bandwidth selection method provided.")

@@ -171,6 +171,7 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
       v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
     }
 
+    print('here')
     h = (v_dgp/bias_dgp[, 3])^(1/6)*n^(-1/6)
     h = stats::sd(y_data)*stats::sd(x_data)*h
 
@@ -484,14 +485,21 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
         singular_flag = TRUE
         Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
       }
-      cx = c_x(x_data, x, m=q+1, q, bx, kernel_type)
-      Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
-      # using equation from the matrix cookbook
-      bias_dgp[j, 1] = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=2, q=3,
-                            mu=1, nu=2, h=bw, kernel_type=kernel_type)
-      bias_dgp[j, 2] = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=4, q=q,
-                            mu=3, nu=nu, h=bw, kernel_type=kernel_type)
-
+      #TODO: Fix cx estimation
+      #estimating theta hats
+      print(normal_dgps(y_grid[j], mu, my, sd_y))
+      print(normal_dgps(x, 2, mx, sd_x))
+      bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * prod(normal_dgps(x, 2, mx, sd_x))
+      bias_dgp[j, 2] = normal_dgps(y_grid[j], p+1, my, sd_y) * prod(normal_dgps(x, 0, mx, sd_x))
+      mv = mvec(q+1, d)
+      for(i in 1:(length(mv)-d)){
+        cx = c_x(x_data=x_data, eval_pt = x, m=mv[[i]], q=q, h=bx, kernel_type = kernel_type)
+        bias_dgp[j, 1] = bias_dgp[j, 1] + (t(cx)%*%Sx)[nu+1]
+      }
+      for (i in 1:d){
+        cx = c_x(x_data=x_data, eval_pt = x, m=mv[[length(mv)-d+i]], q=q, h=bx, kernel_type = kernel_type)
+        bias_dgp[j, 1] = bias_dgp[j, 1] + (t(cx)%*%Sx)[nu+1]
+      }
       bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
 
       y_scaled = as.matrix((y_data-y_grid[j])/by)
@@ -502,24 +510,24 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
         Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
       }
       cy = c_x(y_data, y_grid[j], m=p+1, q=p, by, kernel_type=kernel_type)
-      Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
       bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
 
       bias_dgp[j, 3] = (bias_dgp[j, 1] + bias_dgp[j, 2])^2
     }
+    print(bias_dgp)
 
     # variance estimate. See Lemma 7 in the Appendix.
-    v_dgp = matrix(NA, ncol=1, nrow=ng)
+    v_dgp = matrix(0, ncol=1, nrow=ng)
     if (mu > 0){
-      x_scaled = as.matrix((x_data-x)/bx)
-      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
-        Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
-      } else{
-        singular_flag = TRUE
-        Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
-      Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
       for (j in 1:ng) {
+        x_scaled = as.matrix((x_data-x)/bx[j])
+        if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx[j]))[1]== TRUE){
+          Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx[j]))
+        } else{
+          singular_flag = TRUE
+          Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+        }
+        Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx[j], kernel_type=kernel_type)
         y_scaled = as.matrix((y_data-y_grid[j])/by)
         if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
           Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
@@ -541,7 +549,8 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
       }
       Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
       for (j in 1:ng) {
-        cdf_hat = stats::pnorm(y_grid[j]) * stats::pnorm(x)
+        cdf_hat = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid[j], p=3, q=1,
+                       mu=0, nu=0, h=bx, kernel_type=kernel_type)
         v_dgp [j, 1] = cdf_hat*(1-cdf_hat)
       }
       v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
@@ -549,7 +558,7 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 
     alpha = d + 2*min(p, q) + 2*max(mu, nu) + 1
     h = (v_dgp/bias_dgp[, 3])^(1/alpha)*n^(-1/alpha)
-    h = sd_y*sd_x*h
+    h = sd_y*stats::sd(x_data)*h
   }
   return(h)
 }
