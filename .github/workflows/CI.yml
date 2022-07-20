@@ -25,6 +25,6 @@ jobs:
       - run: cd R/lpcde/ && Rscript -e '.libPaths("../../R_packages/"); library(covr); cov = package_coverage(); to_cobertura(cov)'
       - uses: codecov/codecov-action@v3
         with:
-          files: ./R/cobertura.xml
+          files: ./R/lpcde/cobertura.xml
           fail_ci_if_error: true
           verbose: true
