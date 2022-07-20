@@ -21,9 +21,9 @@ jobs:
       - run: sudo apt-get -y install ghostscript
       - run: mkdir R_packages/
       - run: Rscript -e 'install.packages(c("Rcpp", "ggplot2", "purrr", "MASS", "mvtnorm", "combinat", "stats", "covr", "testthat", "devtools", "spam", "roxygen2", "RcppArmadillo"), lib="./R_packages/")'
-      - run: cd R/ && Rscript -e '.libPaths("../R_packages/"); library(devtools); test()'
+      - run: cd R/lpcde/ && Rscript -e '.libPaths("../R_packages/"); library(devtools); test()'
       - run: cd R/lpcde/ && Rscript -e '.libPaths("../../R_packages/"); library(covr); cov = package_coverage(); to_cobertura(cov)'
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
         with:
           files: ./R/cobertura.xml
           fail_ci_if_error: true
