@@ -19,9 +19,9 @@ jobs:
       - run: sudo apt -y install r-base
       - run: mkdir R_packages/
       - run: Rscript -e 'install.packages(c("igraph", "Matrix", "RSpectra", "covr", "knitr", "mclust", "rmarkdown", "testthat", "devtools", "spam", "roxygen2", "qpdf"), lib="./R_packages/")'
-      - run: cd R/lpcde/ && Rscript -e '.libPaths("../R_packages/"); library(devtools); document()'
-      - run: cd R/lpcde/ && Rscript -e '.libPaths("../R_packages/"); library(devtools); test()'
-      - run: cd R/lpcde/ && Rscript -e '.libPaths("../R_packages/"); library(covr); cov = package_coverage(); to_cobertura(cov)'
+      - run: cd R/lpcde/ && Rscript -e '.libPaths("../../R_packages/"); library(devtools); document()'
+      - run: cd R/lpcde/ && Rscript -e '.libPaths("../../R_packages/"); library(devtools); test()'
+      - run: cd R/lpcde/ && Rscript -e '.libPaths("../../R_packages/"); library(covr); cov = package_coverage(); to_cobertura(cov)'
       - uses: codecov/codecov-action@v2
         with:
           files: ./R/cobertura.xml
