@@ -2,7 +2,6 @@
 [![CRAN version](https://img.shields.io/cran/v/lpcde?color=7733BB&label=CRAN)](https://cran.r-project.org/web/packages/lpcde/index.html)
 
 
-
 # LPCDE
 
 The `lpcde` package provides R implementation of bandwidth selection, point estimation and inference procedures for local polynomial conditional distribution and density methods.

@@ -1,16 +1,10 @@
 #+title: lpcde
 #+author: Rajita Chandak
 
-* TODO Add code coverage github action
+* CHECK Add code coverage github action
 
 * TODO Multivariate extension
 ** TODO bw function
-*** DONE rot
-**** DONE mu=0
-**** DONE mu>0
-*** DONE irot
-**** DONE mu=0
-**** DONE mu>0
 *** mse
 **** TODO mu=0
 **** TODO mu>0
@@ -18,7 +12,6 @@
 **** TODO mu=0
 **** TODO mu>0
 *** DONE eff n
-** TODO CI default computation check
 
 * TODO Nonnegative constraint
 
