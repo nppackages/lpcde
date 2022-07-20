@@ -1,6 +1,6 @@
 [![license: GPLv2](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 [![CRAN version](https://img.shields.io/cran/v/lpcde?color=7733BB&label=CRAN)](https://cran.r-project.org/web/packages/lpcde/index.html)
-
+[![Coverage Status](https://coveralls.io/repos/github/nppackages/lpcde/badge.svg?branch=main)](https://coveralls.io/github/nppackages/lpcde?branch=main)
 
 
 # LPCDE
