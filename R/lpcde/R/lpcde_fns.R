@@ -53,6 +53,9 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
       est_rbc = est
       se_rbc = se
       covMat_rbc = covMat
+
+      rbc_flag = f_hat_val$singular_flag
+      c_rbc_flag = covmat$singular_flag
     }else{
       # estimate
       f_hat_rbc = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p_RBC,

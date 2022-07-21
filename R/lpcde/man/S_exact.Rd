@@ -7,7 +7,7 @@ Internal Function
 
 Generate Matrix}
 \usage{
-S_exact(lower, upper, eval_pt, p, kernel_type)
+S_exact(lower = -1, upper = 1, eval_pt, p, kernel_type)
 }
 \arguments{
 \item{eval_pt}{evaluation point}
@@ -15,30 +15,14 @@ S_exact(lower, upper, eval_pt, p, kernel_type)
 \item{p}{Nonnegative integer, polynomial order.}
 
 \item{kernel_type}{String, kernel type}
-
-\item{y_data}{Numeric matrix/data frame, the raw data of independent.}
-
-\item{x_data}{Numeric matrix/data frame, the raw data of covariates.}
-
-\item{y_grid}{Numeric vector, the evaluation points.}
-
-\item{x}{Numeric, specifies the evaluation point(s) in the x-direction.}
-
-\item{q}{Integer, polynomial order.}
-
-\item{mu}{Integer, order of derivative.}
-
-\item{nu}{Integer, order of derivative.}
 }
 \value{
-bandwidth sequence
-
 a (p+1)-by-(p+1) matrix
 }
 \description{
-IMSE Bandwidth selection
-}
-\details{
+S matrix
 Internal Function
+
+Generate Matrix
 }
 \keyword{internal}

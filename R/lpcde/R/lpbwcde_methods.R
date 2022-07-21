@@ -22,6 +22,17 @@
 #'
 #' Supported methods: \code{\link{coef.lpbwcde}}, \code{\link{print.lpbwcde}}, \code{\link{summary.lpbwcde}}.
 #'
+#'
+#' @examples
+#' n=100
+#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' # bandwidth selection
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' model2 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid, bw_type = "mse-rot")
+#' print(model2)
+#'
 #' @export
 print.lpbwcde <- function(x, ...) {
 
@@ -177,6 +188,15 @@ summary.lpbwcde = function(object, ...) {
 #' @seealso \code{\link{lpbwcde}} for data-driven bandwidth selection.
 #'
 #' Supported methods: \code{\link{coef.lpbwcde}}, \code{\link{print.lpbwcde}}, \code{\link{summary.lpbwcde}}.
+#'
+#' n=100
+#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' # bandwidth selection
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' model2 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid, bw_type = "mse-rot")
+#' coef(model2)
 #'
 #' @export
 coef.lpbwcde <- function(object, ...) {

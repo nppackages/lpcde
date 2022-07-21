@@ -7,7 +7,6 @@
 #' of length less than or equal to d of numbers that add up to n.
 #' @param n total value of each combination
 #' @param d maximum length of combinations
-#' @examples mvec(4, 2)
 mvec = function(n, d){
   if (d ==1){
     mvec = n
