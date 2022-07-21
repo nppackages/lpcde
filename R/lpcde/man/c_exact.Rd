@@ -5,7 +5,7 @@
 \title{C matrix
 Internal Function}
 \usage{
-c_exact(lower, upper, eval_pt, m, p, kernel_type)
+c_exact(lower = -1, upper = -1, eval_pt, m, p, kernel_type)
 }
 \arguments{
 \item{eval_pt}{evaluation point.}

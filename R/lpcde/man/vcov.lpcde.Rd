@@ -22,6 +22,16 @@ The vcov method for local polynomial conditionaldensity objects.
 \details{
 Vcov Method for Local Polynomial Density Conditional Estimation and Inference
 }
+\examples{
+n=100
+x_data = as.matrix(rnorm(n, mean=0, sd=1))
+y_data = as.matrix(rnorm(n, mean=0, sd=1))
+y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+# density estimation
+model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+vcov(model1)
+
+}
 \seealso{
 \code{\link{lpcde}} for local polynomial conditional density estimation.
 

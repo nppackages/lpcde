@@ -6,7 +6,7 @@
 Internal Function
 Generate Matrix}
 \usage{
-T_y_exact(lower, upper, eval_pt, p, kernel_type = "uniform")
+T_y_exact(lower = -1, upper = 1, eval_pt, p, kernel_type = "uniform")
 }
 \arguments{
 \item{eval_pt}{evaluation point}

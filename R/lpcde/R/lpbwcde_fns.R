@@ -98,7 +98,7 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 
     bx = (4/(d+1))^(1/(d+4))*n^(-1/(d+4))*sd_x
     #pdf of multivariate norm
-    sigma_hat = cov(x_data)
+    sigma_hat = stats::cov(x_data)
 
     mvt_deriv = mvtnorm::dmvnorm(t(x), mean=rep(0, nrow(sigma_hat)), sigma=sigma_hat)*(solve(sigma_hat)%*%(x-mx)%*%t(x-mx)%*%solve(sigma_hat) - solve(sigma_hat))
 
@@ -154,7 +154,7 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
         # need to substitute exact Tx function
         Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
 
-        v_dgp[j, 1] = mvtnorm::dmvnorm(matrix(c(y_grid[j],x), nrow=1), mean=rep(0, d+1), sigma=cov(data))^2
+        v_dgp[j, 1] = mvtnorm::dmvnorm(matrix(c(y_grid[j],x), nrow=1), mean=rep(0, d+1), sigma=stats::cov(data))^2
         v_dgp [j, 1] = v_dgp[j, 1] * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
       }
     }else {
@@ -165,8 +165,8 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
         # need to substitute exact tx function
         Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
 
-        cdf_hat =  mvtnorm::pmvnorm(c(y_grid[j],x), mean=rep(0, d+1), sigma=cov(data))
-        v_dgp [j , 1] = cdf_hat*(1-cdf_hat) * mvtnorm::dmvnorm(c(y_grid[j],x), mean=rep(0, d+1), sigma=cov(data))
+        cdf_hat =  mvtnorm::pmvnorm(c(y_grid[j],x), mean=rep(0, d+1), sigma=stats::cov(data))
+        v_dgp [j , 1] = cdf_hat*(1-cdf_hat) * mvtnorm::dmvnorm(c(y_grid[j],x), mean=rep(0, d+1), sigma=stats::cov(data))
       }
       v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
     }
@@ -279,7 +279,7 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 
     bx = (4/(d+1))^(1/(d+4))*n^(-1/(d+4))*sd_x
     #pdf of multivariate norm
-    sigma_hat = cov(x_data)
+    sigma_hat = stats::cov(x_data)
 
     mvt_deriv = mvtnorm::dmvnorm(t(x), mean=rep(0, nrow(sigma_hat)), sigma=sigma_hat)*(solve(sigma_hat)%*%(x-mx)%*%t(x-mx)%*%solve(sigma_hat) - solve(sigma_hat))
 
@@ -322,7 +322,7 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
       }
 #      bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
       bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
-      bias_dgp[j, 3] = mvtnorm::dmvnorm(t(z), mean=rep(0, nrow(cov(data))), sigma=cov(data))*(bias_dgp[j, 1] + bias_dgp[j, 2])^2
+      bias_dgp[j, 3] = mvtnorm::dmvnorm(t(z), mean=rep(0, nrow(stats::cov(data))), sigma=stats::cov(data))*(bias_dgp[j, 1] + bias_dgp[j, 2])^2
     }
 
     # variance estimate. See Lemma 7 in the Appendix.
@@ -335,7 +335,7 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
         # need to substitute exact Tx function
         Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
 
-        v_dgp[j, 1] = mvtnorm::dmvnorm(matrix(c(y_grid[j],x), nrow=1), mean=rep(0, d+1), sigma=cov(data))^2
+        v_dgp[j, 1] = mvtnorm::dmvnorm(matrix(c(y_grid[j],x), nrow=1), mean=rep(0, d+1), sigma=stats::cov(data))^2
         v_dgp [j, 1] = v_dgp[j, 1] * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
       }
     }else {
@@ -346,8 +346,8 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
         # need to substitute exact tx function
         Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
 
-        cdf_hat =  mvtnorm::pmvnorm(c(y_grid[j],x), mean=rep(0, d+1), sigma=cov(data))
-        v_dgp [j , 1] = cdf_hat*(1-cdf_hat) * mvtnorm::dmvnorm(c(y_grid[j],x), mean=rep(0, d+1), sigma=cov(data))
+        cdf_hat =  mvtnorm::pmvnorm(c(y_grid[j],x), mean=rep(0, d+1), sigma=stats::cov(data))
+        v_dgp [j , 1] = cdf_hat*(1-cdf_hat) * mvtnorm::dmvnorm(c(y_grid[j],x), mean=rep(0, d+1), sigma=stats::cov(data))
         v_dgp[j, 1] = v_dgp[j, 1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
       }
     }

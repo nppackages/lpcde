@@ -17,6 +17,16 @@
 \description{
 The print method for local polynomial conditional density objects.
 }
+\examples{
+n=100
+x_data = as.matrix(rnorm(n, mean=0, sd=1))
+y_data = as.matrix(rnorm(n, mean=0, sd=1))
+y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+# density estimation
+model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+print(model1)
+
+}
 \seealso{
 \code{\link{lpcde}} for local polynomial conditional density estimation.
 Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
