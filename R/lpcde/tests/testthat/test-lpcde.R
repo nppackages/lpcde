@@ -56,4 +56,7 @@ test_that("error checking", {
   model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, p=2, q=1, p_RBC=2, q_RBC=1, bw=1.8)
   expect_equal(model2$opt$p, model2$opt$p_RBC)
   expect_equal(model2$opt$q, model2$opt$q_RBC)
+
+  model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, kernel_type="triangular", p=2, q=1, p_RBC=2, q_RBC=1, bw=1.8)
+  expect_equal(model2$opt$kernel, "triangular")
 })
