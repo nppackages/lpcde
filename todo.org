@@ -1,7 +1,7 @@
 #+title: lpcde
 #+author: Rajita Chandak
 
-* CHECK Add code coverage github action
+* DONE Add code coverage github action
 
 * TODO Multivariate extension
 ** TODO bw function
