@@ -33,6 +33,9 @@ To install/update in R type:
 install.packages('lpcde')
 ```
 
+## Major Updates
+Details regarding package updates can be found in [NEWS.md](https://github.com/nppackages/lpcde/blob/main/R/lpcde/NEWS.md).
+
 ## Additional Information
 
 - Help: [R Manual](https://github.com/nppackages/lpcde/blob/main/R/lpcde.pdf), [CRAN repository](https://cran.r-project.org/web/packages/lpcde/index.html).
