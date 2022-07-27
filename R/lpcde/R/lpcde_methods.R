@@ -23,6 +23,15 @@
 #' \code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 #'
+#' @examples
+#' n=100
+#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' # density estimation
+#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' print(model1)
+#'
 #' @export
 #'
 print.lpcde = function(x, ...){
@@ -148,7 +157,7 @@ summary.lpcde = function(object, ...){
       CIsimul = ceiling(CIsimul)
       corrMat = sweep(sweep(x$CovMat$CovMat_RBC, MARGIN=1, FUN="*", STATS=1/x$Estimate[, "se_RBC"]), MARGIN=2, FUN="*", STATS=1/x$Estimate[, "se_RBC"])
       normalSimu = try(
-        MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=corrMat),
+        MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=Matrix::nearPD(corrMat)$mat),
         silent=TRUE)
       if (is.character(normalSimu)) {
         print(normalSimu)
@@ -253,6 +262,16 @@ summary.lpcde = function(object, ...){
 #' \code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 #'
+#'
+#' @examples
+#' n=100
+#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' # density estimation
+#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' coef(model1)
+#'
 #' @export
 coef.lpcde = function(object, ...) {
   object$Estimate
@@ -284,6 +303,16 @@ coef.lpcde = function(object, ...) {
 #'
 #' Supported methods: \code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
 #' \code{\link{summary.lpcde}},
+#'
+#'
+#' @examples
+#' n=100
+#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' # density estimation
+#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' vcov(model1)
 #'
 #' @export
 vcov.lpcde = function(object, ...) {
@@ -335,6 +364,16 @@ vcov.lpcde = function(object, ...) {
 #' Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
 #' \code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
+#'
+#'
+#' @examples
+#' n=100
+#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
+#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' # density estimation
+#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' confint(model1)
 #'
 #' @export
 confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CIsimul=2000, alpha=0.05, ...){
@@ -394,7 +433,7 @@ confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CI
       CIsimul = ceiling(CIsimul)
       corrMat = sweep(sweep(x$CovMat$CovMat_RBC, MARGIN=1, FUN="*", STATS=1/x$Estimate[, "se_RBC"]), MARGIN=2, FUN="*", STATS=1/x$Estimate[, "se_RBC"])
       normalSimu = try(
-        MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=corrMat),
+        MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=Matrix::nearPD(corrMat)$mat),
         silent=TRUE)
       if (is.character(normalSimu)) {
         print(normalSimu)
@@ -714,7 +753,7 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
         CIsimul = ceiling(CIsimul)
         corrMat = sweep(sweep(x$CovMat$CovMat_RBC, MARGIN=1, FUN="*", STATS=1/x$Estimate[, "se_RBC"], check.margin = FALSE), MARGIN=2, FUN="*", STATS=1/x$Estimate[, "se_RBC"], check.margin = FALSE)
         normalSimu = try(
-          MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=corrMat),
+          MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=Matrix::nearPD(corrMat)$mat),
           silent=TRUE)
         if (is.character(normalSimu)) {
           print(normalSimu)

@@ -1,9 +1,9 @@
 #+title: lpcde
 #+author: Rajita Chandak
 
-* TODO Add code coverage github action
+* DONE Add code coverage github action
 
-* RUNNING Multivariate extension
+* DONE Multivariate extension
 
 * TODO Nonnegative constraint
 

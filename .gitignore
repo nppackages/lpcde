@@ -1,6 +1,6 @@
 R/lpcde/.Rproj.user/
 R/lpcde/.RData
-R/lpcde.Rcheck
+R/lpcde.Rcheck/
 R/lpcde/.Rbuildignore
 R/lpcde/.Rhistory
 
@@ -8,3 +8,4 @@ R/lpcde/.Rhistory
 R/*.tar.gz
 
 *.html
+.Rproj.user

@@ -167,7 +167,7 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
   } else {
    bw_type = tolower(bw_type)
    bw_type = bw_type[1]
-   if (!bw_type%in%c("mse-rot", "imse-rot", "mse-dpi")){
+   if (!bw_type%in%c("mse-rot", "imse-rot", "mse-dpi", "imse-dpi")){
      stop("Incorrect bandwidth selection method specified.\n")
    }
   }
@@ -198,11 +198,18 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
     bw = bw_irot(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
 
   }else if(bw_type == "mse-dpi"){
-  bw = bw_mse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
-  # stop("this method is not implementable yet")
+    if(d ==1){
+      bw = bw_mse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
+    }else{
+      stop("this method is not implementable yet")
+    }
 
-  # }else if(bw_type == "imse-dpi"){
-    # bw = bw_imse(y_data=y_data, x_data=x_data, y_grid=y_grid, x_grid=x_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
+  }else if(bw_type == "imse-dpi"){
+    if(d==1){
+      bw = bw_imse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
+    }else{
+      stop("this method is not implementable yet")
+    }
     # stop("this method is not implementable yet")
   }else {
     stop("Invalid bandwidth selection method provided.")
@@ -219,9 +226,16 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
   colnames(BW) = c("y_grid", "bw", "nh")
 
 
-  for (i in 1:ng) {
-    x_idx = which(abs(x_data-x)<=BW[i, 2])
-    BW[i, 3] = sum(abs(y_data[x_idx] - BW[i, 1]) <= BW[i, 2])
+  if (d == 1){
+    for (i in 1:ng) {
+      x_idx = which(abs(x_data-x)<=BW[i, 2])
+      BW[i, 3] = sum(abs(y_data[x_idx] - BW[i, 1]) <= BW[i, 2])
+    }
+  } else {
+    for (i in 1:ng){
+      idx = which(rowSums(abs(sweep(x_data, 2, x))<=BW[i, 2])==d)
+      BW[i, 3] = sum(abs(y_data[idx] - BW[i, 1]) <= BW[i, 2])
+    }
   }
 
   Result = list(BW=BW,

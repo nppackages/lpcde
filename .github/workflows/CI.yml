@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop, codecov ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+
+jobs:
+
+  R:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: sudo apt-get update
+      - run: sudo apt -y install libcurl4-openssl-dev
+      - run: sudo apt -y install pandoc
+      - run: sudo apt -y install r-base
+      - run: sudo apt-get -y install ghostscript
+      - run: sudo apt-get install -y libharfbuzz-dev
+      - run: sudo apt-get install -y libfribidi-dev
+      - run: mkdir R_packages/
+      - run: Rscript -e 'install.packages(c("Matrix", "Rcpp", "ggplot2", "purrr", "MASS", "mvtnorm", "combinat", "stats", "covr", "testthat", "devtools", "spam", "roxygen2", "RcppArmadillo"), lib="./R_packages/")'
+      - run: cd R/lpcde/ && Rscript -e '.libPaths("../../R_packages/"); library(covr); cov = package_coverage(); to_cobertura(cov)'
+      - uses: codecov/codecov-action@v3
+        with:
+          files: ./R/lpcde/cobertura.xml
+          fail_ci_if_error: true
+          verbose: true

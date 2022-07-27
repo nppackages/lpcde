@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpcde_fns.R
 \name{cov_hat}
 \alias{cov_hat}
-\title{asymp_var: asymptotic covariance estimator}
+\title{cov_hat: covariance estimator}
 \usage{
 cov_hat(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type)
 }
@@ -31,12 +31,8 @@ y-direction.}
 }
 \value{
 covariance matrix for all the grid points
-
-covariance matrix for all the grid points
 }
 \description{
-Function for estimating the variance-covariance matrix.
-
 Function for estimating the variance-covariance matrix.
 }
 \keyword{internal}

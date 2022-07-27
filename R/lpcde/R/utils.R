@@ -2,6 +2,31 @@
 # This file contains code for basic utility functions used in other computations
 #######################################################################################
 
+#' @title polynomial order vector
+#' @description generates list of all combinations
+#' of length less than or equal to d of numbers that add up to n.
+#' @param n total value of each combination
+#' @param d maximum length of combinations
+mvec = function(n, d){
+  if (d ==1){
+    mvec = n
+  }else {
+  pvec = print_all_sumC(n)
+  for (j in 1:length(pvec)){
+    if (length(pvec[[j]])<d){
+      pvec[[j]] = append(pvec[[j]], rep(0, d-length(pvec[[j]])))
+    }
+  }
+  v = c()
+  for (i in 1:length(pvec)){
+    v = append(v, combinat::permn(pvec[[i]]))
+  }
+  v = v[lengths(v)<= d]
+  mvec = unique(c(v, combinat::permn(c(n, rep(0, d-1)))))
+  }
+  return(mvec)
+}
+
 #' @title  Polynomial basis vector expansion
 #' @description Generate polynomial basis vector up to order p.
 #' has multivariate functionality as described in the main paper
@@ -34,6 +59,9 @@ poly_base = function(x, p){
 
     return(num/denom)
   } else {
+    if (p >= 5){
+      stop("Not implementable for multivariate polynomials of order greater than 4.")
+    }else{
     # multivariate x case
     # generate matrix of pure exponents
     v = matrix(rep(t(x),p), ncol=p, byrow=FALSE)
@@ -94,6 +122,7 @@ poly_base = function(x, p){
           polyvec = c(polyvec, prod_val/matrix(factorial(m), nrow = length(prod_val), ncol = 1 ))
         }
       }
+    }
     }
     return(polyvec)
   }
@@ -230,7 +259,7 @@ kernel_eval = function(x, kernel_type){
   }else if (kernel_type == "epanechnikov"){
     k = 0.75*(1-x^2)*ifelse(abs(x)<=1, 1, 0)
   }
-  # k = prod(k)
+  k = prod(k)
   return(k)
 }
 
@@ -240,32 +269,3 @@ kernel_eval = function(x, kernel_type){
 #' @param m matrix
 #' @keywords internal
 check_inv  = function(m) class(try(solve(m),silent=T))=="matrix"
-
-#' @title Matrix inversion
-#' @description function to compute inverse of matrix.
-#' @return inverted matrix
-#' @param m matrix
-#' @keywords internal
-mat_inv  = function(m) solve(m)
-
-# #' @title u_ij function
-# #' @param y_i first data point
-# #' @param y_j second data point
-# #' @param x_i conditioning data
-# #' @param y evaluation point for y
-# #' @param x evaluation point for x
-# #' @keywords internal
-# uij = function(y_i, y_j, x_i, y, x, kernel_type, symat, sxmat, p, q, mu, nu){
-#
-#   e_nu = basis_vec(x, q, nu)
-#
-#   # y basis vector
-#   e_mu = basis_vec(1, p, mu)
-#
-#   a_i = b_x(y_i, sy_mat, e_mu, p, kernel_type)
-#   a_j = b_x(y_j, sy_mat, e_mu, p, kernel_type)
-#   b_i = b_x(x_i, sx_mat, e_nu, q, kernel_type)
-#
-#   u_ij = ifelse(y_i < y_j,1,0)%*%(a_j)%*%b_i +ifelse(y_i > y_j,1,0)*a_i%*%b_i
-#   return(u_ij)
-# }
