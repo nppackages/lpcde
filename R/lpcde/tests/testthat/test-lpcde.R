@@ -1,3 +1,7 @@
+test_that("error checking", {
+
+})
+
 test_that("lpcde default output", {
   set.seed(42)
   n=1000

@@ -24,16 +24,6 @@ using namespace Rcpp;
 //using namespace Eigen;
 using namespace arma;
 
-//sum.cpp
-
-// [[Rcpp::export]]
-double rcpp_sum(arma::colvec v){
-  double sum = 0;
-  for(int i=0; i<v.size(); ++i){
-    sum += v[i];
-  }
-  return(sum);
-}
 
 //used code from https://www.educative.io/m/find-all-sum-combinations
 void print_all_sum_rec(
