@@ -1,6 +1,6 @@
 test_that("lpbwcde default output", {
   set.seed(42)
-  n=1000
+  n=100
   x_data = matrix(rnorm(1*n, mean=0, sd=1), ncol=1)
   y_data = matrix(rnorm(n, mean=0, sd=1))
   y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
@@ -25,7 +25,7 @@ test_that("lpbwcde default output", {
 
 test_that("lpbwcde multivariate default output", {
   set.seed(42)
-  n=1000
+  n=100
   x_data = matrix(rnorm(2*n, mean=0, sd=1), ncol=2)
   y_data = matrix(rnorm(n, mean=0, sd=1))
   y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
@@ -37,7 +37,7 @@ test_that("lpbwcde multivariate default output", {
 
 test_that("lpbwcde default output", {
   set.seed(42)
-  n=1000
+  n=100
   x_data = matrix(rnorm(1*n, mean=0, sd=1), ncol=1)
   y_data = matrix(rnorm(n, mean=0, sd=1))
   y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
