@@ -185,15 +185,8 @@ summary.lpcde = function(object, ...){
   cat(format(" ", width= 8 ))
   cat(format("Point", width= 10, justify="right"))
   cat(format("Std." , width= 10, justify="right"))
-  if (x$opt$p_RBC > x$opt$p && x$opt$q_RBC > x$opt$q) {
-    cat(format("Robust B.C."
-               , width=25, justify="centre"))
-    cat("\n")
-  } else {
-    cat(format("Conventional"
-               , width=25, justify="centre"))
-    cat("\n")
-  }
+  cat(format("Robust B.C." , width=25, justify="centre"))
+  cat("\n")
 
   cat(format("Index     Grid"            , width=14, justify="right"))
   cat(format("B.W."              , width=10, justify="right"))

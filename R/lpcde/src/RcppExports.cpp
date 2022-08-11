@@ -11,17 +11,6 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// rcpp_sum
-double rcpp_sum(arma::colvec v);
-RcppExport SEXP _lpcde_rcpp_sum(SEXP vSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::colvec >::type v(vSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpp_sum(v));
-    return rcpp_result_gen;
-END_RCPP
-}
 // print_all_sumC
 std::vector<std::vector<int>> print_all_sumC(int target);
 RcppExport SEXP _lpcde_print_all_sumC(SEXP targetSEXP) {
@@ -35,7 +24,6 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_lpcde_rcpp_sum", (DL_FUNC) &_lpcde_rcpp_sum, 1},
     {"_lpcde_print_all_sumC", (DL_FUNC) &_lpcde_print_all_sumC, 1},
     {NULL, NULL, 0}
 };
