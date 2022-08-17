@@ -38,9 +38,9 @@ Details regarding package updates can be found in [NEWS.md](https://github.com/n
 
 ## Additional Information
 
-- Help: [R Manual](https://github.com/nppackages/lpcde/blob/main/R/lpcde.pdf), [CRAN repository](https://cran.r-project.org/web/packages/lpcde/index.html).
+- Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/web/packages/lpcde/index.html).
 
-- A simple replication file: [R-script](https://github.com/nppackages/lpcde/blob/main/R/lpcde_illustration.R).
+- A simple replication file: [R-script](R/lpcde_illustration.R).
 
 - Additional simulations using this package: [Technical Paper replication script](https://github.com/nppackages-replication/CCJM_2022_LPCondDen), [R Journal Article replication script](https://github.com/nppackages-replication/CCJM_2022_lpcde)
 
