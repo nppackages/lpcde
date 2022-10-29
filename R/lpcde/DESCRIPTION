@@ -15,7 +15,7 @@ LazyData: false
 SystemRequirements: GNU make
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Imports: 
+Imports:
     Rcpp (>= 0.12.8),
     ggplot2,
     purrr,
@@ -24,10 +24,10 @@ Imports:
     combinat,
     Matrix,
     stats
-LinkingTo: 
+LinkingTo:
     Rcpp,
     RcppArmadillo
-Suggests: 
+Suggests:
     testthat (>= 3.0.0),
     covr
 Config/testthat/edition: 3
