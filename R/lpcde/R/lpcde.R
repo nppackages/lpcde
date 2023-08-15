@@ -90,7 +90,7 @@
 lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
                  p_RBC=NULL, q_RBC=NULL, mu=NULL, nu=NULL, rbc = TRUE, ng=NULL,
                  kernel_type=c("epanechnikov", "triangular", "uniform"),
-                 bw_type="mse-rot"){
+                 bw_type=NULL){
 
   ################################################################################
   # Error Checking

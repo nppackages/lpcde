@@ -19,7 +19,7 @@ lpcde(
   rbc = TRUE,
   ng = NULL,
   kernel_type = c("epanechnikov", "triangular", "uniform"),
-  bw_type = "mse-rot"
+  bw_type = NULL
 )
 }
 \arguments{
