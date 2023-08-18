@@ -2,7 +2,7 @@
 % Please edit documentation in R/matrices.R
 \name{T_x}
 \alias{T_x}
-\title{T_x matrix (Internal Function)}
+\title{c_y vector (Internal Function)}
 \usage{
 T_x(x_data, eval_pt, q, h, kernel_type)
 }
@@ -16,11 +16,21 @@ T_x(x_data, eval_pt, q, h, kernel_type)
 \item{h}{bandwidth.}
 
 \item{kernel_type}{type of kernel function.}
+
+\item{y_data}{set of data points.}
+
+\item{m}{order of derivative.}
+
+\item{p}{maximum degree for y.}
 }
 \value{
+vector object, c_y.
+
 matrix.
 }
 \description{
+c_x vector generated as described in main paper.
+
 constructing the Tx matrix as described in the supplemental appendix.
 }
 \keyword{internal}
