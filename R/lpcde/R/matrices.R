@@ -126,14 +126,14 @@ T_x = function(x_data, eval_pt, q, h, kernel_type){
   poly_fun = function(v){poly_base(v, q)}
 
   # comput basis for all center and scaled data
-  x_pol = (x_data - eval_pt[1])/h
-  r = apply(x_pol, 1, poly_fun)
+  #x_pol = (x_data - eval_pt[1])/h
+  r = apply(x_data, 1, poly_fun)
 
   # creater kernel function
   k_fun = function(x){kernel_eval(x, kernel_type)}
 
   # compute kernel value for all data points
-  k = apply(x_pol, 1, k_fun)
+  k = apply(x_data, 1, k_fun)
 
   t =  (t(t(r)*k)%*%(t(r)*k))/(n)
 

@@ -42,10 +42,10 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
   # if(var_type=="ustat"){
   covmat = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
                    mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
-  print(covmat)
-  covmat = asymp_var(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
-                   mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
-  print(covmat)
+  #print(covmat)
+  #covmat = asymp_var(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
+  #                 mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
+  #print(covmat)
   covMat = covmat$cov
   c_flag = covmat$singular_flag
   se = sqrt(abs(diag(covMat)))
@@ -74,9 +74,9 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
       covmat_rbc = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
                        p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
                        kernel_type=kernel_type)
-      covmat_rbc = asymp_var(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
-                           p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
-                           kernel_type=kernel_type)
+  #    covmat_rbc = asymp_var(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
+  #                         p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
+  #                         kernel_type=kernel_type)
       covMat_rbc = covmat_rbc$cov
       c_rbc_flag = covmat_rbc$singular_flag
       se_rbc = sqrt(abs(diag(covMat_rbc)))
@@ -644,7 +644,7 @@ asymp_var = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
                  y_grid=y_grid, p=2, q=1, mu=1, nu=0, h=h,
                  kernel_type=kernel_type)$est
     theta_00 = fhat(x_data=as.matrix(x_data), y_data=as.matrix(y_data), x=x,
-                    y_grid=y_grid, p=1, q=1, mu=0, nu=0, h=h,
+                    y_grid=y_grid, p=2, q=1, mu=0, nu=0, h=h,
                     kernel_type=kernel_type)$est
     # localization for x
     idx = which(abs(x_data-x)<=h)
@@ -658,7 +658,7 @@ asymp_var = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
     # x constants
     x_scaled = (x_data-x)/(h^d)
     sx_mat = solve(S_x(as.matrix(x_scaled), q, kernel_type)/(n*h^d))
-    Tx = T_x(x_scaled, x, q, h, kernel_type)/h^d
+    Tx = T_x(x_scaled, x, q, h, kernel_type)/(n*h^(2*d))
     c_mat = matrix(0L, nrow=ng, ncol=ng)
     for (j in 1:ng){
       for (k in 1:j){
@@ -671,28 +671,28 @@ asymp_var = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         sy_mat = solve(S_x(as.matrix(y_scaled), p, kernel_type)/(n*h))
         syp_mat = solve(S_x(as.matrix(yp_scaled), p, kernel_type)/(n*h))
         elems = intersect(y_elems, yp_elems)
-        if (length(elems)==0){
+        if (length(elems)<=20){
           c_mat[j, k] = 0
           c_mat[k, j] = c_mat[j, k]
         }else{
           if (mu==0){
-            c_mat[j, k] = theta_00[j]*(1-theta_00[j]) * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1]
+            c_mat[j, k] = (theta_00[j]*(1-theta_00[k]) * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1])/(n*h^(d+2*nu))
             c_mat[k, j] = c_mat[j, k]
           }else{
-            Ty = T_y(y_scaled[elems], yp_scaled[elems], p, kernel_type)/(n^2)
-            c_mat[j, k] = theta[j] * (sy_mat%*%Ty%*%syp_mat)[mu+1, mu+1] * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1]
+            Ty = T_y(y_scaled[elems], yp_scaled[elems], p, kernel_type)/(h^2)
+            c_mat[j, k] = ((theta[j] * theta[k]) * (sy_mat%*%Ty%*%syp_mat)[mu+1, mu+1] * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1])/(n*h^(d+2*nu+2*mu-1))
             c_mat[k, j] = c_mat[j, k]
           }
         }
       }
     }
-    if(mu == 0){
-      c_mat = sweep(sweep(c_mat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+2*nu))),
-                                            MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*nu)))
-    }else{
-      c_mat = sweep(sweep(c_mat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1))),
-                    MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1)))
-    }
+    #if(mu == 0){
+    #  c_mat = sweep(sweep(c_mat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+2*nu))),
+    #                                        MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*nu)))
+    #}else{
+    #  c_mat = sweep(sweep(c_mat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1))),
+    #                MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1)))
+    #}
   }else{
     theta = fhat(x_data=as.matrix(x_data), y_data=as.matrix(y_data), x=x, y_grid=y_grid, p=2,
                       q=1, mu=1, nu=0, h=h, kernel_type=kernel_type)$est
@@ -710,7 +710,7 @@ asymp_var = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
     # x constants
     x_scaled = (x_data-x)/(mean(h)^d)
     sx_mat = solve(S_x(as.matrix(x_scaled), q, kernel_type)/(n*mean(h)^d))
-    Tx = T_x(x_scaled, x, q, mean(h), kernel_type)
+    Tx = T_x(x_scaled, x, q, mean(h), kernel_type)/(n*mean(h)^(2*d))
     c_mat = matrix(0L, nrow=ng, ncol=ng)
     for (j in 1:ng){
       for (k in 1:j){
@@ -728,11 +728,11 @@ asymp_var = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
           c_mat[k, j] = c_mat[j, k]
         }else {
           if (mu==0){
-            c_mat[j, k] = (theta_00[j]*(1-theta_00[j]) * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1])/(n*h[j]^(d+2*nu))
+            c_mat[j, k] = (theta_00[j]*(1-theta_00[k]) * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1])/(n*h[j]^(d+2*nu))
             c_mat[k, j] = c_mat[j, k]
           }else{
             Ty = T_y(y_scaled[elems], yp_scaled[elems], p, kernel_type)
-            c_mat[j, k] = (theta[j] * (sy_mat%*%Ty%*%syp_mat)[mu+1, mu+1] * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1])/(n*h[j]^(d+2*nu+2*mu-1))
+            c_mat[j, k] = (theta[j] *theta[k]* (sy_mat%*%Ty%*%syp_mat)[mu+1, mu+1] * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1])/(n*h[j]^(d+2*nu+2*mu-1))
             c_mat[k, j] = c_mat[j, k]
           }
         }
@@ -746,7 +746,7 @@ asymp_var = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
                     #MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1)))
     #}
   }
-  diag(c_mat) = diag(c_mat)/2
+  #diag(c_mat) = diag(c_mat)/2
   return(list("cov" =c_mat, "singular_flag" = FALSE))
 }
 
