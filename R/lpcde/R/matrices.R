@@ -75,30 +75,30 @@ c_x = function(x_data, eval_pt, m, q, h, kernel_type){
   return(c)
 }
 
-#' @title c_y vector (Internal Function)
-#' @description c_x vector generated as described in main paper.
-#' @param y_data set of data points.
-#' @param eval_pt evaluation point.
-#' @param m order of derivative.
-#' @param p maximum degree for y.
-#' @param h bandwidth.
-#' @param kernel_type type of kernel function.
-#' @return vector object, c_y.
-#' @keywords internal
-c_y = function(y_data, eval_pt, m, p, h, kernel_type){
-  # initialize empty array for filling with integrated values
-  v = matrix(0L, nrow = p+1, ncol = 1)
-  # setting limits of integration
-  lower_lim = max((min(y_data)-eval_pt)/h, -1)
-  upper_lim = min((max(y_data)-eval_pt)/h, 1)
-  if (lower_lim < upper_lim){
-    for (i in 0:p){
-      # evaluted integrals
-      v[i+1, 1] = int_val(i+m, lower_lim, upper_lim, kernel_type)/(factorial(m))
-    }
-  }
-  return(v*(h^m))
-}
+##' @title c_y vector (Internal Function)
+##' @description c_x vector generated as described in main paper.
+##' @param y_data set of data points.
+##' @param eval_pt evaluation point.
+##' @param m order of derivative.
+##' @param p maximum degree for y.
+##' @param h bandwidth.
+##' @param kernel_type type of kernel function.
+##' @return vector object, c_y.
+##' @keywords internal
+#c_y = function(y_data, eval_pt, m, p, h, kernel_type){
+  ## initialize empty array for filling with integrated values
+  #v = matrix(0L, nrow = p+1, ncol = 1)
+  ## setting limits of integration
+  #lower_lim = max((min(y_data)-eval_pt)/h, -1)
+  #upper_lim = min((max(y_data)-eval_pt)/h, 1)
+  #if (lower_lim < upper_lim){
+    #for (i in 0:p){
+      ## evaluted integrals
+      #v[i+1, 1] = int_val(i+m, lower_lim, upper_lim, kernel_type)/(factorial(m))
+    #}
+  #}
+  #return(v*(h^m))
+#}
 
 
 #' @title T_x matrix (Internal Function)
@@ -161,14 +161,16 @@ T_y = function(y_data, yp_data, p, kernel_type){
   ryp_vec = apply(yp_data, 1, r_p)
 
   v = matrix(0L, nrow=e_len, ncol=e_len)
+  diagelems = matrix(0L, nrow=e_len, ncol=e_len)
   for (i in 1:n){
+    diagelems = diagelems + y_data[i]*(as.matrix(rp_vec[,i])%*%t(as.matrix(ryp_vec[,i])))/n^2
     for (j in 1:n){
       if (i==j){
         v = v
       }else {
-        v = v + min(y_data[i], yp_data[j])*(as.matrix(rp_vec[,i])%*%t(as.matrix(ryp_vec[,j])))
+        v = v + min(y_data[i], yp_data[j])*(as.matrix(rp_vec[,i])%*%t(as.matrix(ryp_vec[,j])))/n^2
       }
     }
   }
-  return(v)
+  return(v-diagelems)
 }

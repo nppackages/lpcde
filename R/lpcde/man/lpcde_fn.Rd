@@ -17,7 +17,7 @@ lpcde_fn(
   mu,
   nu,
   kernel_type,
-  rbc = FALSE
+  rbc
 )
 }
 \arguments{

@@ -24,7 +24,7 @@
 #' @return conditional density estimate at all grid points.
 #' @keywords internal
 lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
-                    kernel_type, rbc = FALSE){
+                    kernel_type, rbc){
   # initializing output vectors
   est = matrix(0L, nrow = length(y_grid), ncol = 1)
   se = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -42,6 +42,10 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
   # if(var_type=="ustat"){
   covmat = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
                    mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
+  print(covmat)
+  covmat = asymp_var(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
+                   mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
+  print(covmat)
   covMat = covmat$cov
   c_flag = covmat$singular_flag
   se = sqrt(abs(diag(covMat)))
@@ -70,6 +74,9 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
       covmat_rbc = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
                        p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
                        kernel_type=kernel_type)
+      covmat_rbc = asymp_var(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
+                           p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
+                           kernel_type=kernel_type)
       covMat_rbc = covmat_rbc$cov
       c_rbc_flag = covmat_rbc$singular_flag
       se_rbc = sqrt(abs(diag(covMat_rbc)))
@@ -168,7 +175,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
       y_scaled = (y_sorted-y)/h
       y_elems = which(abs(y_scaled)<=1)
 
-      if (length(y_elems)<=5){
+      if (length(y_elems)<=20){
         f_hat[j] = 0
         nh_vec [j] = length(y_elems)
       } else {
@@ -248,7 +255,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
       y_scaled = (y_data_loc-y)/h[j]
       y_elems = which(abs(y_scaled)<=1)
 
-      if (length(y_elems)<=5){
+      if (length(y_elems)<=20){
         f_hat[j] = 0
         nh_vec[j] = length(y_elems)
       } else {
@@ -272,7 +279,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
           ax = b_x(matrix(y_scaled), sy_mat, e_mu, p, kernel_type)
 
          # adding and multiplying
-          f_hat[j] = ax %*% cumsum(bx[y_elems])
+          f_hat[j] = ax[y_elems] %*% cumsum(bx[y_elems])
 
          # scaling
           f_hat[j] = f_hat[j]/(n^2*h[j]^(d+mu+nu+1))
@@ -373,7 +380,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         yp_elems = which(abs(yp_scaled)<=1)
         elems = intersect(y_elems, yp_elems)
 
-        if ( length(elems) <= 5){
+        if ( length(elems) <= 20){
           c_hat[i, j] = 0
           c_hat[j, i] = 0
         } else{
@@ -508,7 +515,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         yp_elems = which(abs(yp_scaled)<=1)
         elems = intersect(y_elems, yp_elems)
 
-        if ( length(elems) <= 5){
+        if ( length(elems) <= 20){
           c_hat[i, j] = 0
           c_hat[j, i] = 0
         } else{
@@ -607,6 +614,142 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
   return(list("cov" = c_hat, "singular_flag" = singular_flag))
 }
+
+
+#' @title asymp_var: asymptotic covariance estimator
+#' @description Function for estimating the variance-covariance matrix.
+#' @param y_data response variable dataset, vector.
+#' @param x_data covariate dataset, vector or matrix.
+#' @param y_grid Numeric vector, specifies the grid of evaluation points along y-direction.
+#' @param x Numeric vector or matrix, specifies the grid of evaluation points along x-direction.
+#' @param p polynomial order for y.
+#' @param q polynomial order for covariates.
+#' @param h Numeric, bandwidth vector.
+#' @param mu degree of derivative with respect to y.
+#' @param nu degree of derivative with respect to x.
+#' @param kernel_type kernel function choice.
+#' @return covariance matrix for all the grid points
+#' @keywords internal
+asymp_var = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
+  n = length(y_data)
+  d = ncol(x_data)
+  ng = length(y_grid)
+  # x basis vector
+  e_nu = basis_vec(x, q, nu)
+  # y basis vector
+  e_mu = basis_vec(1, p, mu)
+  if(length(unique(h))==1){
+    h = h[1]
+    theta = fhat(x_data=as.matrix(x_data), y_data=as.matrix(y_data), x=x,
+                 y_grid=y_grid, p=2, q=1, mu=1, nu=0, h=h,
+                 kernel_type=kernel_type)$est
+    theta_00 = fhat(x_data=as.matrix(x_data), y_data=as.matrix(y_data), x=x,
+                    y_grid=y_grid, p=1, q=1, mu=0, nu=0, h=h,
+                    kernel_type=kernel_type)$est
+    # localization for x
+    idx = which(abs(x_data-x)<=h)
+    x_data = x_data[idx]
+    y_data = y_data[idx]
+    # idx of ordering wrt y
+    sort_idx = sort(y_data, index.return=TRUE)$ix
+    # sorting datasets
+    y_data = as.matrix(y_data[sort_idx])
+    x_data = as.matrix(x_data[sort_idx])
+    # x constants
+    x_scaled = (x_data-x)/(h^d)
+    sx_mat = solve(S_x(as.matrix(x_scaled), q, kernel_type)/(n*h^d))
+    Tx = T_x(x_scaled, x, q, h, kernel_type)/h^d
+    c_mat = matrix(0L, nrow=ng, ncol=ng)
+    for (j in 1:ng){
+      for (k in 1:j){
+        y = y_grid[j]
+        yp = y_grid[k]
+        y_scaled = (y_data-y)/h
+        yp_scaled = (y_data-yp)/h
+        y_elems = which(abs(y_scaled)<1)
+        yp_elems = which(abs(yp_scaled)<1)
+        sy_mat = solve(S_x(as.matrix(y_scaled), p, kernel_type)/(n*h))
+        syp_mat = solve(S_x(as.matrix(yp_scaled), p, kernel_type)/(n*h))
+        elems = intersect(y_elems, yp_elems)
+        if (length(elems)==0){
+          c_mat[j, k] = 0
+          c_mat[k, j] = c_mat[j, k]
+        }else{
+          if (mu==0){
+            c_mat[j, k] = theta_00[j]*(1-theta_00[j]) * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1]
+            c_mat[k, j] = c_mat[j, k]
+          }else{
+            Ty = T_y(y_scaled[elems], yp_scaled[elems], p, kernel_type)/(n^2)
+            c_mat[j, k] = theta[j] * (sy_mat%*%Ty%*%syp_mat)[mu+1, mu+1] * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1]
+            c_mat[k, j] = c_mat[j, k]
+          }
+        }
+      }
+    }
+    if(mu == 0){
+      c_mat = sweep(sweep(c_mat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+2*nu))),
+                                            MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*nu)))
+    }else{
+      c_mat = sweep(sweep(c_mat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1))),
+                    MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1)))
+    }
+  }else{
+    theta = fhat(x_data=as.matrix(x_data), y_data=as.matrix(y_data), x=x, y_grid=y_grid, p=2,
+                      q=1, mu=1, nu=0, h=h, kernel_type=kernel_type)$est
+    theta_00 = fhat(x_data=as.matrix(x_data), y_data=as.matrix(y_data), x=x, y_grid=y_grid, p=2,
+                            q=1, mu=0, nu=0, h=h, kernel_type=kernel_type)$est
+    # localization for x
+    idx = which(abs(x_data-x)<=mean(h))
+    x_data = x_data[idx]
+    y_data = y_data[idx]
+    # idx of ordering wrt y
+    sort_idx = sort(y_data, index.return=TRUE)$ix
+    # sorting datasets
+    y_data = as.matrix(y_data[sort_idx])
+    x_data = as.matrix(x_data[sort_idx])
+    # x constants
+    x_scaled = (x_data-x)/(mean(h)^d)
+    sx_mat = solve(S_x(as.matrix(x_scaled), q, kernel_type)/(n*mean(h)^d))
+    Tx = T_x(x_scaled, x, q, mean(h), kernel_type)
+    c_mat = matrix(0L, nrow=ng, ncol=ng)
+    for (j in 1:ng){
+      for (k in 1:j){
+        y = y_grid[j]
+        yp = y_grid[k]
+        y_scaled = (y_data-y)/h[j]
+        yp_scaled = (y_data-yp)/h[k]
+        y_elems = which(abs(y_scaled)<1)
+        yp_elems = which(abs(yp_scaled)<1)
+        sy_mat = solve(S_x(as.matrix(y_scaled), p, kernel_type)/(n*h[j]))
+        syp_mat = solve(S_x(as.matrix(yp_scaled), p, kernel_type)/(n*h[k]))
+        elems = intersect(y_elems, yp_elems)
+        if (length(elems)<=20){
+          c_mat[j, k] = 0
+          c_mat[k, j] = c_mat[j, k]
+        }else {
+          if (mu==0){
+            c_mat[j, k] = (theta_00[j]*(1-theta_00[j]) * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1])/(n*h[j]^(d+2*nu))
+            c_mat[k, j] = c_mat[j, k]
+          }else{
+            Ty = T_y(y_scaled[elems], yp_scaled[elems], p, kernel_type)
+            c_mat[j, k] = (theta[j] * (sy_mat%*%Ty%*%syp_mat)[mu+1, mu+1] * (sx_mat%*%Tx%*%sx_mat)[nu+1, nu+1])/(n*h[j]^(d+2*nu+2*mu-1))
+            c_mat[k, j] = c_mat[j, k]
+          }
+        }
+      }
+    }
+    #if(mu == 0){
+      #c_mat = sweep(sweep(c_mat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+2*nu))),
+                                            #MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*nu)))
+    #}else{
+      #c_mat = sweep(sweep(c_mat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1))),
+                    #MARGIN=2, FUN="*", STATS=1/(n*h^(d+2*mu+2*nu-1)))
+    #}
+  }
+  diag(c_mat) = diag(c_mat)/2
+  return(list("cov" =c_mat, "singular_flag" = FALSE))
+}
+
 #######################################################################################
 # Supplemental Functions
 #######################################################################################
