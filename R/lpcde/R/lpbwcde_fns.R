@@ -169,7 +169,6 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
       v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
     }
 
-    print('here')
     h = (v_dgp/bias_dgp[, 3])^(1/6)*n^(-1/6)
     h = stats::sd(y_data)*stats::sd(x_data)*h
 
@@ -197,8 +196,6 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   sd_x = apply(x_data, 2, stats::sd)
   mx = apply(x_data, 2, mean)
   my = mean(y_data)
-  y_data = (y_data - my)/sd_y
-  x_data = sweep(x_data, 2, mx)/sd_x
   d = ncol(x_data)
   n = length(y_data)
   ng = length(y_grid)
@@ -372,7 +369,7 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 #' @param kernel_type String, the kernel.
 #' @return bandwidth sequence
 #' @keywords internal
-bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
+bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regularize){
   #centering and scaling data
   sd_y = stats::sd(y_data)
   sd_x = apply(x_data, 2, stats::sd)
@@ -485,8 +482,8 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
       }
       #TODO: Fix cx estimation
       #estimating theta hats
-      print(normal_dgps(y_grid[j], mu, my, sd_y))
-      print(normal_dgps(x, 2, mx, sd_x))
+      #print(normal_dgps(y_grid[j], mu, my, sd_y))
+      #print(normal_dgps(x, 2, mx, sd_x))
       bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * prod(normal_dgps(x, 2, mx, sd_x))
       bias_dgp[j, 2] = normal_dgps(y_grid[j], p+1, my, sd_y) * prod(normal_dgps(x, 0, mx, sd_x))
       mv = mvec(q+1, d)
@@ -512,7 +509,7 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 
       bias_dgp[j, 3] = (bias_dgp[j, 1] + bias_dgp[j, 2])^2
     }
-    print(bias_dgp)
+    #print(bias_dgp)
 
     # variance estimate. See Lemma 7 in the Appendix.
     v_dgp = matrix(0, ncol=1, nrow=ng)
@@ -578,7 +575,10 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 #' @keywords internal
 bw_imse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   #centering and scaling data
-
+  sd_y = stats::sd(y_data)
+  sd_x = apply(x_data, 2, stats::sd)
+  mx = apply(x_data, 2, mean)
+  my = mean(y_data)
   d = ncol(x_data)
   n = length(y_data)
   ng = length(y_grid)

@@ -4,7 +4,7 @@
 \alias{bw_mse}
 \title{MSE Bandwidth selection}
 \usage{
-bw_mse(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type)
+bw_mse(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regularize)
 }
 \arguments{
 \item{y_data}{Numeric matrix/data frame, the raw data of independent.}
