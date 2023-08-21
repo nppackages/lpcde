@@ -202,4 +202,3 @@ summary.lpbwcde = function(object, ...) {
 coef.lpbwcde <- function(object, ...) {
   object$BW[, c("y_grid", "bw")]
 }
-

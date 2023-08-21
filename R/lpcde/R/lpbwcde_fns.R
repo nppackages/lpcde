@@ -11,9 +11,10 @@
 #' @param mu Integer, order of derivative.
 #' @param nu Integer, order of derivative.
 #' @param kernel_type String, the kernel.
+#' @param regularize Boolean.
 #' @return bandwidth sequence
 #' @keywords internal
-bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
+bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regularize){
   sd_y = stats::sd(y_data)
   sd_x = apply(x_data, 2, stats::sd)
   mx = apply(x_data, 2, mean)
@@ -91,6 +92,13 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
     }
     h = (v_dgp/bias_dgp[, 3])^(1/alpha)*n^(-1/alpha)
     h = sd_y*sd_x*h
+
+    if (regularize == TRUE){
+      for (j in 1:ng){
+        h[j] <- max(h[j], sort(abs(x_data-x))[min(n, 20+q+4)])
+        h[j] <- max(h[j], sort(abs(y_data-y_grid[j]))[min(n, 20+p+4)])
+      }
+    }
 
   } else {
 
@@ -189,9 +197,10 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 #' @param mu Integer, order of derivative.
 #' @param nu Integer, order of derivative.
 #' @param kernel_type String, the kernel.
+#' @param regularize Boolean.
 #' @return bandwidth sequence
 #' @keywords internal
-bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
+bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regularize){
   sd_y = stats::sd(y_data)
   sd_x = apply(x_data, 2, stats::sd)
   mx = apply(x_data, 2, mean)
@@ -268,6 +277,13 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
     }
     h = (mean(v_dgp)/(2*mean(bias_dgp[, 3])))^(1/alpha)*n^(-1/alpha)
     h = sd_y*sd_x*h
+
+    if (regularize == TRUE){
+      h <- max(h, sort(abs(x_data-x))[min(n, 20+q+1)])
+      for(j in 1:ng){
+        h <- max(h, sort(abs(y_data-y_grid[j]))[min(n, 20+p+1)])
+      }
+    }
 
   } else {
     # assuming product kernel
@@ -369,7 +385,7 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 #' @param kernel_type String, the kernel.
 #' @return bandwidth sequence
 #' @keywords internal
-bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regularize){
+bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   #centering and scaling data
   sd_y = stats::sd(y_data)
   sd_x = apply(x_data, 2, stats::sd)
