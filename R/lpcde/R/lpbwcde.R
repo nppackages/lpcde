@@ -93,6 +93,12 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
     stop("Data should be numeric, and cannot be empty.\n")
   }
 
+  sd_y = stats::sd(y_data)
+  sd_x = apply(x_data, 2, stats::sd)
+  mx = apply(x_data, 2, mean)
+  my = mean(y_data)
+  y_data = (y_data)/sd_y
+  x_data = x_data/sd_x
   # y_grid and x_grid
   if (length(y_grid) == 0) {
     flag_no_grid = TRUE

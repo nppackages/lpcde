@@ -18,8 +18,6 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   sd_x = apply(x_data, 2, stats::sd)
   mx = apply(x_data, 2, mean)
   my = mean(y_data)
-  y_data = (y_data - my)/sd_y
-  x_data = sweep(x_data, 2, mx)/sd_x
   d = ncol(x_data)
   n = length(y_data)
   ng = length(y_grid)
@@ -580,12 +578,6 @@ bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
 #' @keywords internal
 bw_imse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   #centering and scaling data
-  sd_y = stats::sd(y_data)
-  sd_x = apply(x_data, 2, stats::sd)
-  mx = apply(x_data, 2, mean)
-  my = mean(y_data)
-  y_data = (y_data - my)/sd_y
-  x_data = sweep(x_data, 2, mx)/sd_x
 
   d = ncol(x_data)
   n = length(y_data)

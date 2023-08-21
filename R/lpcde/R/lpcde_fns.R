@@ -25,6 +25,12 @@
 #' @keywords internal
 lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
                     kernel_type, rbc = FALSE){
+  sd_y = stats::sd(y_data)
+  sd_x = apply(x_data, 2, stats::sd)
+  mx = apply(x_data, 2, mean)
+  my = mean(y_data)
+  y_data = (y_data - my)/sd_y
+  x_data = sweep(x_data, 2, mx)/sd_x
   # initializing output vectors
   est = matrix(0L, nrow = length(y_grid), ncol = 1)
   se = matrix(0L, nrow = length(y_grid), ncol = 1)
