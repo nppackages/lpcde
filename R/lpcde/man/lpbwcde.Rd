@@ -14,7 +14,8 @@ lpbwcde(
   mu = NULL,
   nu = NULL,
   kernel_type = c("epanechnikov", "triangular", "uniform"),
-  bw_type = c("mse-rot", "imse-rot")
+  bw_type = c("mse-rot", "imse-rot"),
+  regularize = NULL
 )
 }
 \arguments{
@@ -46,6 +47,9 @@ distribution function to be estimated.}
 \item{bw_type}{String, specifies the method for data-driven bandwidth selection. This option will be
 ignored if \code{bw} is provided. Implementable with \code{"mse-rot"} (default, mean squared error-optimal
 bandwidth selected for each grid point)}
+
+\item{regularize}{Boolean (default TRUE). Option to regularize bandwidth selection to have atleast
+20+max(p, q)+1 datapoints when evaluating the estimator.}
 }
 \value{
 \item{BW}{A matrix containing (1) \code{y_grid} (grid point), (2) \code{bw} (bandwidth)}

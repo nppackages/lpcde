@@ -4,7 +4,7 @@
 \alias{bw_rot}
 \title{ROT Bandwidth selection}
 \usage{
-bw_rot(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type)
+bw_rot(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regularize)
 }
 \arguments{
 \item{y_data}{Numeric matrix/data frame, the raw data of independent.}
@@ -24,6 +24,8 @@ bw_rot(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type)
 \item{nu}{Integer, order of derivative.}
 
 \item{kernel_type}{String, the kernel.}
+
+\item{regularize}{Boolean.}
 }
 \value{
 bandwidth sequence

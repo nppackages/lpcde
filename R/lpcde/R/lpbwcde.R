@@ -31,6 +31,8 @@
 #'   bandwidth selected for each grid point)
   # or (2) \code{"mse-irot"} (integrated mse rule-of-thumb bandwidth with Gaussian
   # reference model).
+#' @param regularize Boolean (default TRUE). Option to regularize bandwidth selection to have atleast
+#' 20+max(p, q)+1 datapoints when evaluating the estimator.
 #'
 #' @return
 #' \item{BW}{A matrix containing (1) \code{y_grid} (grid point), (2) \code{bw} (bandwidth)}
@@ -66,7 +68,7 @@
 #'
 lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
                     mu=NULL, nu=NULL, kernel_type=c("epanechnikov", "triangular", "uniform"),
-                    bw_type=c("mse-rot", "imse-rot")){
+                    bw_type=c("mse-rot", "imse-rot"), regularize=NULL){
   ################################################################################
   # Error Checking
   ################################################################################
@@ -93,6 +95,12 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
     stop("Data should be numeric, and cannot be empty.\n")
   }
 
+  sd_y = stats::sd(y_data)
+  sd_x = apply(x_data, 2, stats::sd)
+  mx = apply(x_data, 2, mean)
+  my = mean(y_data)
+  y_data = (y_data)/sd_y
+  x_data = x_data/sd_x
   # y_grid and x_grid
   if (length(y_grid) == 0) {
     flag_no_grid = TRUE
@@ -186,16 +194,23 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
     }
   }
 
+  if (length(regularize) == 0){
+    regularize = TRUE
+  }
+  if(!regularize%in%c(TRUE, FALSE)){
+    stop("regularize option must be a Boolean.\n")
+  }
+
 
   ################################################################################
   # Bandwidth Estimation
   ################################################################################
 
   if(bw_type == "mse-rot"){
-    bw = bw_rot(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
+    bw = bw_rot(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type, regularize=regularize)
 
   }else if(bw_type == "imse-rot"){
-    bw = bw_irot(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
+    bw = bw_irot(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type, regularize=regularize)
 
   }else if(bw_type == "mse-dpi"){
     if(d ==1){

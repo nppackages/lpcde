@@ -90,7 +90,7 @@
 lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
                  p_RBC=NULL, q_RBC=NULL, mu=NULL, nu=NULL, rbc = TRUE, ng=NULL,
                  kernel_type=c("epanechnikov", "triangular", "uniform"),
-                 bw_type="mse-rot"){
+                 bw_type=NULL){
 
   ################################################################################
   # Error Checking
@@ -118,6 +118,12 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
     stop("Data should be numeric, and cannot be empty.\n")
   }
 
+  sd_y = stats::sd(y_data)
+  sd_x = apply(x_data, 2, stats::sd)
+  mx = apply(x_data, 2, mean)
+  my = mean(y_data)
+  y_data = (y_data)/sd_y
+  x_data = x_data/sd_x
   # grid
   if (length(y_grid) == 0) {
     if (length(bw)>=2){
@@ -284,4 +290,3 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
   class(Result) <- c("lpcde")
   return(Result)
 }
-
