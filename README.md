@@ -55,9 +55,9 @@ Working paper.
 
 ### Technical and Methodological
 
-- Cattaneo, Chandak, Jansson and Ma (2022): [Boundary Adaptive Local Polynomial Conditional Density Estimators](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2022_LPCondDen.pdf).<br>
+- Cattaneo, Chandak, Jansson and Ma (2023): [Boundary Adaptive Local Polynomial Conditional Density Estimators](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2023_Bernoulli.pdf).<br>
 Working paper.<br>
-[Supplemental appendix](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2022_LPCondDen--Supplemental.pdf).
+[Supplemental appendix](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2023_Bernoulli--Supplemental.pdf).
 
 
 <br><br>
