@@ -7,13 +7,13 @@
 b_x(datavec, s_mat, e_vec, q, kernel_type)
 }
 \arguments{
+\item{datavec}{dataset, vector.}
+
 \item{s_mat}{s_hat matrix.}
 
 \item{q}{polynomial order.}
 
 \item{kernel_type}{kernel function choice.}
-
-\item{data_vec}{dataset, vector.}
 }
 \value{
 vector of products for each data point.

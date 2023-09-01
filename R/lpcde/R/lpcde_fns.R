@@ -619,7 +619,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
 #' @title bx = constants for each data and evaluation point pair
 #' @description Function for estimating the constants in the estimation formula
-#' @param data_vec dataset, vector.
+#' @param datavec dataset, vector.
 #' @param s_mat s_hat matrix.
 #' @param q polynomial order.
 #' @param kernel_type kernel function choice.

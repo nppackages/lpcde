@@ -75,16 +75,16 @@ c_x = function(x_data, eval_pt, m, q, h, kernel_type){
   return(c)
 }
 
-##' @title c_y vector (Internal Function)
-##' @description c_x vector generated as described in main paper.
-##' @param y_data set of data points.
-##' @param eval_pt evaluation point.
-##' @param m order of derivative.
-##' @param p maximum degree for y.
-##' @param h bandwidth.
-##' @param kernel_type type of kernel function.
-##' @return vector object, c_y.
-##' @keywords internal
+# #' @title c_y vector (Internal Function)
+# #' @description c_x vector generated as described in main paper.
+# #' @param y_data set of data points.
+# #' @param eval_pt evaluation point.
+# #' @param m order of derivative.
+# #' @param p maximum degree for y.
+# #' @param h bandwidth.
+# #' @param kernel_type type of kernel function.
+# #' @return vector object, c_y.
+# #' @keywords internal
 #c_y = function(y_data, eval_pt, m, p, h, kernel_type){
   ## initialize empty array for filling with integrated values
   #v = matrix(0L, nrow = p+1, ncol = 1)
@@ -144,9 +144,7 @@ T_x = function(x_data, eval_pt, q, h, kernel_type){
 #' @title T_y matrix (Internal Function)
 #' @description constructing the Ty matrix as described in the supplemental appendix.
 #' @param y_data vector of data points.
-#' @param eval_pt evaluation point.
 #' @param p polynomial order.
-#' @param h bandwidth.
 #' @param kernel_type type of kernel function. Currently only works with uniform kernel.
 #' @return matrix Ty.
 #' @keywords internal
