@@ -12,10 +12,6 @@ T_y(y_data, yp_data, p, kernel_type)
 \item{p}{polynomial order.}
 
 \item{kernel_type}{type of kernel function. Currently only works with uniform kernel.}
-
-\item{eval_pt}{evaluation point.}
-
-\item{h}{bandwidth.}
 }
 \value{
 matrix Ty.
