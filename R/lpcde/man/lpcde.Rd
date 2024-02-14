@@ -18,6 +18,8 @@ lpcde(
   nu = NULL,
   rbc = TRUE,
   ng = NULL,
+  normalize = FALSE,
+  nonneg = FALSE,
   kernel_type = c("epanechnikov", "triangular", "uniform"),
   bw_type = NULL
 )
@@ -60,6 +62,10 @@ distribution function to be estimated. Default value is \code{0}.}
 \item{rbc}{Boolean. TRUE (default) for rbc calcuations, required for valid uniform inference.}
 
 \item{ng}{int. number of grid points to be used. generates evenly space points over the support of the data.}
+
+\item{normalize}{Boolean. False (default) returns original estimator, True normalizes estimates to integrate to 1.}
+
+\item{nonneg}{Boolean. False (default) returns original estimator, True returns maximum of estimate and 0.}
 
 \item{kernel_type}{String, specifies the kernel function, should be one of
 \code{"triangular"}, \code{"uniform"}, and \code{"epanechnikov"}(default).}

@@ -42,6 +42,8 @@
   # or (2) \code{"mse-rot"} (rule-of-thumb bandwidth with Gaussian
   # reference model).
 #' @param ng int. number of grid points to be used. generates evenly space points over the support of the data.
+#' @param normalize Boolean. False (default) returns original estimator, True normalizes estimates to integrate to 1.
+#' @param nonneg Boolean. False (default) returns original estimator, True returns maximum of estimate and 0.
 #' @return
 #' \item{Estimate}{ A matrix containing (1) \code{grid} (grid points),\cr
 #' (2) \code{bw} (bandwidths),\cr
@@ -89,6 +91,7 @@
 #' @export
 lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
                  p_RBC=NULL, q_RBC=NULL, mu=NULL, nu=NULL, rbc = TRUE, ng=NULL,
+                 normalize=FALSE, nonneg=FALSE,
                  kernel_type=c("epanechnikov", "triangular", "uniform"),
                  bw_type=NULL){
 
@@ -253,7 +256,7 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
 
   ################################################################################
   # Point Estimation and Standard Error
-  ################################################################################
+################################################################################
 
   lpcdest = lpcde_fn(y_data = y_data, x_data = x_data, y_grid = y_grid,
                      x = x, p = p, q = q, p_RBC = p_RBC, q_RBC = q_RBC,
@@ -262,8 +265,16 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
   rownames(lpcdest$est) = 1:ng
 
   ################################################################################
-  # Covariance Estimation
+  # Normalizing
   ################################################################################
+
+  if (nonneg == TRUE) {
+    lpcdest$est[, 3] = replace(lpcdest$est[, 3], lpcdest$est[, 3]<0, 0)
+  }
+  if (normalize == TRUE) {
+    c = sum(lpcdest$est[, 3])
+    lpcdest$est[, 3] = lpcdest$est[, 3]/c
+  }
 
   ################################################################################
   # Return

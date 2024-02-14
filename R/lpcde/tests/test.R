@@ -14,6 +14,10 @@ summary(model1)
 model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=model1$BW[,2])
 summary(model2)
 
+# non-negative and integrating to 1 density estimation
+model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=model1$BW[,2], nonneg=TRUE, normalize=TRUE)
+summary(model2)
+
 #bw estimation
 model1 = lpbwcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw_type = "mse-rot")
 summary(model1)
