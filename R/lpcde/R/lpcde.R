@@ -272,7 +272,8 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
     lpcdest$est[, 3] = replace(lpcdest$est[, 3], lpcdest$est[, 3]<0, 0)
   }
   if (normalize == TRUE) {
-    c = sum(lpcdest$est[, 3])
+    grid_diff = c(diff(y_grid), diff(tail(y_grid, 2)))
+    c = sum(lpcdest$est[, 3]*grid_diff)
     lpcdest$est[, 3] = lpcdest$est[, 3]/c
   }
 
