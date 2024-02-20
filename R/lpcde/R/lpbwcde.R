@@ -24,6 +24,8 @@
 #' \code{1} (default) for the density funtion, etc.
 #' @param nu Nonnegative integer, specifies the derivative with respect to \code{X} of the
 #' distribution function to be estimated.
+#' @param grid_spacing String. If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.
+#' @param ng int. number of grid points to be used in generating bandwidth estimates.
 #' @param kernel_type String, specifies the kernel function, should be one of
 #' \code{"triangular"}, \code{"uniform"} or \code{"epanechnikov"}.
 #' @param bw_type String, specifies the method for data-driven bandwidth selection. This option will be
@@ -66,7 +68,7 @@
 #'
 #' @export
 #'
-lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
+lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL, grid_spacing="", ng=NULL,
                     mu=NULL, nu=NULL, kernel_type=c("epanechnikov", "triangular", "uniform"),
                     bw_type=c("mse-rot", "imse-rot"), regularize=NULL){
   ################################################################################
@@ -103,11 +105,29 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL,
   x_data = x_data/sd_x
   # y_grid and x_grid
   if (length(y_grid) == 0) {
-    flag_no_grid = TRUE
-    y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out=19))
-    ng = length(y_grid)
+    if(grid_spacing=="quantile"){
+      if (length(bw)>=2){
+        y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = length(bw)))
+        ng = length(y_grid)
+      } else{
+        if (length(ng)==1){
+          y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = ng))
+        } else{
+          y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = 19))
+          ng =19
+        }
+      }
+    }else{
+      gmin = stats::quantile(y_data, probs=0.1)
+      gmax = stats::quantile(y_data, probs=0.9)
+      if (length(ng)==1){
+        y_grid = seq(gmin, gmax, length.out=ng)
+      } else{
+        y_grid = seq(gmin, gmax, length.out=19)
+        ng =19
+      }
+    }
   } else {
-    flag_no_grid = FALSE
     y_grid = as.vector(y_grid)
     ng = length(y_grid)
     if(!is.numeric(y_grid)) {

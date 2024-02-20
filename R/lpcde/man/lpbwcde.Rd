@@ -11,6 +11,8 @@ lpbwcde(
   y_grid = NULL,
   p = NULL,
   q = NULL,
+  grid_spacing = "",
+  ng = NULL,
   mu = NULL,
   nu = NULL,
   kernel_type = c("epanechnikov", "triangular", "uniform"),
@@ -33,6 +35,10 @@ construct point estimates. (Default is \code{2}.)}
 
 \item{q}{Nonnegative integer, specifies the order of the local polynomial for \code{X} used to
 construct point estimates. (Default is \code{1}.)}
+
+\item{grid_spacing}{String. If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.}
+
+\item{ng}{int. number of grid points to be used in generating bandwidth estimates.}
 
 \item{mu}{Nonnegative integer, specifies the derivative with respect to \code{Y} of the
 distribution function to be estimated. \code{0} for the distribution function,

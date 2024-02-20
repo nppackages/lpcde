@@ -20,7 +20,7 @@ lpcde(
   ng = NULL,
   normalize = FALSE,
   nonneg = FALSE,
-  grid_spacing = NULL,
+  grid_spacing = "",
   kernel_type = c("epanechnikov", "triangular", "uniform"),
   bw_type = NULL
 )

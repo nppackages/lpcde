@@ -1,6 +1,7 @@
 # lpcde 0.1.2
 - Added flags for returning normalized and/or non-negative estimate
-- Added option to change automatic grid spacing (options include quantile and equally-spaced grid generation)
+- Added option to change automatic grid spacing (options include quantile and equally-spaced grid generation). Functionality available for lpcde and lpbwcde.
+- Added ng option for lpbwcde
 
 # lpcde 0.1.1
 - Fixed RBC CI computation when using automatic MSE bandwidth selection.
