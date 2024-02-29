@@ -42,6 +42,9 @@
   # or (2) \code{"mse-rot"} (rule-of-thumb bandwidth with Gaussian
   # reference model).
 #' @param ng int. number of grid points to be used. generates evenly space points over the support of the data.
+#' @param grid_spacing String. If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.
+#' @param normalize Boolean. False (default) returns original estimator, True normalizes estimates to integrate to 1.
+#' @param nonneg Boolean. False (default) returns original estimator, True returns maximum of estimate and 0.
 #' @return
 #' \item{Estimate}{ A matrix containing (1) \code{grid} (grid points),\cr
 #' (2) \code{bw} (bandwidths),\cr
@@ -89,6 +92,7 @@
 #' @export
 lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
                  p_RBC=NULL, q_RBC=NULL, mu=NULL, nu=NULL, rbc = TRUE, ng=NULL,
+                 normalize=FALSE, nonneg=FALSE, grid_spacing="",
                  kernel_type=c("epanechnikov", "triangular", "uniform"),
                  bw_type=NULL){
 
@@ -126,15 +130,31 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
   x_data = x_data/sd_x
   # grid
   if (length(y_grid) == 0) {
-    if (length(bw)>=2){
-      y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = length(bw)))
-      ng = length(y_grid)
-    } else{
-      if (length(ng)==1){
-        y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = ng))
+    if(grid_spacing=="quantile"){
+      if (length(bw)>=2){
+        y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = length(bw)))
+        ng = length(y_grid)
       } else{
-        y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = 19))
-        ng =19
+        if (length(ng)==1){
+          y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = ng))
+        } else{
+          y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = 19))
+          ng =19
+        }
+      }
+    }else{
+        gmin = stats::quantile(y_data, probs=0.1)
+        gmax = stats::quantile(y_data, probs=0.9)
+      if (length(bw)>=2){
+        y_grid = seq(gmin, gmax, length.out=length(bw))
+        ng = length(y_grid)
+      } else{
+        if (length(ng)==1){
+          y_grid = seq(gmin, gmax, length.out=ng)
+        } else{
+          y_grid = seq(gmin, gmax, length.out=19)
+          ng =19
+        }
       }
     }
   } else {
@@ -253,7 +273,7 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
 
   ################################################################################
   # Point Estimation and Standard Error
-  ################################################################################
+################################################################################
 
   lpcdest = lpcde_fn(y_data = y_data, x_data = x_data, y_grid = y_grid,
                      x = x, p = p, q = q, p_RBC = p_RBC, q_RBC = q_RBC,
@@ -262,8 +282,17 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
   rownames(lpcdest$est) = 1:ng
 
   ################################################################################
-  # Covariance Estimation
+  # Normalizing
   ################################################################################
+
+  if (nonneg == TRUE) {
+    lpcdest$est[, 3] = replace(lpcdest$est[, 3], lpcdest$est[, 3]<0, 0)
+  }
+  if (normalize == TRUE) {
+    grid_diff = c(diff(y_grid), diff(utils::tail(y_grid, 2)))
+    c = sum(lpcdest$est[, 3]*grid_diff)
+    lpcdest$est[, 3] = lpcdest$est[, 3]/c
+  }
 
   ################################################################################
   # Return

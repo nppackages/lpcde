@@ -6,21 +6,29 @@ library("lpcde")
 # software article script
 set.seed(42)
 n=1000
-x_data = matrix(rnorm(2*n, mean=0, sd=1), ncol=2)
-#x_data = matrix(rnorm(n, mean=0, sd=1))
-y_data = matrix(rnorm(n, mean=0, sd=1))
-y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#x_data = matrix(rnorm(2*n, mean=0, sd=1), ncol=2)
+x_data = matrix(rnorm(n, mean=0, sd=1))
+y_data = matrix(rnorm(n, mean=x_data, sd=1))
+y_grid = seq(from=-2, to=2, length.out=10)
 
 # density estimation
-model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=matrix(c(0, 0), ncol=1), bw=0.5)
+#model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=matrix(c(0, 0), ncol=1), bw=0.5)
 model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
 summary(model1)
+model_reg = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=1, nonneg=TRUE, normalize=TRUE)
+summary(model_reg)
+
+plot(x=y_grid, y=model1$Estimate[,3], type="l", lty=1,
+     xlab="", ylab="density", ylim=c(0,0.5))
+lines(x=y_grid, y=model_reg$Estimate[,3], lty=2)
+lines(x=y_grid, y=dnorm(y_grid, mean=mean(x_data), sd=0.8), lty=1,col=2)
+legend('topright',lwd=1, legend=c('f', 'normalized f', 'true f'),lty = c(1, 2, 1), col=c(1,1,2))
 
 #customizing output
 summary(model1, alpha=0.01)
 
 # simple plot
-model2 = lpcde::lpcde(x_data=x_data, y_data=y_data, x=0, bw_type = "mse-rot")
+model2 = lpcde::lpcde(x_data=x_data, y_data=y_data, x=0, y_grid=y_grid)
 plot(model2) + ggplot2::theme(legend.position="none")
 
 #derivative estimation
@@ -31,8 +39,9 @@ summary(model3)
 plot(model3, alpha=0.01) + ggplot2::theme(legend.position="none")
 
 # bandwidth selection
+print("BW selection")
 y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
-model4 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid, bw_type = "mse-rot")
+model4 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid)
 summary(model4)
 
 # IMSE bandwidth selection

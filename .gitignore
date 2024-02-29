@@ -9,3 +9,4 @@ R/*.tar.gz
 
 *.html
 .Rproj.user
+*/.DS_Store
