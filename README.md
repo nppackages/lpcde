@@ -42,7 +42,7 @@ Details regarding package updates can be found in [NEWS.md](https://github.com/n
 
 - A simple replication file: [R-script](R/lpcde_illustration.R).
 
-- Additional simulations using this package: [Technical Paper replication script](https://github.com/nppackages-replication/CCJM_2024_Bernoulli), [R Journal Article replication script](https://github.com/nppackages-replication/CCJM_2024_lpcde)
+- Additional simulations using this package: [Technical Paper replication script](https://github.com/nppackages-replication/CCJM_2024_Bernoulli)
 
 
 ## References
