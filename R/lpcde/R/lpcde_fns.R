@@ -23,6 +23,7 @@
 # choose from "ustat" and "asymp".
 #' @return conditional density estimate at all grid points.
 #' @keywords internal
+#' @importFrom Rdpack reprompt
 lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
                     kernel_type, rbc = FALSE){
   sd_y = stats::sd(y_data)

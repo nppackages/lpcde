@@ -5,7 +5,7 @@
 #' @title Local Polynomial Conditional Density Estimation
 #' @description \code{\link{lpcde}} implements the local polynomial regression based
 #' conditional density (and derivatives). The estimator proposed in
-#' Chandak, Cattaneo, Jansson and Ma.
+#' \insertCite{bernoulli}{lpcde}.
 #' Robust bias-corrected inference methods, both pointwise (confidence intervals) and
 #' uniform (confidence bands), are also implemented.
 #' @param x_data Numeric matrix/data frame, the raw data of covariates.
@@ -89,6 +89,11 @@
 #' \code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 #'
+#' @references
+#' \insertRef{bernoulli}{lpcde}\cr
+#' \insertRef{JASA}{lpcde}\cr
+#' \insertRef{rbc}{lpcde}\cr
+#' \insertRef{lpdensitypaper}{lpcde}
 #' @export
 lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
                  p_RBC=NULL, q_RBC=NULL, mu=NULL, nu=NULL, rbc = TRUE, ng=NULL,

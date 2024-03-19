@@ -90,7 +90,7 @@ bandwidth selected for each grid point)}
 \description{
 \code{\link{lpcde}} implements the local polynomial regression based
 conditional density (and derivatives). The estimator proposed in
-Chandak, Cattaneo, Jansson and Ma.
+\insertCite{bernoulli}{lpcde}.
 Robust bias-corrected inference methods, both pointwise (confidence intervals) and
 uniform (confidence bands), are also implemented.
 }
@@ -116,6 +116,12 @@ Sometimes the density point estimates may lie outside
 of the confidence intervals/bands, which can happen if the underlying distribution exhibits
 high curvature at some evaluation point(s). One possible solution in this case is to
 increase the polynomial order \code{p} or to employ a smaller bandwidth.
+}
+\references{
+\insertRef{bernoulli}{lpcde}\cr
+\insertRef{JASA}{lpcde}\cr
+\insertRef{rbc}{lpcde}\cr
+\insertRef{lpdensitypaper}{lpcde}
 }
 \author{
 Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.

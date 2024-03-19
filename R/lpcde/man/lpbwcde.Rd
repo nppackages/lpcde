@@ -64,7 +64,7 @@ bandwidth selected for each grid point)}
 \description{
 \code{\link{lpbwcde}} implements the bandwidth selection methods for local
 polynomial based conditionaldensity (and derivatives) estimation proposed and studied
-in Cattaneo, Chandak, Jansson and Ma (2021).
+in \insertCite{bernoulli}{lpcde}.
 
 Companion command: \code{\link{lpcde}} for estimation and robust bias-corrected inference.
 
@@ -85,6 +85,9 @@ summary(bw1)
 # Display bandwidths for a subset of y_grid points
 summary(bw1, y_grid=bw1$BW[2:5, "y_grid"])
 
+}
+\references{
+\insertRef{bernoulli}{lpcde}
 }
 \author{
 Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.

@@ -3,7 +3,7 @@
 #'
 #' @description  \code{\link{lpbwcde}} implements the bandwidth selection methods for local
 #'   polynomial based conditionaldensity (and derivatives) estimation proposed and studied
-#'   in Cattaneo, Chandak, Jansson and Ma (2021).
+#'   in \insertCite{bernoulli}{lpcde}.
 #'
 #'   Companion command: \code{\link{lpcde}} for estimation and robust bias-corrected inference.
 #'
@@ -65,6 +65,9 @@
 #'
 #' # Display bandwidths for a subset of y_grid points
 #' summary(bw1, y_grid=bw1$BW[2:5, "y_grid"])
+#'
+#' @references
+#' \insertRef{bernoulli}{lpcde}
 #'
 #' @export
 #'
@@ -279,7 +282,7 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL, grid_spacing
                           data_min=min(y_data), data_max=max(y_data),
                           grid_min=min(y_grid), grid_max=max(y_grid)))
 
-  class(Result) <- c("lpbwcde", "lpcde")
+  class(Result) <- c("lpbwcde")
 
   return (Result)
 }
