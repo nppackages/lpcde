@@ -370,325 +370,325 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regular
     return(h)
 }
 
-#######################################################################################
-#' MSE Bandwidth selection
-#'
-#' Internal Function
-#' @param y_data Numeric matrix/data frame, the raw data of independent.
-#' @param x_data Numeric matrix/data frame, the raw data of covariates.
-#' @param y_grid Numeric vector, the evaluation points.
-#' @param x Numeric, specifies the evaluation point(s) in the x-direction.
-#' @param p Integer, polynomial order.
-#' @param q Integer, polynomial order.
-#' @param mu Integer, order of derivative.
-#' @param nu Integer, order of derivative.
-#' @param kernel_type String, the kernel.
-#' @return bandwidth sequence
-#' @keywords internal
-bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
-  #centering and scaling data
-  sd_y = stats::sd(y_data)
-  sd_x = apply(x_data, 2, stats::sd)
-  mx = apply(x_data, 2, mean)
-  my = mean(y_data)
-  y_data = (y_data - my)/sd_y
-  x_data = sweep(x_data, 2, mx)/sd_x
-
-  d = ncol(x_data)
-  n = length(y_data)
-  ng = length(y_grid)
-
-  bx = (4/(d+1))^(1/(d+4))*n^(-1/(d+4))*sd_x
-  # bx = 1.06*sd_x*n^(-1/5)
-  by = 1.06*sd_y*n^(-1/5)
-
-  if (d==1){
-    # bias estimate, no rate added, DGP constant
-    e_nu = basis_vec(x, q, nu)
-    e_mu = basis_vec(0, p, mu)
-
-    bias_dgp = matrix(NA, ncol=3, nrow=ng)
-    x_scaled = as.matrix((x_data-x)/bx)
-    if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
-      Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
-    } else{
-      singular_flag = TRUE
-      Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-    }
-    cx = c_x(x_data, x, m=q+1, q, bx, kernel_type)
-    Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
-    for (j in 1:ng) {
-      y_scaled = as.matrix((y_data-y_grid[j])/by)
-      # using equation from the matrix cookbook
-      bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * normal_dgps(x, 2, mx, sd_x)
-      bias_dgp[j, 2] = normal_dgps(y_grid[j], p+1, my, sd_y) * normal_dgps(x, 0, mx, sd_x)
-
-      if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
-        Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
-      } else{
-        singular_flag = TRUE
-        Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-      }
-      cy = c_x(y_data, y_grid[j], m=p+1, q=p, by, kernel_type=kernel_type)
-      Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
-
-      bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
-      bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
-      bias_dgp[j, 3] = (bias_dgp[j, 1] + bias_dgp[j, 2])^2
-    }
-
-    # variance estimate. See Lemma 7 in the Appendix.
-    v_dgp = matrix(NA, ncol=1, nrow=ng)
-    if (mu > 0){
-      x_scaled = as.matrix((x_data-x)/bx)
-      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
-        Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
-      } else{
-        singular_flag = TRUE
-        Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
-      Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
-      for (j in 1:ng) {
-        y_scaled = as.matrix((y_data-y_grid[j])/by)
-        if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
-          Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
-        } else{
-          singular_flag = TRUE
-          Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-        }
-        Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
-
-        v_dgp[j, 1] = stats::dnorm(y_grid[j]) * stats::pnorm(x) * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
-      }
-    }else {
-      x_scaled = as.matrix((x_data-x)/bx)
-      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
-        Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
-      } else{
-        singular_flag = TRUE
-        Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
-      Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
-      for (j in 1:ng) {
-        cdf_hat = stats::pnorm(y_grid[j]) * stats::pnorm(x)
-        v_dgp [j, 1] = cdf_hat*(1-cdf_hat)
-      }
-      v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
-    }
-
-    # bandwidth
-    alpha = 2 + 2*min(p, q) + 2*max(mu, nu)
-    h = (v_dgp/bias_dgp[, 3])^(1/alpha)*n^(-1/alpha)
-    h = sd_y*sd_x*h
-
-  } else {
-    #d>1
-    # bias estimate, no rate added, DGP constant
-    e_nu = basis_vec(x, q, nu)
-    e_mu = basis_vec(0, p, mu)
-
-    bias_dgp = matrix(0, ncol=3, nrow=ng)
-    for (j in 1:ng) {
-      x_scaled = sweep(x_data, 2, x)/(bx[j]^d)
-      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx[j]))[1]== TRUE){
-        Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx[j]))
-      } else{
-        singular_flag = TRUE
-        Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
-      #TODO: Fix cx estimation
-      #estimating theta hats
-      #print(normal_dgps(y_grid[j], mu, my, sd_y))
-      #print(normal_dgps(x, 2, mx, sd_x))
-      bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * prod(normal_dgps(x, 2, mx, sd_x))
-      bias_dgp[j, 2] = normal_dgps(y_grid[j], p+1, my, sd_y) * prod(normal_dgps(x, 0, mx, sd_x))
-      mv = mvec(q+1, d)
-      for(i in 1:(length(mv)-d)){
-        cx = c_x(x_data=x_data, eval_pt = x, m=mv[[i]], q=q, h=bx, kernel_type = kernel_type)
-        bias_dgp[j, 1] = bias_dgp[j, 1] + (t(cx)%*%Sx)[nu+1]
-      }
-      for (i in 1:d){
-        cx = c_x(x_data=x_data, eval_pt = x, m=mv[[length(mv)-d+i]], q=q, h=bx, kernel_type = kernel_type)
-        bias_dgp[j, 1] = bias_dgp[j, 1] + (t(cx)%*%Sx)[nu+1]
-      }
-      bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
-
-      y_scaled = as.matrix((y_data-y_grid[j])/by)
-      if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
-        Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
-      } else{
-        singular_flag = TRUE
-        Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-      }
-      cy = c_x(y_data, y_grid[j], m=p+1, q=p, by, kernel_type=kernel_type)
-      bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
-
-      bias_dgp[j, 3] = (bias_dgp[j, 1] + bias_dgp[j, 2])^2
-    }
-    #print(bias_dgp)
-
-    # variance estimate. See Lemma 7 in the Appendix.
-    v_dgp = matrix(0, ncol=1, nrow=ng)
-    if (mu > 0){
-      for (j in 1:ng) {
-        x_scaled = as.matrix((x_data-x)/bx[j])
-        if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx[j]))[1]== TRUE){
-          Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx[j]))
-        } else{
-          singular_flag = TRUE
-          Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-        }
-        Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx[j], kernel_type=kernel_type)
-        y_scaled = as.matrix((y_data-y_grid[j])/by)
-        if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
-          Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
-        } else{
-          singular_flag = TRUE
-          Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-        }
-        Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
-
-        v_dgp[j, 1] = stats::dnorm(y_grid[j]) * stats::pnorm(x) * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
-      }
-    }else {
-      x_scaled = as.matrix((x_data-x)/bx)
-      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
-        Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
-      } else{
-        singular_flag = TRUE
-        Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
-      Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
-      for (j in 1:ng) {
-        cdf_hat = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid[j], p=3, q=1,
-                       mu=0, nu=0, h=bx, kernel_type=kernel_type)
-        v_dgp [j, 1] = cdf_hat*(1-cdf_hat)
-      }
-      v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
-    }
-
-    alpha = d + 2*min(p, q) + 2*max(mu, nu) + 1
-    h = (v_dgp/bias_dgp[, 3])^(1/alpha)*n^(-1/alpha)
-    h = sd_y*stats::sd(x_data)*h
-  }
-  return(h)
-}
-
-#######################################################################################
-#' IMSE Bandwidth selection
-#'
-#' Internal Function
-#' @param y_data Numeric matrix/data frame, the raw data of independent.
-#' @param x_data Numeric matrix/data frame, the raw data of covariates.
-#' @param y_grid Numeric vector, the evaluation points.
-#' @param x Numeric, specifies the evaluation point(s) in the x-direction.
-#' @param p Integer, polynomial order.
-#' @param q Integer, polynomial order.
-#' @param mu Integer, order of derivative.
-#' @param nu Integer, order of derivative.
-#' @param kernel_type String, the kernel.
-#' @return bandwidth sequence
-#' @keywords internal
-bw_imse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
-  #centering and scaling data
-  sd_y = stats::sd(y_data)
-  sd_x = apply(x_data, 2, stats::sd)
-  mx = apply(x_data, 2, mean)
-  my = mean(y_data)
-  d = ncol(x_data)
-  n = length(y_data)
-  ng = length(y_grid)
-
-  bx = (4/(d+1))^(1/(d+4))*n^(-1/(d+4))*sd_x
-  # bx = 1.06*sd_x*n^(-1/5)
-  by = 1.06*sd_y*n^(-1/5)
-
-  if (d==1){
-    # bias estimate, no rate added, DGP constant
-    e_nu = basis_vec(x, q, nu)
-    e_mu = basis_vec(0, p, mu)
-
-    bias_dgp = matrix(NA, ncol=3, nrow=ng)
-    x_scaled = as.matrix((x_data-x)/bx)
-    if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
-      Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
-    } else{
-      singular_flag = TRUE
-      Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-    }
-    cx = c_x(x_data, x, m=q+1, q, bx, kernel_type)
-    Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
-    for (j in 1:ng) {
-      y_scaled = as.matrix((y_data-y_grid[j])/by)
-      # using equation from the matrix cookbook
-      bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * normal_dgps(x, 2, mx, sd_x)
-      bias_dgp[j, 2] = normal_dgps(y_grid[j], p+1, my, sd_y) * normal_dgps(x, 0, mx, sd_x)
-
-      if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
-        Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
-      } else{
-        singular_flag = TRUE
-        Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-      }
-      cy = c_x(y_data, y_grid[j], m=p+1, q=p, by, kernel_type=kernel_type)
-      Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
-
-      bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
-      bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
-      bias_dgp[j, 3] = (bias_dgp[j, 1] + bias_dgp[j, 2])^2
-    }
-
-    # variance estimate. See Lemma 7 in the Appendix.
-    v_dgp = matrix(NA, ncol=1, nrow=ng)
-    if (mu > 0){
-      x_scaled = as.matrix((x_data-x)/bx)
-      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
-        Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
-      } else{
-        singular_flag = TRUE
-        Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
-      Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
-      for (j in 1:ng) {
-        y_scaled = as.matrix((y_data-y_grid[j])/by)
-        if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
-          Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
-        } else{
-          singular_flag = TRUE
-          Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-        }
-        Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
-
-        v_dgp[j, 1] = stats::dnorm(y_grid[j]) * stats::pnorm(x) * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
-      }
-    }else {
-      x_scaled = as.matrix((x_data-x)/bx)
-      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
-        Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
-      } else{
-        singular_flag = TRUE
-        Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
-      Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
-      for (j in 1:ng) {
-        cdf_hat = stats::pnorm(y_grid[j]) * stats::pnorm(x)
-        v_dgp [j, 1] = cdf_hat*(1-cdf_hat)
-      }
-      v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
-    }
-
-    # bandwidth
-    alpha = 2 + 2*min(p, q) + 2*max(mu, nu)
-    h = (sum(v_dgp)/sum(bias_dgp[, 3]))^(1/alpha)*n^(-1/alpha)
-    h = sd_y*sd_x*h
-  } else{
-
-    alpha = 2 + 2*min(p, q) + 2*max(mu, nu)
-    h = (sum(v_dgp)/sum(bias_dgp[, 3]))^(1/alpha)*n^(-1/alpha)
-    h = sd_y*sd_x*h
-  }
-   return(h)
- }
+########################################################################################
+##' MSE Bandwidth selection
+##'
+##' Internal Function
+##' @param y_data Numeric matrix/data frame, the raw data of independent.
+##' @param x_data Numeric matrix/data frame, the raw data of covariates.
+##' @param y_grid Numeric vector, the evaluation points.
+##' @param x Numeric, specifies the evaluation point(s) in the x-direction.
+##' @param p Integer, polynomial order.
+##' @param q Integer, polynomial order.
+##' @param mu Integer, order of derivative.
+##' @param nu Integer, order of derivative.
+##' @param kernel_type String, the kernel.
+##' @return bandwidth sequence
+##' @keywords internal
+#bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
+  ##centering and scaling data
+  #sd_y = stats::sd(y_data)
+  #sd_x = apply(x_data, 2, stats::sd)
+  #mx = apply(x_data, 2, mean)
+  #my = mean(y_data)
+  #y_data = (y_data - my)/sd_y
+  #x_data = sweep(x_data, 2, mx)/sd_x
+#
+  #d = ncol(x_data)
+  #n = length(y_data)
+  #ng = length(y_grid)
+#
+  #bx = (4/(d+1))^(1/(d+4))*n^(-1/(d+4))*sd_x
+  ## bx = 1.06*sd_x*n^(-1/5)
+  #by = 1.06*sd_y*n^(-1/5)
+#
+  #if (d==1){
+    ## bias estimate, no rate added, DGP constant
+    #e_nu = basis_vec(x, q, nu)
+    #e_mu = basis_vec(0, p, mu)
+#
+    #bias_dgp = matrix(NA, ncol=3, nrow=ng)
+    #x_scaled = as.matrix((x_data-x)/bx)
+    #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
+      #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
+    #} else{
+      #singular_flag = TRUE
+      #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+    #}
+    #cx = c_x(x_data, x, m=q+1, q, bx, kernel_type)
+    #Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
+    #for (j in 1:ng) {
+      #y_scaled = as.matrix((y_data-y_grid[j])/by)
+      ## using equation from the matrix cookbook
+      #bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * normal_dgps(x, 2, mx, sd_x)
+      #bias_dgp[j, 2] = normal_dgps(y_grid[j], p+1, my, sd_y) * normal_dgps(x, 0, mx, sd_x)
+#
+      #if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
+        #Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
+      #} else{
+        #singular_flag = TRUE
+        #Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+      #}
+      #cy = c_x(y_data, y_grid[j], m=p+1, q=p, by, kernel_type=kernel_type)
+      #Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
+#
+      #bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
+      #bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
+      #bias_dgp[j, 3] = (bias_dgp[j, 1] + bias_dgp[j, 2])^2
+    #}
+#
+    ## variance estimate. See Lemma 7 in the Appendix.
+    #v_dgp = matrix(NA, ncol=1, nrow=ng)
+    #if (mu > 0){
+      #x_scaled = as.matrix((x_data-x)/bx)
+      #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
+        #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
+      #} else{
+        #singular_flag = TRUE
+        #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      #}
+      #Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
+      #for (j in 1:ng) {
+        #y_scaled = as.matrix((y_data-y_grid[j])/by)
+        #if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
+          #Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
+        #} else{
+          #singular_flag = TRUE
+          #Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+        #}
+        #Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
+#
+        #v_dgp[j, 1] = stats::dnorm(y_grid[j]) * stats::pnorm(x) * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
+      #}
+    #}else {
+      #x_scaled = as.matrix((x_data-x)/bx)
+      #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
+        #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
+      #} else{
+        #singular_flag = TRUE
+        #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      #}
+      #Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
+      #for (j in 1:ng) {
+        #cdf_hat = stats::pnorm(y_grid[j]) * stats::pnorm(x)
+        #v_dgp [j, 1] = cdf_hat*(1-cdf_hat)
+      #}
+      #v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
+    #}
+#
+    ## bandwidth
+    #alpha = 2 + 2*min(p, q) + 2*max(mu, nu)
+    #h = (v_dgp/bias_dgp[, 3])^(1/alpha)*n^(-1/alpha)
+    #h = sd_y*sd_x*h
+#
+  #} else {
+    ##d>1
+    ## bias estimate, no rate added, DGP constant
+    #e_nu = basis_vec(x, q, nu)
+    #e_mu = basis_vec(0, p, mu)
+#
+    #bias_dgp = matrix(0, ncol=3, nrow=ng)
+    #for (j in 1:ng) {
+      #x_scaled = sweep(x_data, 2, x)/(bx[j]^d)
+      #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx[j]))[1]== TRUE){
+        #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx[j]))
+      #} else{
+        #singular_flag = TRUE
+        #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      #}
+      ##TODO: Fix cx estimation
+      ##estimating theta hats
+      ##print(normal_dgps(y_grid[j], mu, my, sd_y))
+      ##print(normal_dgps(x, 2, mx, sd_x))
+      #bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * prod(normal_dgps(x, 2, mx, sd_x))
+      #bias_dgp[j, 2] = normal_dgps(y_grid[j], p+1, my, sd_y) * prod(normal_dgps(x, 0, mx, sd_x))
+      #mv = mvec(q+1, d)
+      #for(i in 1:(length(mv)-d)){
+        #cx = c_x(x_data=x_data, eval_pt = x, m=mv[[i]], q=q, h=bx, kernel_type = kernel_type)
+        #bias_dgp[j, 1] = bias_dgp[j, 1] + (t(cx)%*%Sx)[nu+1]
+      #}
+      #for (i in 1:d){
+        #cx = c_x(x_data=x_data, eval_pt = x, m=mv[[length(mv)-d+i]], q=q, h=bx, kernel_type = kernel_type)
+        #bias_dgp[j, 1] = bias_dgp[j, 1] + (t(cx)%*%Sx)[nu+1]
+      #}
+      #bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
+#
+      #y_scaled = as.matrix((y_data-y_grid[j])/by)
+      #if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
+        #Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
+      #} else{
+        #singular_flag = TRUE
+        #Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+      #}
+      #cy = c_x(y_data, y_grid[j], m=p+1, q=p, by, kernel_type=kernel_type)
+      #bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
+#
+      #bias_dgp[j, 3] = (bias_dgp[j, 1] + bias_dgp[j, 2])^2
+    #}
+    ##print(bias_dgp)
+#
+    ## variance estimate. See Lemma 7 in the Appendix.
+    #v_dgp = matrix(0, ncol=1, nrow=ng)
+    #if (mu > 0){
+      #for (j in 1:ng) {
+        #x_scaled = as.matrix((x_data-x)/bx[j])
+        #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx[j]))[1]== TRUE){
+          #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx[j]))
+        #} else{
+          #singular_flag = TRUE
+          #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+        #}
+        #Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx[j], kernel_type=kernel_type)
+        #y_scaled = as.matrix((y_data-y_grid[j])/by)
+        #if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
+          #Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
+        #} else{
+          #singular_flag = TRUE
+          #Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+        #}
+        #Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
+#
+        #v_dgp[j, 1] = stats::dnorm(y_grid[j]) * stats::pnorm(x) * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
+      #}
+    #}else {
+      #x_scaled = as.matrix((x_data-x)/bx)
+      #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
+        #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
+      #} else{
+        #singular_flag = TRUE
+        #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      #}
+      #Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
+      #for (j in 1:ng) {
+        #cdf_hat = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid[j], p=3, q=1,
+                       #mu=0, nu=0, h=bx, kernel_type=kernel_type)
+        #v_dgp [j, 1] = cdf_hat*(1-cdf_hat)
+      #}
+      #v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
+    #}
+#
+    #alpha = d + 2*min(p, q) + 2*max(mu, nu) + 1
+    #h = (v_dgp/bias_dgp[, 3])^(1/alpha)*n^(-1/alpha)
+    #h = sd_y*stats::sd(x_data)*h
+  #}
+  #return(h)
+#}
+#
+########################################################################################
+##' IMSE Bandwidth selection
+##'
+##' Internal Function
+##' @param y_data Numeric matrix/data frame, the raw data of independent.
+##' @param x_data Numeric matrix/data frame, the raw data of covariates.
+##' @param y_grid Numeric vector, the evaluation points.
+##' @param x Numeric, specifies the evaluation point(s) in the x-direction.
+##' @param p Integer, polynomial order.
+##' @param q Integer, polynomial order.
+##' @param mu Integer, order of derivative.
+##' @param nu Integer, order of derivative.
+##' @param kernel_type String, the kernel.
+##' @return bandwidth sequence
+##' @keywords internal
+#bw_imse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
+  ##centering and scaling data
+  #sd_y = stats::sd(y_data)
+  #sd_x = apply(x_data, 2, stats::sd)
+  #mx = apply(x_data, 2, mean)
+  #my = mean(y_data)
+  #d = ncol(x_data)
+  #n = length(y_data)
+  #ng = length(y_grid)
+#
+  #bx = (4/(d+1))^(1/(d+4))*n^(-1/(d+4))*sd_x
+  ## bx = 1.06*sd_x*n^(-1/5)
+  #by = 1.06*sd_y*n^(-1/5)
+#
+  #if (d==1){
+    ## bias estimate, no rate added, DGP constant
+    #e_nu = basis_vec(x, q, nu)
+    #e_mu = basis_vec(0, p, mu)
+#
+    #bias_dgp = matrix(NA, ncol=3, nrow=ng)
+    #x_scaled = as.matrix((x_data-x)/bx)
+    #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
+      #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
+    #} else{
+      #singular_flag = TRUE
+      #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+    #}
+    #cx = c_x(x_data, x, m=q+1, q, bx, kernel_type)
+    #Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
+    #for (j in 1:ng) {
+      #y_scaled = as.matrix((y_data-y_grid[j])/by)
+      ## using equation from the matrix cookbook
+      #bias_dgp[j, 1] = normal_dgps(y_grid[j], mu, my, sd_y) * normal_dgps(x, 2, mx, sd_x)
+      #bias_dgp[j, 2] = normal_dgps(y_grid[j], p+1, my, sd_y) * normal_dgps(x, 0, mx, sd_x)
+#
+      #if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
+        #Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
+      #} else{
+        #singular_flag = TRUE
+        #Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+      #}
+      #cy = c_x(y_data, y_grid[j], m=p+1, q=p, by, kernel_type=kernel_type)
+      #Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
+#
+      #bias_dgp[j, 1] = bias_dgp[j, 1] * (t(cx)%*%Sx)[nu+1]
+      #bias_dgp[j, 2] = bias_dgp[j, 2] * (t(cy)%*%Sy)[mu+1]
+      #bias_dgp[j, 3] = (bias_dgp[j, 1] + bias_dgp[j, 2])^2
+    #}
+#
+    ## variance estimate. See Lemma 7 in the Appendix.
+    #v_dgp = matrix(NA, ncol=1, nrow=ng)
+    #if (mu > 0){
+      #x_scaled = as.matrix((x_data-x)/bx)
+      #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
+        #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
+      #} else{
+        #singular_flag = TRUE
+        #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      #}
+      #Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
+      #for (j in 1:ng) {
+        #y_scaled = as.matrix((y_data-y_grid[j])/by)
+        #if(check_inv(solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by)))[1]== TRUE){
+          #Sy = solve(S_x(y_scaled, p, kernel_type=kernel_type)/(n*by))
+        #} else{
+          #singular_flag = TRUE
+          #Sy= matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+        #}
+        #Ty = T_y(y_scaled, y_scaled, p, kernel_type)/(choose(n, 2)*by^2)
+#
+        #v_dgp[j, 1] = stats::dnorm(y_grid[j]) * stats::pnorm(x) * (Sy%*%Ty%*%Sy)[mu+1, mu+1] * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
+      #}
+    #}else {
+      #x_scaled = as.matrix((x_data-x)/bx)
+      #if(check_inv(S_x(x_scaled, q, kernel_type)/(n*bx))[1]== TRUE){
+        #Sx= solve(S_x(x_scaled, q, kernel_type)/(n*bx))
+      #} else{
+        #singular_flag = TRUE
+        #Sx= matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      #}
+      #Tx = T_x(x_data=x_data, eval_pt=x, q=q, h = bx, kernel_type=kernel_type)
+      #for (j in 1:ng) {
+        #cdf_hat = stats::pnorm(y_grid[j]) * stats::pnorm(x)
+        #v_dgp [j, 1] = cdf_hat*(1-cdf_hat)
+      #}
+      #v_dgp[, 1] = v_dgp * (Sx%*%Tx%*%Sx)[nu+1, nu+1]
+    #}
+#
+    ## bandwidth
+    #alpha = 2 + 2*min(p, q) + 2*max(mu, nu)
+    #h = (sum(v_dgp)/sum(bias_dgp[, 3]))^(1/alpha)*n^(-1/alpha)
+    #h = sd_y*sd_x*h
+  #} else{
+#
+    #alpha = 2 + 2*min(p, q) + 2*max(mu, nu)
+    #h = (sum(v_dgp)/sum(bias_dgp[, 3]))^(1/alpha)*n^(-1/alpha)
+    #h = sd_y*sd_x*h
+  #}
+   #return(h)
+ #}
 
 
 #######################################################################################
