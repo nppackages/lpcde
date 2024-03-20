@@ -266,7 +266,7 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
       bw = lpbwcde(y_data=y_data, x_data=x_data, x=x, y_grid=y_grid, p=p, q=q, mu=mu,
                    nu=nu, kernel_type=kernel_type, bw_type=bw_type)$BW[,2]
     }
-    if (!bw_type%in%c("mse-dpi", "imse-dpi", "mse-rot", "imse-rot")) {
+    if (!bw_type%in%c("mse-rot", "imse-rot")) {
       stop("Incorrect bandwidth selection method specified.\n")
     }
   } else if (length(bw) == 1) {

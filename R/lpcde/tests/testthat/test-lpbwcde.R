@@ -14,10 +14,6 @@ test_that("lpbwcde default output", {
 
   model1 = lpbwcde(x_data=x_data, y_data=y_data, x=0, bw_type = "mse-rot")
   expect_equal(model1$opt$bw_type, "mse-rot")
-  model1 = lpbwcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw_type = "mse-dpi")
-  expect_equal(model1$opt$bw_type, "mse-dpi")
-  model1 = lpbwcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw_type = "imse-dpi")
-  expect_equal(model1$opt$bw_type, "imse-dpi")
 })
 
 test_that("lpbwcde multivariate default output", {

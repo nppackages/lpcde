@@ -198,7 +198,7 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL, grid_spacing
   } else {
    bw_type = tolower(bw_type)
    bw_type = bw_type[1]
-   if (!bw_type%in%c("mse-rot", "imse-rot", "mse-dpi", "imse-dpi")){
+   if (!bw_type%in%c("mse-rot", "imse-rot")){
      stop("Incorrect bandwidth selection method specified.\n")
    }
   }
@@ -235,27 +235,11 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL, grid_spacing
   }else if(bw_type == "imse-rot"){
     bw = bw_irot(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type, regularize=regularize)
 
-  }else if(bw_type == "mse-dpi"){
-    if(d ==1){
-      bw = bw_mse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
-    }else{
-      stop("this method is not implementable yet")
-    }
-
-  }else if(bw_type == "imse-dpi"){
-    if(d==1){
-      bw = bw_imse(y_data=y_data, x_data=x_data, y_grid=y_grid, x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type)
-    }else{
-      stop("this method is not implementable yet")
-    }
-    # stop("this method is not implementable yet")
   }else {
     stop("Invalid bandwidth selection method provided.")
 
   }
 
-  # scaling back
-  # bw = bw
 
   BW = matrix(NA, ncol=3, nrow=ng)
   BW[, 1] = y_grid
