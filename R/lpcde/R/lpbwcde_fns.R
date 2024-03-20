@@ -371,20 +371,20 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regular
 }
 
 ########################################################################################
-##' MSE Bandwidth selection
-##'
-##' Internal Function
-##' @param y_data Numeric matrix/data frame, the raw data of independent.
-##' @param x_data Numeric matrix/data frame, the raw data of covariates.
-##' @param y_grid Numeric vector, the evaluation points.
-##' @param x Numeric, specifies the evaluation point(s) in the x-direction.
-##' @param p Integer, polynomial order.
-##' @param q Integer, polynomial order.
-##' @param mu Integer, order of derivative.
-##' @param nu Integer, order of derivative.
-##' @param kernel_type String, the kernel.
-##' @return bandwidth sequence
-##' @keywords internal
+# #' MSE Bandwidth selection
+# #'
+# #' Internal Function
+# #' @param y_data Numeric matrix/data frame, the raw data of independent.
+# #' @param x_data Numeric matrix/data frame, the raw data of covariates.
+# #' @param y_grid Numeric vector, the evaluation points.
+# #' @param x Numeric, specifies the evaluation point(s) in the x-direction.
+# #' @param p Integer, polynomial order.
+# #' @param q Integer, polynomial order.
+# #' @param mu Integer, order of derivative.
+# #' @param nu Integer, order of derivative.
+# #' @param kernel_type String, the kernel.
+# #' @return bandwidth sequence
+# #' @keywords internal
 #bw_mse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   ##centering and scaling data
   #sd_y = stats::sd(y_data)
@@ -575,20 +575,20 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regular
 #}
 #
 ########################################################################################
-##' IMSE Bandwidth selection
-##'
-##' Internal Function
-##' @param y_data Numeric matrix/data frame, the raw data of independent.
-##' @param x_data Numeric matrix/data frame, the raw data of covariates.
-##' @param y_grid Numeric vector, the evaluation points.
-##' @param x Numeric, specifies the evaluation point(s) in the x-direction.
-##' @param p Integer, polynomial order.
-##' @param q Integer, polynomial order.
-##' @param mu Integer, order of derivative.
-##' @param nu Integer, order of derivative.
-##' @param kernel_type String, the kernel.
-##' @return bandwidth sequence
-##' @keywords internal
+# #' IMSE Bandwidth selection
+# #'
+# #' Internal Function
+# #' @param y_data Numeric matrix/data frame, the raw data of independent.
+# #' @param x_data Numeric matrix/data frame, the raw data of covariates.
+# #' @param y_grid Numeric vector, the evaluation points.
+# #' @param x Numeric, specifies the evaluation point(s) in the x-direction.
+# #' @param p Integer, polynomial order.
+# #' @param q Integer, polynomial order.
+# #' @param mu Integer, order of derivative.
+# #' @param nu Integer, order of derivative.
+# #' @param kernel_type String, the kernel.
+# #' @return bandwidth sequence
+# #' @keywords internal
 #bw_imse = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type){
   ##centering and scaling data
   #sd_y = stats::sd(y_data)
