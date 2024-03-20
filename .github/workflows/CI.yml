@@ -1,4 +1,5 @@
 name: CI
+bibliography: '`r system.file("references.bib", package="lpcde")`'
 
 on:
   push:
