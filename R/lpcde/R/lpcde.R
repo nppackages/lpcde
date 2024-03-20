@@ -41,10 +41,10 @@
 #'   bandwidth selected for each grid point)
   # or (2) \code{"mse-rot"} (rule-of-thumb bandwidth with Gaussian
   # reference model).
-#' @param ng int. number of grid points to be used. generates evenly space points over the support of the data.
-#' @param grid_spacing String. If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.
-#' @param normalize Boolean. False (default) returns original estimator, True normalizes estimates to integrate to 1.
-#' @param nonneg Boolean. False (default) returns original estimator, True returns maximum of estimate and 0.
+#' @param ng Int, number of grid points to be used. generates evenly space points over the support of the data.
+#' @param grid_spacing String, If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.
+#' @param normalize Boolean, False (default) returns original estimator, True normalizes estimates to integrate to 1.
+#' @param nonneg Boolean, False (default) returns original estimator, True returns maximum of estimate and 0.
 #' @return
 #' \item{Estimate}{ A matrix containing (1) \code{grid} (grid points),\cr
 #' (2) \code{bw} (bandwidths),\cr

@@ -4,10 +4,10 @@
 #######################################################################################
 
 #' @title Sx Matrix (Internal Function)
-#' @description S_x matrix constructed as described in *ref main paper*.
-#' @param x_data data of covariates.
-#' @param q maximum degree for x.
-#' @param kernel_type type of kernel function.
+#' @description S_x matrix.
+#' @param x_data Data of covariates.
+#' @param q Maximum degree for x.
+#' @param kernel_type Type of kernel function.
 #' @return S_x matrix
 #' @keywords internal
 S_x = function(x_data, q, kernel_type){
@@ -33,12 +33,12 @@ S_x = function(x_data, q, kernel_type){
 
 #' @title c_x vector (Internal Function)
 #' @description c_x vector generated as described in main paper.
-#' @param x_data data of covariates.
-#' @param eval_pt evaluation point.
-#' @param m order of polynomial.
-#' @param q maximum degree for x.
-#' @param h bandwidth.
-#' @param kernel_type type of kernel function.
+#' @param x_data Data of covariates.
+#' @param eval_pt Evaluation point.
+#' @param m Order of polynomial.
+#' @param q Maximum degree for x.
+#' @param h Bandwidth.
+#' @param kernel_type Type of kernel function.
 #' @keywords internal
 c_x = function(x_data, eval_pt, m, q, h, kernel_type){
   # setting kernel and dimension of x data
@@ -102,13 +102,13 @@ c_x = function(x_data, eval_pt, m, q, h, kernel_type){
 
 
 #' @title T_x matrix (Internal Function)
-#' @description constructing the Tx matrix as described in the supplemental appendix.
-#' @param x_data data of covariates.
-#' @param eval_pt evaluation point.
-#' @param q polynomial order for covariates.
-#' @param h bandwidth.
-#' @param kernel_type type of kernel function.
-#' @return matrix.
+#' @description Constructing the Tx matrix as described in the supplemental appendix.
+#' @param x_data Data of covariates.
+#' @param eval_pt Evaluation point.
+#' @param q Polynomial order for covariates.
+#' @param h Bandwidth.
+#' @param kernel_type Type of kernel function.
+#' @return Matrix.
 #' @keywords internal
 T_x = function(x_data, eval_pt, q, h, kernel_type){
   x_data = as.matrix(x_data)
@@ -142,11 +142,11 @@ T_x = function(x_data, eval_pt, q, h, kernel_type){
 
 
 #' @title T_y matrix (Internal Function)
-#' @description constructing the Ty matrix as described in the supplemental appendix.
-#' @param y_data vector of data points.
-#' @param p polynomial order.
-#' @param kernel_type type of kernel function. Currently only works with uniform kernel.
-#' @return matrix Ty.
+#' @description Constructing the Ty matrix as described in the supplemental appendix.
+#' @param y_data Vector of data points.
+#' @param p Polynomial order.
+#' @param kernel_type Type of kernel function. Currently only works with uniform kernel.
+#' @return Matrix Ty.
 #' @keywords internal
 T_y = function(y_data, yp_data, p, kernel_type){
   y_data = as.matrix(y_data)

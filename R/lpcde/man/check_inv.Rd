@@ -7,12 +7,12 @@
 check_inv(m)
 }
 \arguments{
-\item{m}{matrix}
+\item{m}{Matrix}
 }
 \value{
 TRUE if matrix is invertible.
 }
 \description{
-function to check intertibility of matrix.
+Function to check intertibility of matrix.
 }
 \keyword{internal}

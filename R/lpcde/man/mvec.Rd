@@ -2,16 +2,16 @@
 % Please edit documentation in R/utils.R
 \name{mvec}
 \alias{mvec}
-\title{polynomial order vector}
+\title{Polynomial order vector}
 \usage{
 mvec(n, d)
 }
 \arguments{
-\item{n}{total value of each combination}
+\item{n}{Total value of each combination}
 
-\item{d}{maximum length of combinations}
+\item{d}{Maximum length of combinations}
 }
 \description{
-generates list of all combinations
+Generates list of all combinations
 of length less than or equal to d of numbers that add up to n.
 }

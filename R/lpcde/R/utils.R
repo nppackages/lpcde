@@ -2,11 +2,11 @@
 # This file contains code for basic utility functions used in other computations
 #######################################################################################
 
-#' @title polynomial order vector
-#' @description generates list of all combinations
+#' @title Polynomial order vector
+#' @description Generates list of all combinations
 #' of length less than or equal to d of numbers that add up to n.
-#' @param n total value of each combination
-#' @param d maximum length of combinations
+#' @param n Total value of each combination
+#' @param d Maximum length of combinations
 mvec = function(n, d){
   if (d ==1){
     mvec = n
@@ -32,9 +32,9 @@ mvec = function(n, d){
 #' has multivariate functionality as described in the main paper
 #' normalized by factorials in denominator.
 #' NOTE: currently works only up to 4th degree polynomial expansion for multivariate \code{x}.
-#' @param x a number or vector.
-#' @param p a number (integer).
-#' @return polynomial basis of \code{x} up to degree \code{p}.
+#' @param x A number or vector.
+#' @param p A number (integer).
+#' @return Polynomial basis of \code{x} up to degree \code{p}.
 #' @examples poly_base(x = 2, p = 5)
 #' @export
 poly_base = function(x, p){
@@ -132,9 +132,9 @@ poly_base = function(x, p){
 #' @description Function to generate unit basis vector according to polynomial order
 #' and derivative order. This function returns unit vector that is the same size
 #' as the vector returned by \code{poly_base(x, p)}.
-#' @param x sample input scalar or vector.
-#' @param p polynomial order.
-#' @param mu derivative order.
+#' @param x Sample input scalar or vector.
+#' @param p Polynomial order.
+#' @param mu Derivative order.
 #' @return Vector of appropriate length with ones corresponding to entries of order \code{mu}.
 #' @examples basis_vec(x = 2, p = 5, mu = 1)
 #' @export
@@ -209,14 +209,14 @@ basis_vec = function(x, p, mu){
   }
 }
 
-#' @title lp integral (Internal Function)
-#' @description local polynomial integral evaluation
+#' @title Lp integral (Internal Function)
+#' @description Local polynomial integral evaluation
 #' calculation of elements of S_y and middle integral (evaluating integral at end points).
-#' @param l degree of polynomial being integrated.
-#' @param a lower limit of integration.
-#' @param b upper limit of integration.
-#' @param kernel_type type of kernel function. Choose from "uniform", "triangular", "epanechnikov".
-#' @return value of integral.
+#' @param l Degree of polynomial being integrated.
+#' @param a Lower limit of integration.
+#' @param b Upper limit of integration.
+#' @param kernel_type Type of kernel function. Choose from "uniform", "triangular", "epanechnikov".
+#' @return Value of integral.
 #' @keywords internal
 int_val = function(l, a, b, kernel_type){
   if (kernel_type == "triangular"){
@@ -247,9 +247,9 @@ int_val = function(l, a, b, kernel_type){
 
 #' @title Kernel Evaluation function (Internal Function)
 #' @description Function that evaluates product kernel at x based on the chosen function.
-#' @param x evaluation point.
-#' @param kernel_type type of kernel function. Choose from "uniform", "triangular", "epanechnikov".
-#' @return kernel evaluated at \code{x}.
+#' @param x Evaluation point.
+#' @param kernel_type Type of kernel function. Choose from "uniform", "triangular", "epanechnikov".
+#' @return Kernel evaluated at \code{x}.
 #' @keywords internal
 kernel_eval = function(x, kernel_type){
   if (kernel_type == "uniform"){
@@ -264,8 +264,8 @@ kernel_eval = function(x, kernel_type){
 }
 
 #' @title Matrix invertibility check
-#' @description function to check intertibility of matrix.
+#' @description Function to check intertibility of matrix.
 #' @return TRUE if matrix is invertible.
-#' @param m matrix
+#' @param m Matrix
 #' @keywords internal
 check_inv  = function(m) class(try(solve(m),silent=T))=="matrix"

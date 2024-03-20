@@ -2,24 +2,24 @@
 % Please edit documentation in R/utils.R
 \name{int_val}
 \alias{int_val}
-\title{lp integral (Internal Function)}
+\title{Lp integral (Internal Function)}
 \usage{
 int_val(l, a, b, kernel_type)
 }
 \arguments{
-\item{l}{degree of polynomial being integrated.}
+\item{l}{Degree of polynomial being integrated.}
 
-\item{a}{lower limit of integration.}
+\item{a}{Lower limit of integration.}
 
-\item{b}{upper limit of integration.}
+\item{b}{Upper limit of integration.}
 
-\item{kernel_type}{type of kernel function. Choose from "uniform", "triangular", "epanechnikov".}
+\item{kernel_type}{Type of kernel function. Choose from "uniform", "triangular", "epanechnikov".}
 }
 \value{
-value of integral.
+Value of integral.
 }
 \description{
-local polynomial integral evaluation
+Local polynomial integral evaluation
 calculation of elements of S_y and middle integral (evaluating integral at end points).
 }
 \keyword{internal}

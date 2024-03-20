@@ -7,17 +7,17 @@
 c_x(x_data, eval_pt, m, q, h, kernel_type)
 }
 \arguments{
-\item{x_data}{data of covariates.}
+\item{x_data}{Data of covariates.}
 
-\item{eval_pt}{evaluation point.}
+\item{eval_pt}{Evaluation point.}
 
-\item{m}{order of polynomial.}
+\item{m}{Order of polynomial.}
 
-\item{q}{maximum degree for x.}
+\item{q}{Maximum degree for x.}
 
-\item{h}{bandwidth.}
+\item{h}{Bandwidth.}
 
-\item{kernel_type}{type of kernel function.}
+\item{kernel_type}{Type of kernel function.}
 }
 \description{
 c_x vector generated as described in main paper.

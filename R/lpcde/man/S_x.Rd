@@ -7,16 +7,16 @@
 S_x(x_data, q, kernel_type)
 }
 \arguments{
-\item{x_data}{data of covariates.}
+\item{x_data}{Data of covariates.}
 
-\item{q}{maximum degree for x.}
+\item{q}{Maximum degree for x.}
 
-\item{kernel_type}{type of kernel function.}
+\item{kernel_type}{Type of kernel function.}
 }
 \value{
 S_x matrix
 }
 \description{
-S_x matrix constructed as described in \emph{ref main paper}.
+S_x matrix.
 }
 \keyword{internal}

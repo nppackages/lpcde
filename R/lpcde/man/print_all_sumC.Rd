@@ -7,10 +7,10 @@
 print_all_sumC(target)
 }
 \arguments{
-\item{target}{target value for sum.}
+\item{Target}{target value for sum.}
 }
 \value{
-list of combinations that add up to target value.
+List of combinations that add up to target value.
 }
 \description{
 Function that prints all combinations of natural numbers that

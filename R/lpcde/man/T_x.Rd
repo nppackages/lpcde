@@ -7,20 +7,20 @@
 T_x(x_data, eval_pt, q, h, kernel_type)
 }
 \arguments{
-\item{x_data}{data of covariates.}
+\item{x_data}{Data of covariates.}
 
-\item{eval_pt}{evaluation point.}
+\item{eval_pt}{Evaluation point.}
 
-\item{q}{polynomial order for covariates.}
+\item{q}{Polynomial order for covariates.}
 
-\item{h}{bandwidth.}
+\item{h}{Bandwidth.}
 
-\item{kernel_type}{type of kernel function.}
+\item{kernel_type}{Type of kernel function.}
 }
 \value{
-matrix.
+Matrix.
 }
 \description{
-constructing the Tx matrix as described in the supplemental appendix.
+Constructing the Tx matrix as described in the supplemental appendix.
 }
 \keyword{internal}

@@ -7,11 +7,11 @@
 basis_vec(x, p, mu)
 }
 \arguments{
-\item{x}{sample input scalar or vector.}
+\item{x}{Sample input scalar or vector.}
 
-\item{p}{polynomial order.}
+\item{p}{Polynomial order.}
 
-\item{mu}{derivative order.}
+\item{mu}{Derivative order.}
 }
 \value{
 Vector of appropriate length with ones corresponding to entries of order \code{mu}.

@@ -7,16 +7,16 @@
 T_y(y_data, yp_data, p, kernel_type)
 }
 \arguments{
-\item{y_data}{vector of data points.}
+\item{y_data}{Vector of data points.}
 
-\item{p}{polynomial order.}
+\item{p}{Polynomial order.}
 
-\item{kernel_type}{type of kernel function. Currently only works with uniform kernel.}
+\item{kernel_type}{Type of kernel function. Currently only works with uniform kernel.}
 }
 \value{
-matrix Ty.
+Matrix Ty.
 }
 \description{
-constructing the Ty matrix as described in the supplemental appendix.
+Constructing the Ty matrix as described in the supplemental appendix.
 }
 \keyword{internal}

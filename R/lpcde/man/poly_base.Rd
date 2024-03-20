@@ -7,12 +7,12 @@
 poly_base(x, p)
 }
 \arguments{
-\item{x}{a number or vector.}
+\item{x}{A number or vector.}
 
-\item{p}{a number (integer).}
+\item{p}{A number (integer).}
 }
 \value{
-polynomial basis of \code{x} up to degree \code{p}.
+Polynomial basis of \code{x} up to degree \code{p}.
 }
 \description{
 Generate polynomial basis vector up to order p.

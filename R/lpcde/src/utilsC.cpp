@@ -52,8 +52,8 @@ void print_all_sum_rec(
 //' @title All Sums in C++ (Internal Function)
 //' @description Function that prints all combinations of natural numbers that
 //' add up to target value.
-//' @param target target value for sum.
-//' @return list of combinations that add up to target value.
+//' @param Target target value for sum.
+//' @return List of combinations that add up to target value.
 //' @keywords internal
 // [[Rcpp::export]]
 std::vector<std::vector<int>> print_all_sumC(int target) {

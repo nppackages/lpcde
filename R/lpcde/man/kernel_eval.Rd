@@ -7,12 +7,12 @@
 kernel_eval(x, kernel_type)
 }
 \arguments{
-\item{x}{evaluation point.}
+\item{x}{Evaluation point.}
 
-\item{kernel_type}{type of kernel function. Choose from "uniform", "triangular", "epanechnikov".}
+\item{kernel_type}{Type of kernel function. Choose from "uniform", "triangular", "epanechnikov".}
 }
 \value{
-kernel evaluated at \code{x}.
+Kernel evaluated at \code{x}.
 }
 \description{
 Function that evaluates product kernel at x based on the chosen function.
