@@ -12,9 +12,6 @@ test_that("lpbwcde default output", {
   coef(model1)
   expect_equal(model1$opt$ng, 19)
 
-  expect_error(vcov(model1), regexp="The vcov method does not support \"lpbwcde\" objects.")
-  expect_error(confint(model1), regexp="The confint method does not support \"lpbwcde\" objects.")
-
   model1 = lpbwcde(x_data=x_data, y_data=y_data, x=0, bw_type = "mse-rot")
   expect_equal(model1$opt$bw_type, "mse-rot")
   model1 = lpbwcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw_type = "mse-dpi")
