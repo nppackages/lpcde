@@ -49,8 +49,8 @@
 #'
 #' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
 #'
-#' @seealso Supported methods: \code{\link{coef.lpbwdensity}},
-# \code{\link{print.lpbwdensity}}, \code{\link{summary.lpbwdensity}}.
+#' @seealso Supported methods: \code{\link{coef.lpbwcde}},
+#' \code{\link{print.lpbwcde}}, \code{\link{summary.lpbwcde}}.
 #'
 #' @examples
 #' # Generate a random sample

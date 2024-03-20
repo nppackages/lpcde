@@ -90,7 +90,8 @@ summary(bw1, y_grid=bw1$BW[2:5, "y_grid"])
 \insertRef{bernoulli}{lpcde}
 }
 \seealso{
-Supported methods: \code{\link{coef.lpbwdensity}},
+Supported methods: \code{\link{coef.lpbwcde}},
+\code{\link{print.lpbwcde}}, \code{\link{summary.lpbwcde}}.
 }
 \author{
 Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
