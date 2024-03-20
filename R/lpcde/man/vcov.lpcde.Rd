@@ -17,7 +17,7 @@
 \item{CovMat_RBC}{The variance-covariance matrix corresponding to \code{est_RBC}.}
 }
 \description{
-The vcov method for local polynomial conditionaldensity objects.
+The vcov method for local polynomial conditional density objects.
 }
 \details{
 Vcov Method for Local Polynomial Density Conditional Estimation and Inference

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpbwcde.R
 \name{lpbwcde}
 \alias{lpbwcde}
-\title{Data-driven Bandwidth Selection for Local Polynomial Conditional Density Estimators}
+\title{Data-driven bandwidth selection for local polynomial conditional density estimators}
 \usage{
 lpbwcde(
   y_data,
@@ -36,9 +36,9 @@ construct point estimates. (Default is \code{2}.)}
 \item{q}{Nonnegative integer, specifies the order of the local polynomial for \code{X} used to
 construct point estimates. (Default is \code{1}.)}
 
-\item{grid_spacing}{String. If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.}
+\item{grid_spacing}{String, If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.}
 
-\item{ng}{int. number of grid points to be used in generating bandwidth estimates.}
+\item{ng}{Int, number of grid points to be used in generating bandwidth estimates.}
 
 \item{mu}{Nonnegative integer, specifies the derivative with respect to \code{Y} of the
 distribution function to be estimated. \code{0} for the distribution function,
@@ -88,6 +88,9 @@ summary(bw1, y_grid=bw1$BW[2:5, "y_grid"])
 }
 \references{
 \insertRef{bernoulli}{lpcde}
+}
+\seealso{
+Supported methods: \code{\link{coef.lpbwdensity}},
 }
 \author{
 Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.

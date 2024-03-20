@@ -273,7 +273,7 @@ coef.lpcde = function(object, ...) {
 #' Vcov Method for Local Polynomial Density Conditional Estimation and Inference
 #'
 #' @title Variance-Covariance
-#' @description The vcov method for local polynomial conditionaldensity objects.
+#' @description The vcov method for local polynomial conditional density objects.
 #'
 #' @param object Class "lpdensity" object, obtained by calling \code{\link{lpcde}}.
 #' @param ... Additional options.
@@ -341,7 +341,7 @@ vcov.lpcde = function(object, ...) {
 #' @return
 #' \item{Estimate}{A matrix containing grid points, estimates and confidence interval end points using p- and q-th order local polynomials
 #' as well as bias-corrected estimates and corresponding confidence intervals.}
-#' \item{crit_val}{the critical value used in computing the confidence interval end points.}
+#' \item{crit_val}{The critical value used in computing the confidence interval end points.}
 #'
 #' @author
 #' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.

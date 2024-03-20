@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpcde.R
 \name{lpcde}
 \alias{lpcde}
-\title{Local Polynomial Conditional Density Estimation}
+\title{Local polynomial conditional density estimation}
 \usage{
 lpcde(
   x_data,
@@ -134,6 +134,11 @@ summary(model1)
 \insertRef{rbc}{lpcde}\cr
 \insertRef{lpdensitypaper}{lpcde}
 }
+\seealso{
+Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
+\code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
+\code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
+}
 \author{
 Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
 
@@ -142,8 +147,4 @@ Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu
 Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
 
 Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
-
-Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
-\code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
-\code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 }

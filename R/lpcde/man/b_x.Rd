@@ -2,21 +2,21 @@
 % Please edit documentation in R/lpcde_fns.R
 \name{b_x}
 \alias{b_x}
-\title{bx = constants for each data and evaluation point pair}
+\title{bx}
 \usage{
 b_x(datavec, s_mat, e_vec, q, kernel_type)
 }
 \arguments{
-\item{datavec}{dataset, vector.}
+\item{datavec}{Dataset, vector.}
 
-\item{s_mat}{s_hat matrix.}
+\item{s_mat}{S_hat matrix.}
 
-\item{q}{polynomial order.}
+\item{q}{Polynomial order.}
 
-\item{kernel_type}{kernel function choice.}
+\item{kernel_type}{Kernel function choice.}
 }
 \value{
-vector of products for each data point.
+Vector of products for each data point.
 }
 \description{
 Function for estimating the constants in the estimation formula

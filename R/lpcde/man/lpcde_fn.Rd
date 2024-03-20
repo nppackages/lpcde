@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpcde_fns.R
 \name{lpcde_fn}
 \alias{lpcde_fn}
-\title{lpcde_fn: conditional density estimator.}
+\title{lpcde_fn: Conditional density estimator.}
 \usage{
 lpcde_fn(
   y_data,
@@ -21,17 +21,17 @@ lpcde_fn(
 )
 }
 \arguments{
-\item{y_data}{response variable dataset, vector.}
+\item{y_data}{Response variable dataset, vector.}
 
-\item{x_data}{covariate dataset, vector or matrix.}
+\item{x_data}{Covariate dataset, vector or matrix.}
 
 \item{y_grid}{Numeric vector, specifies the grid of evaluation points along y-direction.}
 
 \item{x}{Numeric vector or matrix, specifies the grid of evaluation points along x-direction.}
 
-\item{p}{polynomial order for y.}
+\item{p}{Polynomial order for y.}
 
-\item{q}{polynomial order for covariates.}
+\item{q}{Polynomial order for covariates.}
 
 \item{p_RBC}{Nonnegative integer, specifies the order of the local polynomial for \code{Y} used to
 construct bias-corrected point estimates. (Default is \code{p+1}.)}
@@ -41,16 +41,16 @@ construct bias-corrected point estimates. (Default is \code{q+1}.)}
 
 \item{bw}{Numeric, bandwidth vector.}
 
-\item{mu}{degree of derivative with respect to y.}
+\item{mu}{Degree of derivative with respect to y.}
 
-\item{nu}{degree of derivative with respect to x.}
+\item{nu}{Degree of derivative with respect to x.}
 
-\item{kernel_type}{kernel function choice.}
+\item{kernel_type}{Kernel function choice.}
 
 \item{rbc}{Boolean for whether to return RBC estimate and standard errors.}
 }
 \value{
-conditional density estimate at all grid points.
+Conditional density estimate at all grid points.
 }
 \description{
 Function for estimating the density function and its derivatives.

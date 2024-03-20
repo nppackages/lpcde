@@ -2,33 +2,33 @@
 % Please edit documentation in R/lpcde_fns.R
 \name{fhat}
 \alias{fhat}
-\title{fhat: estimator}
+\title{Estimator construction}
 \usage{
 fhat(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type)
 }
 \arguments{
-\item{x_data}{covariate dataset, vector or matrix.}
+\item{x_data}{Covariate dataset, vector or matrix.}
 
-\item{y_data}{response variable dataset, vector.}
+\item{y_data}{Response variable dataset, vector.}
 
 \item{x}{Numeric vector or matrix, specifies the grid of evaluation points along x-direction.}
 
 \item{y_grid}{Numeric vector, specifies the grid of evaluation points along y-direction.}
 
-\item{p}{polynomial order for y.}
+\item{p}{Polynomial order for y.}
 
-\item{q}{polynomial order for covariates.}
+\item{q}{Polynomial order for covariates.}
 
-\item{mu}{degree of derivative with respect to y.}
+\item{mu}{Degree of derivative with respect to y.}
 
-\item{nu}{degree of derivative with respect to x.}
+\item{nu}{Degree of derivative with respect to x.}
 
 \item{h}{Numeric, bandwidth vector.}
 
-\item{kernel_type}{kernel function choice.}
+\item{kernel_type}{Kernel function choice.}
 }
 \value{
-conditional density estimate at all grid points.
+Conditional density estimate at all grid points.
 }
 \description{
 Function for estimating the density function and its derivatives.

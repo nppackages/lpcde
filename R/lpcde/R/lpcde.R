@@ -2,7 +2,7 @@
 # This file contains code for generating conditional density estimate (External Functions)
 ############################################################################################
 
-#' @title Local Polynomial Conditional Density Estimation
+#' @title Local polynomial conditional density estimation
 #' @description \code{\link{lpcde}} implements the local polynomial regression based
 #' conditional density (and derivatives). The estimator proposed in
 #' \insertCite{bernoulli}{lpcde}.
@@ -85,7 +85,7 @@
 #'
 #' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
 #'
-#'  Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
+#' @seealso Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
 #' \code{\link{plot.lpcde}}, \code{\link{print.lpcde}},
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 #'

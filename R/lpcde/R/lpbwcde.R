@@ -1,5 +1,5 @@
 ##################################################################################################
-#' @title Data-driven Bandwidth Selection for Local Polynomial Conditional Density Estimators
+#' @title Data-driven bandwidth selection for local polynomial conditional density estimators
 #'
 #' @description  \code{\link{lpbwcde}} implements the bandwidth selection methods for local
 #'   polynomial based conditionaldensity (and derivatives) estimation proposed and studied
@@ -24,8 +24,8 @@
 #' \code{1} (default) for the density funtion, etc.
 #' @param nu Nonnegative integer, specifies the derivative with respect to \code{X} of the
 #' distribution function to be estimated.
-#' @param grid_spacing String. If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.
-#' @param ng int. number of grid points to be used in generating bandwidth estimates.
+#' @param grid_spacing String, If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.
+#' @param ng Int, number of grid points to be used in generating bandwidth estimates.
 #' @param kernel_type String, specifies the kernel function, should be one of
 #' \code{"triangular"}, \code{"uniform"} or \code{"epanechnikov"}.
 #' @param bw_type String, specifies the method for data-driven bandwidth selection. This option will be
@@ -49,7 +49,7 @@
 #'
 #' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
 #'
-# @seealso Supported methods: \code{\link{coef.lpbwdensity}},
+#' @seealso Supported methods: \code{\link{coef.lpbwdensity}},
 # \code{\link{print.lpbwdensity}}, \code{\link{summary.lpbwdensity}}.
 #'
 #' @examples
