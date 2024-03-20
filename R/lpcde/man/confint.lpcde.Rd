@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpcde_methods.R
 \name{confint.lpcde}
 \alias{confint.lpcde}
-\title{Confint Method for Local Polynomial Density Conditional Estimation and Inference}
+\title{Confint method for local polynomial density conditional estimation}
 \usage{
 \method{confint}{lpcde}(
   object,

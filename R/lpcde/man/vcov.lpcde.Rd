@@ -20,7 +20,7 @@
 The vcov method for local polynomial conditional density objects.
 }
 \details{
-Vcov Method for Local Polynomial Density Conditional Estimation and Inference
+Vcov method for local polynomial density conditional estimation
 }
 \examples{
 n=100

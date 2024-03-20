@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpbwcde_methods.R
 \name{print.lpbwcde}
 \alias{print.lpbwcde}
-\title{Print Method for Local Polynomial Conditional Density Bandwidth Selection}
+\title{Print method for local polynomial conditional density bandwidth selection}
 \usage{
 \method{print}{lpbwcde}(x, ...)
 }

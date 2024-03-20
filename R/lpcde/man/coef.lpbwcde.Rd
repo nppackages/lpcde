@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpbwcde_methods.R
 \name{coef.lpbwcde}
 \alias{coef.lpbwcde}
-\title{Coef Method for Local Polynomial Density Bandwidth Selection}
+\title{Coef method for local polynomial density bandwidth selection}
 \usage{
 \method{coef}{lpbwcde}(object, ...)
 }

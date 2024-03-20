@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpbwcde_methods.R
 \name{summary.lpbwcde}
 \alias{summary.lpbwcde}
-\title{Summary Method for Local Polynomial Conditional Density Bandwidth Selection}
+\title{Summary method for local polynomial conditional density bandwidth selection}
 \usage{
 \method{summary}{lpbwcde}(object, ...)
 }

@@ -1,5 +1,5 @@
 #######################################################################################
-#' Print Method for Local Polynomial Conditional Density Estimation and Inference
+#' Print method for local polynomial conditional density estimation
 #'
 #' @description The print method for local polynomial conditional density objects.
 #'
@@ -51,7 +51,7 @@ print.lpcde = function(x, ...){
 }
 
 #######################################################################################
-#' Summary Method for Local Polynomial Density ConditionalEstimation and Inference
+#' Summary method for local polynomial density conditional estimation
 #'
 #' @description The summary method for local polynomial conditional density objects.
 #'
@@ -229,9 +229,8 @@ summary.lpcde = function(object, ...){
 }
 
 #######################################################################################
-#' Coef Method for Local Polynomial Density Conditional Estimation and Inference
+#' Coef method for local polynomial density conditional estimation
 #'
-#' @title Coef Method
 #' @description The coef method for local polynomial conditional density objects.
 #'
 #' @param object Class "lpcde" object, obtained by calling \code{\link{lpcde}}.
@@ -270,7 +269,7 @@ coef.lpcde = function(object, ...) {
   object$Estimate
 }
 #######################################################################################
-#' Vcov Method for Local Polynomial Density Conditional Estimation and Inference
+#' Vcov method for local polynomial density conditional estimation
 #'
 #' @title Variance-Covariance
 #' @description The vcov method for local polynomial conditional density objects.
@@ -316,7 +315,7 @@ vcov.lpcde = function(object, ...) {
 }
 
 #######################################################################################
-#' Confint Method for Local Polynomial Density Conditional Estimation and Inference
+#' Confint method for local polynomial density conditional estimation
 #'
 #' @description The confint method for local polynomial conditional density objects.
 #'
@@ -457,7 +456,7 @@ confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CI
 }
 
 #######################################################################################
-#' @title Plot Method for Local Polynomial Density Conditional Estimation and Inference
+#' @title Plot method for local polynomial density conditional estimation
 #'
 #' @description The plot method for local polynomial density objects.
 #' A standard \code{ggplot2} object is returned, hence can be used for further customization.

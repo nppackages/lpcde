@@ -1,5 +1,5 @@
 ################################################################################
-#' Print Method for Local Polynomial Conditional Density Bandwidth Selection
+#' Print method for local polynomial conditional density bandwidth selection
 #'
 #' @description The print method for local polynomial conditional density bandwidth selection objects.
 #'
@@ -52,7 +52,7 @@ print.lpbwcde <- function(x, ...) {
 }
 
 ################################################################################
-#' Summary Method for Local Polynomial Conditional Density Bandwidth Selection
+#' Summary method for local polynomial conditional density bandwidth selection
 #'
 #' @description The summary method for local polynomial conditional density bandwidth selection objects.
 #'
@@ -166,7 +166,7 @@ summary.lpbwcde = function(object, ...) {
 }
 
 ################################################################################
-#' Coef Method for Local Polynomial Density Bandwidth Selection
+#' Coef method for local polynomial density bandwidth selection
 #'
 #' @description The coef method for local polynomial density bandwidth selection objects.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpcde_methods.R
 \name{print.lpcde}
 \alias{print.lpcde}
-\title{Print Method for Local Polynomial Conditional Density Estimation and Inference}
+\title{Print method for local polynomial conditional density estimation}
 \usage{
 \method{print}{lpcde}(x, ...)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpcde_methods.R
 \name{summary.lpcde}
 \alias{summary.lpcde}
-\title{Summary Method for Local Polynomial Density ConditionalEstimation and Inference}
+\title{Summary method for local polynomial density conditional estimation}
 \usage{
 \method{summary}{lpcde}(object, ...)
 }

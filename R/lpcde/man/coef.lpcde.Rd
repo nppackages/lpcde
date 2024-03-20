@@ -2,7 +2,7 @@
 % Please edit documentation in R/lpcde_methods.R
 \name{coef.lpcde}
 \alias{coef.lpcde}
-\title{Coef Method}
+\title{Coef method for local polynomial density conditional estimation}
 \usage{
 \method{coef}{lpcde}(object, ...)
 }
@@ -16,9 +16,6 @@
 }
 \description{
 The coef method for local polynomial conditional density objects.
-}
-\details{
-Coef Method for Local Polynomial Density Conditional Estimation and Inference
 }
 \examples{
 n=100
