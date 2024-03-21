@@ -31,9 +31,9 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
   mx = apply(x_data, 2, mean)
   my = mean(y_data)
   y_data = (y_data - my)/sd_y
+  y_grid = (y_grid-my)/sd_y
   x_data = sweep(x_data, 2, mx)/sd_x
-  d = ncol(x_data)
-  x = matrix(x, ncol=d)
+  x = as.matrix(x)
   x = sweep(x, 2, mx)/sd_x
   # initializing output vectors
   est = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -45,8 +45,6 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
   est = f_hat_val$est
   eff.n = f_hat_val$eff.n
   est_flag = f_hat_val$singular_flag
-
-  # covariance matrix
 
   # standard errors
   # if(var_type=="ustat"){
@@ -91,6 +89,8 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
     }else{
       singular_flag=FALSE
     }
+    x = x*sd_x + mx
+    y_grid = y_grid*sd_y + my
     estimate = cbind(y_grid, bw, est, est_rbc, se, se_rbc)
     colnames(estimate) = c("y_grid","bw", "est","est_RBC", "se", "se_RBC")
     rownames(estimate) = c()
@@ -105,6 +105,7 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
     se_rbc = se
     covMat_rbc = covMat
     # generating matrices and list to return
+    y_grid = y_grid*sd_y + my
     estimate = cbind(y_grid, bw, est, est_rbc, se, se_rbc)
     colnames(estimate) = c("y_grid","bw", "est","est_RBC", "se", "se_RBC")
     rownames(estimate) = c()
