@@ -106,6 +106,7 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL, grid_spacing
   my = mean(y_data)
   y_data = (y_data)/sd_y
   x_data = x_data/sd_x
+  x = (x-mx)/sd_x
   # y_grid and x_grid
   if (length(y_grid) == 0) {
     if(grid_spacing=="quantile"){

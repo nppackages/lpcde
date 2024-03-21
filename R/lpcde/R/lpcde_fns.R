@@ -32,6 +32,9 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
   my = mean(y_data)
   y_data = (y_data - my)/sd_y
   x_data = sweep(x_data, 2, mx)/sd_x
+  d = ncol(x_data)
+  x = matrix(x, ncol=d)
+  x = sweep(x, 2, mx)/sd_x
   # initializing output vectors
   est = matrix(0L, nrow = length(y_grid), ncol = 1)
   se = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -149,6 +152,7 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
     h = h[1]
     # localization for x
     idx = which(rowSums(abs(sweep(x_data, 2, x))<=h)==d)
+    #print(x_data)
 
     x_idx = matrix(x_data[idx, ], ncol=d)
     y_idx = y_data[idx]
