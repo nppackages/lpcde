@@ -24,7 +24,8 @@
   xlabel = NULL,
   ylabel = NULL,
   legendTitle = NULL,
-  legendGroups = NULL
+  legendGroups = NULL,
+  rbc = FALSE
 )
 }
 \arguments{
@@ -102,6 +103,9 @@ accordingly.}
 \item{legendTitle}{String, specifies the legend title.}
 
 \item{legendGroups}{String vector, specifies the group names used in legend.}
+
+\item{rbc}{\code{TRUE} or \code{FALSE} (default), plotting confidence intervals and bands with
+standard estimates (\code{FALSE}) or RBC estimates (\code{TRUE}).}
 }
 \value{
 \item{Figure}{A standard \code{ggplot2} object is returned, hence can be used for further customization.}
