@@ -503,6 +503,8 @@ confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CI
 #'   accordingly.
 #' @param CIuniform \code{TRUE} or \code{FALSE} (default), plotting either pointwise confidence intervals (\code{FALSE}) or
 #'   uniform confidence bands (\code{TRUE}).
+#' @param rbc \code{TRUE} or \code{FALSE} (default), plotting confidence intervals and bands with
+#' standard estimates (\code{FALSE}) or RBC estimates (\code{TRUE}).
 #' @param CIsimul Positive integer, specifies the number of simulations used to construct critical values (default is \code{2000}). This
 #'   option is ignored if \code{CIuniform=FALSE}.
 #' @param CIshade Numeric, specifies the opaqueness of the confidence region, should be between 0 (transparent) and
@@ -539,7 +541,7 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
                       pty=NULL, pwd=NULL, pcol=NULL, y_grid=NULL,CItype=NULL,
                       CIuniform=FALSE, CIsimul=2000, CIshade=NULL, CIcol=NULL,
                       title=NULL, xlabel=NULL, ylabel=NULL,
-                      legendTitle=NULL, legendGroups=NULL) {
+                      legendTitle=NULL, legendGroups=NULL, rbc=FALSE) {
 
   ########################################
   # check how many series are passed in
@@ -679,6 +681,9 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
     }
   }
 
+
+
+
   # # x_grid
   # if (!is.null(x_grid)) {
   #   if (!is.numeric(x_grid)) {
@@ -762,9 +767,20 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
     }
 
     # computing and saving lower and upper confidence interval values
-    # use RBC values for computation
-    data_x$CI_l = data_x$est_RBC - z_val * data_x$se_RBC
-    data_x$CI_r = data_x$est_RBC + z_val * data_x$se_RBC
+    if(rbc){
+      # use RBC values for computation
+      data_x$CI_l = data_x$est_RBC - z_val * data_x$se_RBC
+      data_x$CI_r = data_x$est_RBC + z_val * data_x$se_RBC
+    } else {
+      # use standard values for computation
+      data_x$CI_l = data_x$est - z_val * data_x$se
+      data_x$CI_r = data_x$est + z_val * data_x$se
+    }
+    # valid estimates
+    n_suff = 30
+    suff_idx = x[[i]]$eff_n<n_suff
+    data_x$CI_l[suff_idx] = 0
+    data_x$CI_r[suff_idx] = 0
 
     # adding legend information to dataset
     if (legend_default) {
@@ -866,7 +882,8 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
     title <- ""
   }
 
-  temp_plot <- temp_plot + ggplot2::labs(x=xlabel, y=ylabel) + ggplot2::ggtitle(title)
+  temp_plot <- temp_plot + ggplot2::labs(x=xlabel, y=ylabel) + ggplot2::ggtitle(title) +
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
 
   # check plotting range vs estimation range
   if (!is.null(y_grid)) {
