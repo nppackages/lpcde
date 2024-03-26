@@ -748,7 +748,7 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
         z_val = stats::qnorm(1 - alpha/2)
       }else {
         CIsimul = ceiling(CIsimul)
-        corrMat = sweep(sweep(x$CovMat$CovMat_RBC, MARGIN=1, FUN="*", STATS=1/x$Estimate[, "se_RBC"], check.margin = FALSE), MARGIN=2, FUN="*", STATS=1/x$Estimate[, "se_RBC"], check.margin = FALSE)
+        corrMat = sweep(sweep(x[[i]]$CovMat$CovMat_RBC, MARGIN=1, FUN="*", STATS=1/x[[i]]$Estimate[, "se_RBC"], check.margin = FALSE), MARGIN=2, FUN="*", STATS=1/x[[i]]$Estimate[, "se_RBC"], check.margin = FALSE)
         normalSimu = try(
           MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=Matrix::nearPD(corrMat)$mat),
           silent=TRUE)
