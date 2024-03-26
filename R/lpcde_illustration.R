@@ -10,18 +10,29 @@ n=1000
 x_data = matrix(rnorm(n, mean=0, sd=1))
 y_data = matrix(rnorm(n, mean=x_data, sd=1))
 y_grid = seq(from=-2, to=2, length.out=10)
-
 # density estimation
 #model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=matrix(c(0, 0), ncol=1), bw=0.5)
-model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=1)
 summary(model1)
 model_reg = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=1, nonneg=TRUE, normalize=TRUE)
 summary(model_reg)
 
+set.seed(42)
+n=1000
+x_data = matrix(rnorm(n, mean=0, sd=1))
+y_data = matrix(rnorm(n, mean=x_data, sd=1))
+y_grid = seq(from=-2, to=2, length.out=10)
+# density estimation
+model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0)
+model_reg = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, nonneg=TRUE, normalize=TRUE)
+#plotting densities
+#standard estimate
 plot(x=y_grid, y=model1$Estimate[,3], type="l", lty=1,
      xlab="", ylab="density", ylim=c(0,0.5))
+#regularized estimate
 lines(x=y_grid, y=model_reg$Estimate[,3], lty=2)
-lines(x=y_grid, y=dnorm(y_grid, mean=mean(x_data), sd=0.8), lty=1,col=2)
+#true density
+lines(x=y_grid, y=dnorm(y_grid, mean = mean(y_data)), lty=1,col=2)
 legend('topright',lwd=1, legend=c('f', 'normalized f', 'true f'),lty = c(1, 2, 1), col=c(1,1,2))
 
 #customizing output
