@@ -37,7 +37,7 @@ npbws_q3 = npcdensbw(x, y)
 np_est_q3 = fitted(npcdens(exdat=rep(x_evals[4], 30), eydat=lpcde_est_q3$Estimate[,1], bws=npbws_q3))
 
 #plotting all CDEs
-plot(1, main=TeX(r'($f(y|x=1.6)$)'),  xlab="Sepal length", ylab="density", ylim=c(-0.8, 1.6), xlim=c(4.8, 6.9))
+plot(1, main=TeX(r'($f(y|x=1.6)$)'),  xlab="Sepal length", ylab="density", ylim=c(-0.8, 1.6), xlim=c(4.8, 6.9), cex=1.5)
 lines(lpcde_est_q1$Estimate[, 1], lpcde_est_q1$Estimate[,3])
 lines(hdr_est_q1$y, hdr_est_q1$z, col=2)
 lines(lpcde_est_q1$Estimate[, 1], np_est_q1, col=3)
@@ -56,9 +56,12 @@ lines(lpcde_est_q3$Estimate[, 1], np_est_q3, col=3)
 legend('topright',lwd=1, legend=c('lpcde', 'hdrcde', 'np'), col=c(1,2,3))
 
 # lpcde estimates with CI
-plot(lpcde_est_q1, xlabel="Sepal length", ylabel="density", title=TeX(r'($f(y|x=1.6)$ with confidence bands)')) + ggplot2::ylim(-0.8, 1.6) + ggplot2::xlim(4.8, 6.9) + ggplot2::theme(legend.position='none')
-plot(lpcde_est_q2,xlabel="Sepal length", ylabel="density", title=TeX(r'($f(y|x=4.35)$ with confidence bands)'))+ ggplot2::ylim(-0.8, 1.6) + ggplot2::xlim(4.8, 6.9) + ggplot2::theme(legend.position='none')
-plot(lpcde_est_q3, xlabel="Sepal length", ylabel="density", title=TeX(r'($f(y|x=5.1)$ with confidence bands)'))+ ggplot2::ylim(-0.8, 1.6) + ggplot2::xlim(4.8, 6.9) + ggplot2::theme(legend.position='none')
+plot(lpcde_est_q1, xlabel="Sepal length", ylabel="density", title=TeX(r'($f(y|x=1.6)$ with confidence bands)')) + ggplot2::ylim(-0.8, 1.6) + ggplot2::xlim(4.8, 6.9) + ggplot2::theme(legend.position='none', panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
+                                                                                                                                                                                      panel.background = ggplot2::element_blank(), text = ggplot2::element_text(size = 7))
+plot(lpcde_est_q2,xlabel="Sepal length", ylabel="density", title=TeX(r'($f(y|x=4.35)$ with confidence bands)'))+ ggplot2::ylim(-0.8, 1.6) + ggplot2::xlim(4.8, 6.9) + ggplot2::theme(legend.position='none', panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
+                                                                                                                                                                                     panel.background = ggplot2::element_blank(), text = ggplot2::element_text(size = 7))
+plot(lpcde_est_q3, xlabel="Sepal length", ylabel="density", title=TeX(r'($f(y|x=5.1)$ with confidence bands)'))+ ggplot2::ylim(-0.8, 1.6) + ggplot2::xlim(4.8, 6.9) + ggplot2::theme(legend.position='none', panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
+                                                                                                                                                                                     panel.background = ggplot2::element_blank(), text = ggplot2::element_text(size = 7))
 
 
 
