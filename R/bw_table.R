@@ -60,4 +60,3 @@ colnames(table_data) = c("BW", "bias", "sd", "rmse", "WBC CE", "RBC CE",
 rownames(table_data) = h_grid/0.5
 #print table
 table_data
-print(xtable(table_data), file='bw_table.tex')

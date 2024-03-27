@@ -61,26 +61,3 @@ plot(lpcde_est_q2,xlabel="Sepal length", ylabel="density", title=TeX(r'($f(y|x=4
                                                                                                                                                                                      panel.background = ggplot2::element_blank(), text = ggplot2::element_text(size = 7))
 plot(lpcde_est_q3, xlabel="Sepal length", ylabel="density", title=TeX(r'($f(y|x=5.1)$ with confidence bands)'))+ ggplot2::ylim(-0.8, 1.6) + ggplot2::xlim(4.8, 6.9) + ggplot2::theme(legend.position='none', panel.grid.major = ggplot2::element_blank(), panel.grid.minor = ggplot2::element_blank(),
                                                                                                                                                                                      panel.background = ggplot2::element_blank(), text = ggplot2::element_text(size = 7))
-
-
-
-
-
-#open3d()
-#
-#lines3d(x_evals[2], lpcde_est_q1$Estimate[,1], lpcde_est_q1$Estimate[,3])
-#lines3d(x_evals[3], lpcde_est_q2$Estimate[,1], lpcde_est_q2$Estimate[,3])
-#lines3d(x_evals[4], lpcde_est_q3$Estimate[,1], lpcde_est_q3$Estimate[,3])
-#
-#lines3d(x_evals[2], hdr_est_q1$y, hdr_est_q1$z, color='red')
-#lines3d(x_evals[3], hdr_est_q2$y, hdr_est_q2$z, color='red')
-#lines3d(x_evals[4], hdr_est_q3$y, hdr_est_q3$z, color='red')
-#
-#lines3d(x_evals[2], lpcde_est_q1$Estimate[,1], np_est_q1, color='blue')
-#lines3d(x_evals[3], lpcde_est_q2$Estimate[,1], np_est_q2, color='blue')
-#lines3d(x_evals[4], lpcde_est_q3$Estimate[,1], np_est_q3, color='blue')
-#
-#axes3d()
-#title3d('', '', 'Petal Length', 'Sepal Length', 'density')
-#legend3d("topright", c("lpcde", "hdrcde", "np"), pch = c(1,25, 16), col = c('black', 'red', 'blue'), cex=1)
-
