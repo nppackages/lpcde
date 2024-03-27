@@ -13,7 +13,7 @@ x = as.matrix(iris[, 3], ncol=1)
 x_evals = quantile(x)
 
 #scatter plot of data with chosen conditioning values
-plot(x,y)
+plot(x,y, xlab = "Petal length", ylab = "Sepal length")
 abline(v=x_evals[2], col="green")
 abline(v=x_evals[3], col="green")
 abline(v=x_evals[4], col="green")
