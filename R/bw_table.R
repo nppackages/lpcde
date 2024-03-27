@@ -1,15 +1,15 @@
 # Script for generating table 1 in Cattaneo, Chandak, Jansson and Ma (2022)
 
 #parameters
-n = 1000
-num_sims = 1000
+n = 2000
+num_sims = 100
 y = 0.0
 x = 0.0
 #true density function
 true_dens = stats::dnorm(y, mean = 0, sd=1)
 
 #grid for bandwidth range
-h_grid = c(0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5)*0.6
+h_grid = c(0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5)*0.5
 
 bw_testing = function(s){
   print(s)
@@ -57,7 +57,7 @@ table_data = table_data[2:nrow(table_data), ]
 table_data[, 2] = abs(table_data[,2])
 colnames(table_data) = c("BW", "bias", "sd", "rmse", "WBC CE", "RBC CE",
                          "WBC AL", "RBC AL")
-#rownames(table_data) = h_grid/0.6
+rownames(table_data) = h_grid/0.5
 #print table
 table_data
-#print(xtable(table_data), file='bw_table.tex')
+print(xtable(table_data), file='bw_table.tex')
