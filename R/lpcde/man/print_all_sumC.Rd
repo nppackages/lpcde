@@ -7,7 +7,7 @@
 print_all_sumC(target)
 }
 \arguments{
-\item{Target}{target value for sum.}
+\item{target}{Target value for sum.}
 }
 \value{
 List of combinations that add up to target value.

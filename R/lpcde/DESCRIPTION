@@ -1,13 +1,13 @@
 Package: lpcde
 Type: Package
 Title: Boundary Adaptive Local Polynomial Conditional Density Estimator
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: person(given = "Rajita",
            family = "Chandak",
            role = c("aut", "cre"),
            email = "rchandak@princeton.edu" )
 Maintainer: Rajita Chandak <rchandak@princeton.edu>
-Description: Tools for estimation and inference of conditional densities, derivatives and functions. This is the companion software for Cattaneo, Chandak, Jansson and Ma (2024) <arxiv:2204.10359>.
+Description: Tools for estimation and inference of conditional densities, derivatives and functions. This is the companion software for Cattaneo, Chandak, Jansson and Ma (2024) <arXiv:2204.10359>.
 Depends: R (>= 3.3.0)
 License: GPL-2
 Encoding: UTF-8

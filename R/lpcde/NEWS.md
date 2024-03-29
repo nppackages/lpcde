@@ -1,3 +1,8 @@
+# lpcde 0.1.3
+- Fixed uniform CB construction
+- added rbc flag for plotting
+- Fixed re-scaling of inputs
+
 # lpcde 0.1.2
 - Added flags for returning normalized and/or non-negative estimate
 - Added option to change automatic grid spacing (options include quantile and equally-spaced grid generation). Functionality available for lpcde and lpbwcde.
