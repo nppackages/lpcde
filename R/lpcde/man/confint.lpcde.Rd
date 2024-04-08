@@ -7,10 +7,9 @@
 \method{confint}{lpcde}(
   object,
   parm = NULL,
-  level = NULL,
+  level = 0.95,
   CIuniform = FALSE,
   CIsimul = 2000,
-  alpha = 0.05,
   ...
 )
 }
@@ -19,17 +18,14 @@
 
 \item{parm}{Integer, indicating which parameters are to be given confidence intervals.}
 
-\item{level}{Numeric scalar between 0 and 1, the significance level for computing
-confidence intervals}
+\item{level}{Numeric scalar between 0 and 1, the confidence level for computing
+confidence intervals/bands. Equivalent to (1-significance level).}
 
 \item{CIuniform}{\code{TRUE} or \code{FALSE} (default), plotting either pointwise confidence intervals (\code{FALSE}) or
 uniform confidence bands (\code{TRUE}).}
 
 \item{CIsimul}{Positive integer, specifies the number of simulations used to construct critical values (default is \code{2000}). This
 option is ignored if \code{CIuniform=FALSE}.}
-
-\item{alpha}{Numeric scalar between 0 and 1, specifies the significance level for plotting
-confidence intervals/bands.}
 
 \item{...}{Additional options, including (i) \code{grid} specifies a subset of grid points
 to display the bandwidth; (ii) \code{gridIndex} specifies the indices of grid points

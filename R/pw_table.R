@@ -6,8 +6,9 @@ num_sims = 100
 y_points = c(0.0, 0.8, 1.5)
 x_points = c(0.0, 0.8, 1.5)
 
+set.seed(42)
+RNGkind(kind = "L'Ecuyer-CMRG")
 pw_testing = function(s){
-  print(s)
   # simulating data
   x_data = matrix(rnorm(n, mean=0, sd=1))
   y_data = matrix(rnorm(n, mean=x_data, sd=1))
@@ -39,7 +40,7 @@ pw_testing = function(s){
 }
 
 pw_table = list()
-bw_mat = matrix(c(0.51, 0.58, 0.8, 0.6, 0.6, 0.6, 1, 0.8, .9), nrow=3)
+bw_mat = matrix(c(0.5, 0.58, 0.82, 0.6, 0.6, 0.6, 1, 0.8, 0.8), nrow=3)
 # running simulations
 for (i in 1:length(x_points)){
   x = x_points[i]

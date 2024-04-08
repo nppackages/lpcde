@@ -321,10 +321,8 @@ vcov.lpcde = function(object, ...) {
 #'
 #' @param object Class "lpdensity" object, obtained by calling \code{\link{lpcde}}.
 #' @param parm Integer, indicating which parameters are to be given confidence intervals.
-#' @param level Numeric scalar between 0 and 1, the significance level for computing
-#' confidence intervals
-#' @param alpha Numeric scalar between 0 and 1, specifies the significance level for plotting
-#'   confidence intervals/bands.
+#' @param level Numeric scalar between 0 and 1, the confidence level for computing
+#' confidence intervals/bands. Equivalent to (1-significance level).
 #' @param CIuniform \code{TRUE} or \code{FALSE} (default), plotting either pointwise confidence intervals (\code{FALSE}) or
 #'   uniform confidence bands (\code{TRUE}).
 #' @param CIsimul Positive integer, specifies the number of simulations used to construct critical values (default is \code{2000}). This
@@ -368,17 +366,15 @@ vcov.lpcde = function(object, ...) {
 #' confint(model1)
 #'
 #' @export
-confint.lpcde <- function(object, parm = NULL, level = NULL, CIuniform=FALSE, CIsimul=2000, alpha=0.05, ...){
+confint.lpcde <- function(object, parm = NULL, level=0.95, CIuniform=FALSE, CIsimul=2000, ...){
   x = object
   if (class(x)[1] == "lpbwcde") {
     stop("The confint method does not support \"lpbwcde\" objects.\n")
   }
   args = list(...)
+  alpha = 1-level
 
   if (!is.null(parm)) { args[['grid']] = parm }
-  if (!is.null(level)) { args[['alpha']] = 1 - level }
-
-  if (is.null(args[['alpha']])) { alpha = 0.05 } else { alpha = args[['alpha']] }
   if (is.null(args[['CIuniform']]))   { CIuniform = FALSE } else { CIuniform = args[['CIuniform']] }
   if (is.null(args[['CIsimul']]))   { CIsimul = 2000 } else { sep = args[['CIsimul']] }
 
@@ -786,8 +782,6 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
     if (legend_default) {
       data_x$Sname = paste("Series", i, sep=" ")
       legendGroups = c(legendGroups, data_x$Sname)
-    } else {
-      data_x$Sname = legendGroups[i]
     }
 
     ########################################
@@ -875,7 +869,7 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
   }
 
   if (is.null(xlabel)) {
-    xlabel <- ""
+    xlabel <- "y"
   }
 
   if (is.null(title)) {
@@ -884,6 +878,10 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
 
   temp_plot <- temp_plot + ggplot2::labs(x=xlabel, y=ylabel) + ggplot2::ggtitle(title) +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+
+  if (nfig ==1){
+    temp_plot <- temp_plot + ggplot2::theme(legend.position = "none")
+  }
 
   # check plotting range vs estimation range
   if (!is.null(y_grid)) {

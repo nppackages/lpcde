@@ -4,7 +4,7 @@
 library("lpcde")
 
 #Setting up simulation
-set.seed(42)
+set.seed(30)
 n=1000
 x_data = matrix(rnorm(n, mean=0, sd=1))
 y_data = matrix(rnorm(n, mean=x_data, sd=1))
