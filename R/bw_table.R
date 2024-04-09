@@ -48,13 +48,13 @@ table_data = matrix(ncol=8)
 RNGkind(kind = "L'Ecuyer-CMRG")
 set.seed(42)
 for (i in 1:length(h_grid)){
- h = h_grid[i]
- object = parallel::mclapply(1:num_sims, bw_testing, mc.cores=8)
+  h = h_grid[i]
+  object = parallel::mclapply(1:num_sims, bw_testing, mc.cores=8)
   int_avg = matrix(0L, nrow = num_sims, ncol = 8)
   for (l in 1:num_sims){
     int_avg[l,] = object[[l]][1,]
   }
-table_data = rbind(table_data, (colSums(int_avg)/num_sims))
+  table_data = rbind(table_data, (colSums(int_avg)/num_sims))
 }
 table_data = table_data[2:nrow(table_data), ]
 table_data[, 2] = abs(table_data[,2])
@@ -62,4 +62,7 @@ colnames(table_data) = c("BW", "bias", "sd", "rmse", "WBC CE", "RBC CE",
                          "WBC AL", "RBC AL")
 rownames(table_data) = h_grid/hmse
 #print table
+library(xtable)
 table_data
+print(xtable(table_data), file="bw_table.tex")
+
