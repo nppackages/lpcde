@@ -1,6 +1,10 @@
+# lpcde 0.1.4
+- Cleaned up standard plot output
+- Consolidated level and alpha parameters for confint
+
 # lpcde 0.1.3
 - Fixed uniform CB construction
-- added rbc flag for plotting
+- Added rbc flag for plotting
 - Fixed re-scaling of inputs
 
 # lpcde 0.1.2
