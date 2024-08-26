@@ -8,7 +8,8 @@
 #load package
 library("lpcde")
 
-#Setting up simulation
+# Setting up simulation
+RNGkind("L'Ecuyer-CMRG")
 set.seed(30)
 n=1000
 x_data = matrix(rnorm(n, mean=0, sd=1))

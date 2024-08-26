@@ -39,7 +39,7 @@ np_est_q3 = fitted(npcdens(exdat=rep(x_evals[4], 30), eydat=lpcde_est_q3$Estimat
 #plotting all CDEs
 # Figure 4(a)
 plot(1, main=TeX(r'($f(y|x=1.6)$)'),  xlab="Sepal length", ylab="density", ylim=c(-0.8, 1.6), xlim=c(4.8, 6.9), cex=1.5)
-lines(lpcde_est_q1$Estimate[, 1], lpcde_est_q1$Estimate[,3])
+#lines(lpcde_est_q1$Estimate[, 1], lpcde_est_q1$Estimate[,3])
 lines(hdr_est_q1$y, hdr_est_q1$z, col=2)
 lines(lpcde_est_q1$Estimate[, 1], np_est_q1, col=3)
 legend('topright',lwd=1, legend=c('lpcde', 'hdrcde', 'np'), col=c(1,2,3))
