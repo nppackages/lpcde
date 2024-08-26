@@ -24,7 +24,7 @@ authors:
 - name: Xinwei Ma
   orcid: "0000-0001-8827-9146"
   affiliation: 4
-bibliography: CCJM_2024_JOSS-bib.bib
+bibliography: paper.bib
 link-citations: true
 affiliations:
 - name: Department of Operations Research and Financial Engineering, Princeton University,
@@ -44,7 +44,7 @@ Conditional cumulative distribution functions (CDFs), conditional probability de
 
 The package `lpcde` offers data-driven (pointwise and uniform) estimation and inference methods for conditional CDFs, conditional PDFs, and derivatives thereof, which are automatically valid at both interior and boundary points of the support of the outcome and conditioning variables. For point estimation, the package offers mean squared error optimal bandwidth selection and associated optimal mean square and uniform point estimators. For inference, the package offers valid confidence intervals and confidence bands based on robust bias-correction techniques [@Calonico-Cattaneo-Farrell_2018_JASA; @Calonico-Cattaneo-Farrell_2022_Bernoulli]. Finally, these statistical procedures can be easily used for visualization and graphical presentation of smooth estimates of conditional CDFs, conditional PDFs, and derivative thereof, with custom `ggplot` [@ggplot2] commands built for the package.
 
-This package is currently the only open source implementation of an estimator offering boundary adaptive, data-driven conditional density estimation with robust bias-corrected pointwise confidence interval and uniform confidence band constructions, providing users with statistical tools to better understand the reliability of their empirical analysis. A detailed tutorial, replication files, and other information on how to use the package can be found in the [GitHub repository](https://github.com/nppackages/lpcde) and through the [CRAN repository](https://cran.r-project.org/web/packages/lpcde/index.html). See also the `lpcde` package website (https://nppackages.github.io/lpcde/) and the companion arXiv article [@CCJM_2024_lpcde] for additional methodological information and numerical results.   
+This package is currently the only open source implementation of an estimator offering boundary adaptive, data-driven conditional density estimation with robust bias-corrected pointwise confidence interval and uniform confidence band constructions, providing users with statistical tools to better understand the reliability of their empirical analysis. A detailed tutorial, replication files, and other information on how to use the package can be found in the [GitHub repository](https://github.com/nppackages/lpcde) and through the [CRAN repository](https://cran.r-project.org/web/packages/lpcde/index.html). See also the `lpcde` package website (https://nppackages.github.io/lpcde/) and the companion arXiv article [@CCJM_2024_lpcde] for additional methodological information and numerical results.
 
 # Statement of need
 
