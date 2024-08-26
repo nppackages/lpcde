@@ -1,4 +1,6 @@
 name: CI
+ env:
+    CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 on:
   push:
@@ -24,7 +26,7 @@ jobs:
       - run: mkdir R_packages/
       - run: Rscript -e 'install.packages(c("Matrix", "Rcpp", "ggplot2", "purrr", "MASS", "mvtnorm", "combinat", "stats", "covr", "testthat", "devtools", "spam", "roxygen2", "Rdpack", "RcppArmadillo"), lib="./R_packages/")'
       - run: cd R/lpcde/ && Rscript -e '.libPaths("../../R_packages/"); library(covr); cov = package_coverage(); to_cobertura(cov)'
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v4
         with:
           files: ./R/lpcde/cobertura.xml
           fail_ci_if_error: true
