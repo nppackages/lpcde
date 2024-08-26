@@ -58,10 +58,10 @@ The package `lpcde` contributes to a small set of open source statistical softwa
 
 | Package  | Programming language | CDF/Derivative estimation | Regularized density | Valid at boundary | Standard error | Valid inference | Confidence bands | Bandwidth selection |
 |--------|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
-| `hdrcde` | R      | x | x | x | x | x | x | ✓ |
-| `np`     | R      | x | x | x | ✓ | x | x | ✓ |
-| `cde`    | Python | x | x | x | x | x  | x | ✓ |
-| `lpcde`  | R      | $\checkmark$ | ✓ | ✓ | ✓ | ✓  | ✓  | ✓   |
+| `hdrcde` | R      | x | x | x | x | x | x | $\checkmark$ |
+| `np`     | R      | x | x | x | $\checkmark$ | x | x | $\checkmark$ |
+| `cde`    | Python | x | x | x | x | x  | x | $\checkmark$ |
+| `lpcde`  | R      | $\checkmark$ | $\checkmark$ | $\checkmark$ | $\checkmark$ | $\checkmark$  | $\checkmark$  | $\checkmark$   |
 
 # Acknowledgements
 
