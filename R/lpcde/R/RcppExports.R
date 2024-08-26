@@ -4,7 +4,7 @@
 #' @title All Sums in C++ (Internal Function)
 #' @description Function that prints all combinations of natural numbers that
 #' add up to target value.
-#' @param Target target value for sum.
+#' @param target Target value for sum.
 #' @return List of combinations that add up to target value.
 #' @keywords internal
 print_all_sumC <- function(target) {

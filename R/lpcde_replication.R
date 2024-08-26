@@ -4,7 +4,7 @@
 library("lpcde")
 
 #Setting up simulation
-set.seed(42)
+set.seed(30)
 n=1000
 x_data = matrix(rnorm(n, mean=0, sd=1))
 y_data = matrix(rnorm(n, mean=x_data, sd=1))
@@ -31,5 +31,5 @@ lines(model1$Estimate[,1], dnorm(y_grid), col=3)
 legend('topleft',lwd=1, legend=c('standard estimate', 'regularized estimate', 'true density'), col=c(1,2,3))
 
 #A simple plot (see Fig 2)
-plot(model1, CIuniform = TRUE, rbc=TRUE, xlabel="y") + ggplot2::theme(legend.position = "none")
+plot(model1, CIuniform = TRUE, rbc=TRUE, xlabel="y")
 

@@ -7,6 +7,13 @@ R/lpcde/.Rhistory
 #dont include tar
 R/*.tar.gz
 
+#replication files
+*.tex
+*.txt
+
 *.html
 .Rproj.user
 */.DS_Store
+
+#emacs
+auto/

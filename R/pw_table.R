@@ -7,7 +7,6 @@ y_points = c(0.0, 0.8, 1.5)
 x_points = c(0.0, 0.8, 1.5)
 
 pw_testing = function(s){
-  print(s)
   # simulating data
   x_data = matrix(rnorm(n, mean=0, sd=1))
   y_data = matrix(rnorm(n, mean=x_data, sd=1))
@@ -39,8 +38,10 @@ pw_testing = function(s){
 }
 
 pw_table = list()
-bw_mat = matrix(c(0.51, 0.58, 0.8, 0.6, 0.6, 0.6, 1, 0.8, .9), nrow=3)
+bw_mat = matrix(c(0.48, 0.55, 0.78, 0.65, 0.6, 0.68, 1, 0.9, 0.9), nrow=3)
 # running simulations
+RNGkind(kind = "L'Ecuyer-CMRG")
+set.seed(42)
 for (i in 1:length(x_points)){
   x = x_points[i]
   bw_star= bw_mat[, i]
@@ -48,8 +49,11 @@ for (i in 1:length(x_points)){
   avg = Reduce('+', object)/num_sims
   avg[, 2] = abs(avg[,2])
   colnames(avg) = c("BW", "bias", "sd", "rmse", "WBC CE", "RBC CE",
-                         "WBC AL", "RBC AL")
+                    "WBC AL", "RBC AL")
   pw_table[[i]] = avg
 }
+library(xtable)
+print(xtable(pw_table[[1]]), file="pw_table_int.tex")
+print(xtable(pw_table[[2]]), file="pw_table_nb.tex")
+print(xtable(pw_table[[3]]), file="pw_table_b.tex")
 
-pw_table
