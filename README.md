@@ -1,4 +1,4 @@
-[![license: GPLv2](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+  [![license: GPLv2](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 [![CRAN version](https://img.shields.io/cran/v/lpcde?color=7733BB&label=CRAN)](https://cran.r-project.org/web/packages/lpcde/index.html)
 [![codecov](https://codecov.io/gh/nppackages/lpcde/branch/main/graph/badge.svg?token=DE4RI272QB)](https://codecov.io/gh/nppackages/lpcde)
 
@@ -50,7 +50,7 @@ Details regarding package updates can be found in [NEWS.md](https://github.com/n
 ### Software and Implementation
 
 - Cattaneo, Chandak, Jansson and Ma (2024): [lpcde: Estimation and Inference for Local Polynomial Conditional Density Estimators](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2024_lpcde.pdf).<br>
-Working paper.
+Instructional guide.
 
 
 ### Technical and Methodological
