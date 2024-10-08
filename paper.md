@@ -61,6 +61,7 @@ The package `lpcde` contributes to a small set of open source statistical softwa
 |--------|:------:|:------:|:------:|:------:|:------:|:------:|:------:|:------:|
 | `hdrcde` | R      | x | x | x | x | x | x | $\checkmark$ |
 | `np`     | R      | x | x | x | $\checkmark$ | x | x | $\checkmark$ |
+| `haldensify` | R      | x | x | x | $\checkmark$ | x | x | $\checkmark$ |
 | `cde`    | Python | x | x | x | x | x  | x | $\checkmark$ |
 | `lpcde`  | R      | $\checkmark$ | $\checkmark$ | $\checkmark$ | $\checkmark$ | $\checkmark$  | $\checkmark$  | $\checkmark$   |
 
