@@ -33,6 +33,9 @@ To install/update in R type:
 install.packages('lpcde')
 ```
 
+## Contributing
+If you have any contributions to help improve or increase the functionality of this package, then please feel free to contribute, by opening a PR or an issue if you have any suggestions.
+
 ## Major Updates
 Details regarding package updates can be found in [NEWS.md](https://github.com/nppackages/lpcde/blob/main/R/lpcde/NEWS.md).
 

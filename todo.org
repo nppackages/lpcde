@@ -1,12 +1,17 @@
 #+title: lpcde
 #+author: Rajita Chandak
 
-* DONE Add code coverage github action
-
-* DONE Multivariate extension
-
-* TODO Nonnegative constraint
-
-* TODO Integrates to 1 constraint
-
-* TODO Add tutorial for lpcde
+* JOSS Revision
+** TODO bandwidth selection error example
+** TODO check grid redundancy
+** TODO adding predict method
+** TODO add more unit tests
+*** TODO checking integrates to 1
+*** TODO checking non-negativity
+** TODO ggplot deprecated warnings
+** DONE add missing doi
+** DONE fix main paper reference
+** DONE spelling mistake on pg 2
+** TODO add haldensify to table
+** TODO check mit liscense
+** DONE add community guideline for contributions

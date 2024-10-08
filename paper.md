@@ -8,24 +8,25 @@ tags:
 - local polynomials
 date: "21 August 2024"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 authors:
 - name: Matias D. Cattaneo
-  orcid: "0000-0003-0493-7506"
+  orcid: 0000-0003-0493-7506
   affiliation: 1
 - name: Rajita Chandak
-  orcid: "0009-0006-4289-2520"
-  corresponding: true
+  orcid: 0009-0006-4289-2520
+  corresponding: yes
   affiliation: 2
 - name: Michael Jansson
-  orcid: "0000-0003-4678-7518"
+  orcid: 0000-0003-4678-7518
   affiliation: 3
 - name: Xinwei Ma
-  orcid: "0000-0001-8827-9146"
+  orcid: 0000-0001-8827-9146
   affiliation: 4
 bibliography: paper.bib
-link-citations: true
+link-citations: yes
 affiliations:
 - name: Department of Operations Research and Financial Engineering, Princeton University,
     USA
@@ -48,7 +49,7 @@ This package is currently the only open source implementation of an estimator of
 
 # Statement of need
 
-@Wand-Jones_1995_Book, @Fan-Gijbels_1996_Book, @simonoff2012smoothing, and @scott2015multivariate give textbook introductions to kernel-based density and local polynomial estimation and inference methods. The core idea underlying the estimator implemented in `lpcde` is to use kernel-based local polynomial smoothing methods to construct an automatic boundary adaptive estimator for conditional CDFs, conditional PDFs, and derivatives thereof. The estimator implemented in this package consists of two steps. The first step estimates the conditional distribution function using standard local polynomial regression methods, and the second step applies local polynomial smoothing to the (non-smooth) local polynomial conditional CDF estimate from the first step to obtain a smooth estimate of the conditional CDF, conditioal PDF, and derivatives thereof.
+@Wand-Jones_1995_Book, @Fan-Gijbels_1996_Book, @simonoff2012smoothing, and @scott2015multivariate give textbook introductions to kernel-based density and local polynomial estimation and inference methods. The core idea underlying the estimator implemented in `lpcde` is to use kernel-based local polynomial smoothing methods to construct an automatic boundary adaptive estimator for conditional CDFs, conditional PDFs, and derivatives thereof. The estimator implemented in this package consists of two steps. The first step estimates the conditional distribution function using standard local polynomial regression methods, and the second step applies local polynomial smoothing to the (non-smooth) local polynomial conditional CDF estimate from the first step to obtain a smooth estimate of the conditional CDF, conditional PDF, and derivatives thereof.
 
 A distinct advantage of this estimation method over existing ones is its boundary adaptivity for a possibly unknown compact support of the data. Furthermore, the estimator has a simple closed form representation, which leads to easy and fast implementation. Unlike other boundary adaptive procedures, the estimation procedures implemented in the package `lpcde` do not require pre-processing of data, and thus avoid the challenges of hyper-parameter tuning: only one bandwidth parameter needs to be selected for implementation. See @CCJM_2024_Bernoulli and @CCJM_2024_lpcde for more details.
 
