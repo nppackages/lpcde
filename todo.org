@@ -13,5 +13,5 @@
 ** DONE fix main paper reference
 ** DONE spelling mistake on pg 2
 ** TODO add haldensify to table
-** TODO check mit liscense
+** DONE check mit liscense
 ** DONE add community guideline for contributions

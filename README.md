@@ -63,7 +63,7 @@ Bernoulli 30(4): 3193-3223.<br>
 [Supplemental appendix](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2024_Bernoulli--Supplemental.pdf).
 
 
-<br><br>
+<br>
 
 ## License
 &copy; 2024 lpcde Authors
