@@ -3,6 +3,7 @@
 
 * JOSS Revision
 ** TODO bandwidth selection error example
+*** DONE typo in documentation
 ** TODO check grid redundancy
 ** TODO adding predict method
 ** TODO add more unit tests

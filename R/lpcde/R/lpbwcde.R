@@ -2,7 +2,7 @@
 #' @title Data-driven bandwidth selection for local polynomial conditional density estimators
 #'
 #' @description  \code{\link{lpbwcde}} implements the bandwidth selection methods for local
-#'   polynomial based conditionaldensity (and derivatives) estimation proposed and studied
+#'   polynomial based conditional density (and derivatives) estimation proposed and studied
 #'   in \insertCite{bernoulli}{lpcde}.
 #'
 #'   Companion command: \code{\link{lpcde}} for estimation and robust bias-corrected inference.
