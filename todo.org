@@ -9,7 +9,8 @@
 ** TODO add more unit tests
 *** TODO checking integrates to 1
 *** TODO checking non-negativity
-** TODO ggplot deprecated warnings
+** DONE ggplot deprecated warnings
+** DONE multivariate warning
 ** DONE add missing doi
 ** DONE fix main paper reference
 ** DONE spelling mistake on pg 2

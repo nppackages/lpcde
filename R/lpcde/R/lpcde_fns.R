@@ -32,9 +32,10 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
   my = mean(y_data)
   #y_data = (y_data - my)/sd_y
   #y_grid = (y_grid-my)/sd_y
+  d = ncol(x_data)
   x_data = sweep(x_data, 2, mx)/sd_x
-  x = as.matrix(x)
-  x = sweep(x, 2, mx)/sd_x
+  x = matrix(x, ncol=d)
+  x = sweep(x, MARGIN=2, STATS=matrix(mx, ncol=d))/sd_x
   # initializing output vectors
   est = matrix(0L, nrow = length(y_grid), ncol = 1)
   se = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -52,7 +53,7 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
                    mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
   covMat = covmat$cov
   c_flag = covmat$singular_flag
-  se = sqrt(abs(diag(covMat)))*sd_y*sd_x
+  se = sqrt(abs(diag(covMat)))*sd_y*mean(sd_x)
 
   if (rbc){
     est_rbc = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -80,7 +81,7 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
                        kernel_type=kernel_type)
       covMat_rbc = covmat_rbc$cov
       c_rbc_flag = covmat_rbc$singular_flag
-      se_rbc = sqrt(abs(diag(covMat_rbc)))*sd_y*sd_x
+      se_rbc = sqrt(abs(diag(covMat_rbc)))*sd_y*mean(sd_x)
     }
 
     # with rbc results
