@@ -16,7 +16,7 @@ lpbwcde(
   mu = NULL,
   nu = NULL,
   kernel_type = c("epanechnikov", "triangular", "uniform"),
-  bw_type = c("mse-rot", "imse-rot"),
+  bw_type = c("imse-rot", "mse-rot"),
   regularize = NULL
 )
 }

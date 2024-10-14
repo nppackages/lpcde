@@ -258,7 +258,7 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
   # bw
   if (length(bw) == 0) {
     if (length(bw_type) == 0) {
-      bw_type = "mse-rot"
+      bw_type = "imse-rot"
       bw = lpbwcde(y_data=y_data, x_data=x_data, x=x, y_grid=y_grid, p=p, q=q, mu=mu,
                    nu=nu, kernel_type=kernel_type, bw_type=bw_type)$BW[,2]
     } else {

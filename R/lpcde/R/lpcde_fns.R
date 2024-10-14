@@ -169,13 +169,17 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # x constants
     x_scaled = sweep(x_sorted, 2, x)/(h^d)
-    if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
-      sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
-    } else{
-      singular_flag = TRUE
-      sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+    if(length(x_scaled) == 0){
+      bx = 0
+    } else {
+      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
+        sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+        } else{
+          singular_flag = TRUE
+          sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+          }
+      bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
     }
-    bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
 
     for (j in 1:ng){
       y = y_grid[j]
@@ -365,13 +369,18 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # x constants
     x_scaled = sweep(x_sorted, 2, x)/(h^d)
-    if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
-      sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
-    } else{
-      singular_flag = TRUE
-      sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+    if(length(x_scaled) == 0){
+      bx = 0
+    } else {
+      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
+        sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+      } else{
+        singular_flag = TRUE
+        sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      }
+      bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
     }
-    bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
+
 
     # initialize matrix
     c_hat = matrix(0L, nrow=ng, ncol=ng)

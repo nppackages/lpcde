@@ -2,13 +2,13 @@
 #+author: Rajita Chandak
 
 * JOSS Revision
-** TODO bandwidth selection error example
+** DONE bandwidth selection error example
 *** DONE typo in documentation
 ** TODO check grid redundancy
 ** TODO adding predict method
-** TODO add more unit tests
-*** TODO checking integrates to 1
-*** TODO checking non-negativity
+** DONE add more unit tests
+*** DONE checking integrates to 1
+*** DONE checking non-negativity
 ** DONE ggplot deprecated warnings
 ** DONE multivariate warning
 ** DONE add missing doi

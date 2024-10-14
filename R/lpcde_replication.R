@@ -11,7 +11,7 @@ y_data = matrix(rnorm(n, mean=x_data, sd=1))
 y_grid = seq(from=-2, to=2, length.out=10)
 
 #Standard density estimation
-model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=1, rbc = TRUE)
+model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, rbc = TRUE)
 summary(model1)
 #Bandwidth selection
 model2 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid)
