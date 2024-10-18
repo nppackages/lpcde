@@ -18,6 +18,7 @@
 #' @param mu Degree of derivative with respect to y.
 #' @param nu Degree of derivative with respect to x.
 #' @param kernel_type Kernel function choice.
+#' @param cov_flag Flag for covariance estimation option.
 #' @param rbc Boolean for whether to return RBC estimate and standard errors.
 # @param var_type String. type of variance estimator to implement.
 # choose from "ustat" and "asymp".
@@ -25,7 +26,7 @@
 #' @keywords internal
 #' @importFrom Rdpack reprompt
 lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
-                    kernel_type, rbc = FALSE){
+                    cov_flag, kernel_type, rbc = FALSE){
   sd_y = stats::sd(y_data)
   sd_x = apply(x_data, 2, stats::sd)
   mx = apply(x_data, 2, mean)
@@ -48,12 +49,19 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
   est_flag = f_hat_val$singular_flag
 
   # standard errors
-  # if(var_type=="ustat"){
+  if(cov_flag=="full"){
   covmat = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
                    mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
   covMat = covmat$cov
   c_flag = covmat$singular_flag
   se = sqrt(abs(diag(covMat)))*sd_y*mean(sd_x)
+  } else if (cov_flag == "diag"){
+
+  } else if (cov_flag == "off"){
+    covMat = NA
+    c_flag = FALSE
+    se = rep(NA, length(y_grid))
+  }
 
   if (rbc){
     est_rbc = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -75,13 +83,21 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
       # covariance matrix
 
       # standard errors
-      # if(var_type=="ustat"){
+      if(cov_flag=="full"){
       covmat_rbc = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
                        p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
                        kernel_type=kernel_type)
       covMat_rbc = covmat_rbc$cov
       c_rbc_flag = covmat_rbc$singular_flag
       se_rbc = sqrt(abs(diag(covMat_rbc)))*sd_y*mean(sd_x)
+      } else if (cov_flag == "diag"){
+
+      } else if (cov_flag == "off"){
+        covMat_rbc = NA
+        c_rbc_flag = FALSE
+        se_rbc = rep(NA, length(y_grid))
+
+      }
     }
 
     # with rbc results

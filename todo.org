@@ -4,7 +4,9 @@
 * JOSS Revision
 ** DONE bandwidth selection error example
 *** DONE typo in documentation
-** TODO check grid redundancy
+** DONE check grid redundancy
+** TODO Implement diag cov estimation
+** TODO multiple x inputs
 ** TODO adding predict method
 ** DONE add more unit tests
 *** DONE checking integrates to 1

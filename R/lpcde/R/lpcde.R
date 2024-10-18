@@ -45,14 +45,15 @@
 #' @param grid_spacing String, If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.
 #' @param normalize Boolean, False (default) returns original estimator, True normalizes estimates to integrate to 1.
 #' @param nonneg Boolean, False (default) returns original estimator, True returns maximum of estimate and 0.
+#' @param cov_flag String, specifies covariance computation. Must be one of "full" (default), "diag" or "off".
 #' @return
 #' \item{Estimate}{ A matrix containing (1) \code{grid} (grid points),\cr
 #' (2) \code{bw} (bandwidths),\cr
 #' (3) \code{est} (point estimates with p-th and q-th order local polynomial),\cr
 #' (4) \code{est_RBC} (point estimates with p_RBC-th and q_RBC-th order local polynomial),\cr
-#' (5) \code{se} (standard error corresponding to \code{est}).
-#' (6) \code{se_RBC} (standard error corresponding to \code{est_RBC}).}
-#' \item{CovMat}{The variance-covariance matrix corresponding to \code{est}.}
+#' (5) \code{se} (standard error corresponding to \code{est}. Set to NA if cov_flag="off").
+#' (6) \code{se_RBC} (standard error corresponding to \code{est_RBC}). Set to NA if cov_flag="off"}
+#' \item{CovMat}{The variance-covariance matrix corresponding to \code{est}. Will be 0 if cov_flag="off" or a diagonal matrix if cov_flag="diag".}
 #' \item{opt}{A list containing options passed to the function.}
 #' @details Bias correction is only used for the construction of confidence intervals/bands, but not for point estimation.
 #' The point estimates, denoted by \code{est}, are constructed using local polynomial estimates of order \code{p} and \code{q},
@@ -108,6 +109,7 @@
 #' @export
 lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
                  p_RBC=NULL, q_RBC=NULL, mu=NULL, nu=NULL, rbc = TRUE, ng=NULL,
+                 cov_flag=c("full", "diag", "off"),
                  normalize=FALSE, nonneg=FALSE, grid_spacing="",
                  kernel_type=c("epanechnikov", "triangular", "uniform"),
                  bw_type=NULL){
@@ -136,6 +138,15 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
   n = ncol(x_data)
   if (!is.numeric(x_data) | length(x_data)==0) {
     stop("Data should be numeric, and cannot be empty.\n")
+  }
+
+  if (length(cov_flag) == 0) {
+    cov_flag = "full"
+  } else {
+    cov_flag = cov_flag[1]
+    if (!cov_flag%in%c("full", "diag", "off")){
+      stop("Incorrect covariance estimation flag provided. Please see the documentation on available options.")
+    }
   }
 
   #sd_y = stats::sd(y_data)
@@ -293,7 +304,7 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
 
   lpcdest = lpcde_fn(y_data = y_data, x_data = x_data, y_grid = y_grid,
                      x = x, p = p, q = q, p_RBC = p_RBC, q_RBC = q_RBC,
-                     bw = bw, mu = mu, nu = nu,
+                     bw = bw, mu = mu, nu = nu, cov_flag = cov_flag,
                      kernel_type = kernel_type, rbc = rbc)
   rownames(lpcdest$est) = 1:ng
 
@@ -319,7 +330,7 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
                  opt=list(
                    p=p, q=q, p_RBC = p_RBC, q_RBC = q_RBC,
                    mu=mu, nu=nu, kernel=kernel_type, n=length(y_data), ng=ng,
-                   bw_type=bw_type, bw = bw, xeval = x,
+                   bw_type=bw_type, bw = bw, xeval = x, cov_flag = cov_flag,
                    y_data_min=min(y_data), y_data_max=max(y_data),
                    x_data_min=min(x_data), x_data_max=max(x_data),
                    grid_min=min(y_grid), grid_max=max(y_grid)

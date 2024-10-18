@@ -16,6 +16,7 @@ lpcde_fn(
   bw,
   mu,
   nu,
+  cov_flag,
   kernel_type,
   rbc = FALSE
 )
@@ -44,6 +45,8 @@ construct bias-corrected point estimates. (Default is \code{q+1}.)}
 \item{mu}{Degree of derivative with respect to y.}
 
 \item{nu}{Degree of derivative with respect to x.}
+
+\item{cov_flag}{Flag for covariance estimation option.}
 
 \item{kernel_type}{Kernel function choice.}
 
