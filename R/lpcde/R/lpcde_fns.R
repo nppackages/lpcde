@@ -403,7 +403,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     for (i in 1:ng){
       for (j in 1:i){
-        # relevant entries wrt y and y_prime
+        # relevant entries w.r.t. y and y_prime
         y = y_grid[i]
         y_prime = y_grid[j]
         y_scaled = (y_sorted - y)/h
