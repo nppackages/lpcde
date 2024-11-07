@@ -57,8 +57,9 @@ test_that("error checking", {
 #  expect_equal(model2$opt$p, model2$opt$p_RBC)
 #  expect_equal(model2$opt$q, model2$opt$q_RBC)
 
-  model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, kernel_type="triangular", bw=1.8)
+  model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, kernel_type="triangular", bw=1.8, cov_flag="diag")
   expect_equal(model2$opt$kernel, "triangular")
+  expect_equal(model2$opt$cov_flag, "diag")
 })
 
 test_that("lpcde multivariate output", {
@@ -102,3 +103,4 @@ test_that("Properties of pdf estimator", {
   #check all probabilities are less than 1
   expect_equal(all(model_reg$Estimate[,3]<1), TRUE)
 })
+

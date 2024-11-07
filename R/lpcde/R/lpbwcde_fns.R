@@ -691,7 +691,7 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regular
 
 
 #######################################################################################
-#' @title S matrix
+#' S matrix
 #' Internal Function
 #'
 #' Generate Matrix
