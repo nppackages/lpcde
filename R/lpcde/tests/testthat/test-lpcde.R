@@ -60,6 +60,10 @@ test_that("error checking", {
   model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, kernel_type="triangular", bw=1.8, cov_flag="diag")
   expect_equal(model2$opt$kernel, "triangular")
   expect_equal(model2$opt$cov_flag, "diag")
+
+  model2 = lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, kernel_type="triangular", bw=1.8, cov_flag="off")
+  expect_equal(model2$CovMat$CovMat, NA)
+  expect_equal(model2$CovMat$CovMat_RBC, NA)
 })
 
 test_that("lpcde multivariate output", {
