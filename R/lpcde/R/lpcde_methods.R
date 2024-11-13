@@ -266,7 +266,7 @@ summary.lpcde = function(object, ...){
 #'
 #' @export
 coef.lpcde = function(object, ...) {
-  object$Estimate
+  object$Estimate[,c(1,3)]
 }
 #######################################################################################
 #' Vcov method for local polynomial density conditional estimation

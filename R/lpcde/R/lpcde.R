@@ -14,7 +14,9 @@
 #' points will be chosen as 0.05-0.95 percentiles of the data, with a step size of 0.05 in
 #' y-direction.
 #' @param x Numeric, specifies the grid of evaluation points in the x-direction. When set to default,
-#' the evaluation point will be chosen as the median of the x data.
+#' the evaluation point will be chosen as the median of the x data. To generate
+#' estimates for multiple conditioning values, please loop over the x values and
+#' evaluate the lpcde function at each point.
 #' @param bw Numeric, specifies the bandwidth used for estimation. Can be (1) a positive
 #' scalar (common bandwidth for all grid points); or (2) a positive numeric vector/matrix
 #' specifying bandwidths for each grid point (should be the same dimension as \code{grid}).
