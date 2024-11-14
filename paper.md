@@ -102,7 +102,7 @@ only one bandwidth parameter needs to be selected for implementation. See
 The package `lpcde` contributes to a small set of open source statistical
 software packages implementing estimation and inference methods for conditional
 CDF, conditional PDF, and derivatives thereof. More specifically, we identified
-three `R` packages, `hdrcde` [@hdrcde], `haldensify` [@haldensify] and `np`
+three `R` packages, `hdrcde` [@hdrcde], `haldensify` [@haldensify], and `np`
 [@np], and one `Python` package, `cde` [@rothfuss2019conditional], which provide
 related methodology. There are no open source `Stata` packages that implement
 comparable estimation and inference methods. The table below summarizes some of
@@ -125,6 +125,6 @@ broadly, to the open source statistical community.
 
 # Acknowledgements
 
-Cattaneo gratefully acknowledges financial support from the National Science Foundation through grants SES-1947805 and DMS-2210561, and from the National Institute of Health (R01 GM072611-16). Jansson gratefully acknowledges financial support from the National Science Foundation through grant SES-1947662.
+Cattaneo gratefully acknowledges financial support from the National Science Foundation through grants SES-1947805, DMS-2210561, and SES-2241575, and from the National Institute of Health (R01 GM072611-16). Jansson gratefully acknowledges financial support from the National Science Foundation through grant SES-1947662.
 
 # References
