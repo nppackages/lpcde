@@ -42,3 +42,4 @@ test_that("lpbwcde default output", {
   coef(model1)
   expect_equal(model1$opt$bw_type, "imse-rot")
 })
+

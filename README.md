@@ -33,6 +33,9 @@ To install/update in R type:
 install.packages('lpcde')
 ```
 
+## Contributing
+If you have any contributions to help improve or increase the functionality of this package, then please feel free to contribute, by opening a PR or an issue if you have any suggestions.
+
 ## Major Updates
 Details regarding package updates can be found in [NEWS.md](https://github.com/nppackages/lpcde/blob/main/R/lpcde/NEWS.md).
 
@@ -60,4 +63,32 @@ Bernoulli 30(4): 3193-3223.<br>
 [Supplemental appendix](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2024_Bernoulli--Supplemental.pdf).
 
 
-<br><br>
+<br>
+
+## License
+&copy; 2024 lpcde Authors
+
+The contents of this repository are distributed under the MIT license. See below
+for details:
+
+```
+Copyright (c) 2024 lpcde Authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

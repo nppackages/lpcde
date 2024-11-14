@@ -90,8 +90,7 @@ bw_rot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regulari
     } else{
       alpha = d + 2*min(p, q) + 2*max(mu, nu) + 1
     }
-    h = (v_dgp/bias_dgp[, 3])^(1/alpha)*n^(-1/alpha)
-    h = sd_y*sd_x*h
+    h = (abs(v_dgp/bias_dgp[, 3]))^(1/alpha)*n^(-1/alpha)
 
     if (regularize == TRUE){
       for (j in 1:ng){
@@ -275,7 +274,7 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regular
     } else{
       alpha = d + 2*min(p, q) + 2*max(mu, nu) + 1
     }
-    h = (mean(v_dgp)/(2*mean(bias_dgp[, 3])))^(1/alpha)*n^(-1/alpha)
+    h = (abs(mean(v_dgp)/(2*mean(bias_dgp[, 3]))))^(1/alpha)*n^(-1/alpha)
     h = sd_y*sd_x*h
 
     if (regularize == TRUE){
@@ -692,7 +691,7 @@ bw_irot = function(y_data, x_data, y_grid, x, p, q, mu, nu, kernel_type, regular
 
 
 #######################################################################################
-#' @title S matrix
+#' S matrix
 #' Internal Function
 #'
 #' Generate Matrix

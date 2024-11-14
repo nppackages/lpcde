@@ -18,6 +18,7 @@ lpcde(
   nu = NULL,
   rbc = TRUE,
   ng = NULL,
+  cov_flag = c("full", "diag", "off"),
   normalize = FALSE,
   nonneg = FALSE,
   grid_spacing = "",
@@ -35,7 +36,9 @@ points will be chosen as 0.05-0.95 percentiles of the data, with a step size of 
 y-direction.}
 
 \item{x}{Numeric, specifies the grid of evaluation points in the x-direction. When set to default,
-the evaluation point will be chosen as the median of the x data.}
+the evaluation point will be chosen as the median of the x data. To generate
+estimates for multiple conditioning values, please loop over the x values and
+evaluate the lpcde function at each point.}
 
 \item{bw}{Numeric, specifies the bandwidth used for estimation. Can be (1) a positive
 scalar (common bandwidth for all grid points); or (2) a positive numeric vector/matrix
@@ -64,6 +67,8 @@ distribution function to be estimated. Default value is \code{0}.}
 
 \item{ng}{Int, number of grid points to be used. generates evenly space points over the support of the data.}
 
+\item{cov_flag}{String, specifies covariance computation. Must be one of "full" (default), "diag" or "off".}
+
 \item{normalize}{Boolean, False (default) returns original estimator, True normalizes estimates to integrate to 1.}
 
 \item{nonneg}{Boolean, False (default) returns original estimator, True returns maximum of estimate and 0.}
@@ -82,9 +87,9 @@ bandwidth selected for each grid point)}
 (2) \code{bw} (bandwidths),\cr
 (3) \code{est} (point estimates with p-th and q-th order local polynomial),\cr
 (4) \code{est_RBC} (point estimates with p_RBC-th and q_RBC-th order local polynomial),\cr
-(5) \code{se} (standard error corresponding to \code{est}).
-(6) \code{se_RBC} (standard error corresponding to \code{est_RBC}).}
-\item{CovMat}{The variance-covariance matrix corresponding to \code{est}.}
+(5) \code{se} (standard error corresponding to \code{est}. Set to NA if cov_flag="off").
+(6) \code{se_RBC} (standard error corresponding to \code{est_RBC}). Set to NA if cov_flag="off"}
+\item{CovMat}{The variance-covariance matrix corresponding to \code{est}. Will be 0 if cov_flag="off" or a diagonal matrix if cov_flag="diag".}
 \item{opt}{A list containing options passed to the function.}
 }
 \description{

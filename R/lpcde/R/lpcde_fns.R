@@ -18,6 +18,7 @@
 #' @param mu Degree of derivative with respect to y.
 #' @param nu Degree of derivative with respect to x.
 #' @param kernel_type Kernel function choice.
+#' @param cov_flag Flag for covariance estimation option.
 #' @param rbc Boolean for whether to return RBC estimate and standard errors.
 # @param var_type String. type of variance estimator to implement.
 # choose from "ustat" and "asymp".
@@ -25,16 +26,17 @@
 #' @keywords internal
 #' @importFrom Rdpack reprompt
 lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
-                    kernel_type, rbc = FALSE){
+                    cov_flag, kernel_type, rbc = FALSE){
   sd_y = stats::sd(y_data)
   sd_x = apply(x_data, 2, stats::sd)
   mx = apply(x_data, 2, mean)
   my = mean(y_data)
   #y_data = (y_data - my)/sd_y
   #y_grid = (y_grid-my)/sd_y
+  d = ncol(x_data)
   x_data = sweep(x_data, 2, mx)/sd_x
-  x = as.matrix(x)
-  x = sweep(x, 2, mx)/sd_x
+  x = matrix(x, ncol=d)
+  x = sweep(x, MARGIN=2, STATS=matrix(mx, ncol=d))/sd_x
   # initializing output vectors
   est = matrix(0L, nrow = length(y_grid), ncol = 1)
   se = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -47,12 +49,17 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
   est_flag = f_hat_val$singular_flag
 
   # standard errors
-  # if(var_type=="ustat"){
-  covmat = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
-                   mu=mu, nu=nu, h=bw, kernel_type=kernel_type)
-  covMat = covmat$cov
-  c_flag = covmat$singular_flag
-  se = sqrt(abs(diag(covMat)))*sd_y*sd_x
+  if(cov_flag == "off"){
+    covMat = NA
+    c_flag = FALSE
+    se = rep(NA, length(y_grid))
+  } else {
+    covmat = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid, p=p, q=q,
+                     mu=mu, nu=nu, h=bw, kernel_type=kernel_type, cov_flag=cov_flag)
+    covMat = covmat$cov
+    c_flag = covmat$singular_flag
+    se = sqrt(abs(diag(covMat)))*sd_y*mean(sd_x)
+  }
 
   if (rbc){
     est_rbc = matrix(0L, nrow = length(y_grid), ncol = 1)
@@ -74,13 +81,18 @@ lpcde_fn = function(y_data, x_data, y_grid, x, p, q, p_RBC, q_RBC, bw, mu, nu,
       # covariance matrix
 
       # standard errors
-      # if(var_type=="ustat"){
-      covmat_rbc = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
-                       p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
-                       kernel_type=kernel_type)
-      covMat_rbc = covmat_rbc$cov
-      c_rbc_flag = covmat_rbc$singular_flag
-      se_rbc = sqrt(abs(diag(covMat_rbc)))*sd_y*sd_x
+      if (cov_flag == "off"){
+        covMat_rbc = NA
+        c_rbc_flag = FALSE
+        se_rbc = rep(NA, length(y_grid))
+      } else {
+        covmat_rbc = cov_hat(x_data=x_data, y_data=y_data, x=x, y_grid=y_grid,
+                             p=p_RBC, q=q_RBC, mu=mu, nu=nu, h=bw,
+                             kernel_type=kernel_type, cov_flag=cov_flag)
+        covMat_rbc = covmat_rbc$cov
+        c_rbc_flag = covmat_rbc$singular_flag
+        se_rbc = sqrt(abs(diag(covMat_rbc)))*sd_y*mean(sd_x)
+      }
     }
 
     # with rbc results
@@ -168,13 +180,17 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # x constants
     x_scaled = sweep(x_sorted, 2, x)/(h^d)
-    if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
-      sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
-    } else{
-      singular_flag = TRUE
-      sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+    if(length(x_scaled) == 0){
+      bx = 0
+    } else {
+      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
+        sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+        } else{
+          singular_flag = TRUE
+          sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+          }
+      bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
     }
-    bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
 
     for (j in 1:ng){
       y = y_grid[j]
@@ -332,9 +348,10 @@ fhat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 #' @param mu Degree of derivative with respect to y.
 #' @param nu Degree of derivative with respect to x.
 #' @param kernel_type Kernel function choice.
+#' @param cov_flag Flag for covariance estimation option.
 #' @return Covariance matrix for all the grid points
 #' @keywords internal
-cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
+cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov_flag){
   # setting constants
   n = length(y_data)
   d = ncol(x_data)
@@ -364,22 +381,28 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     # x constants
     x_scaled = sweep(x_sorted, 2, x)/(h^d)
-    if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
-      sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
-    } else{
-      singular_flag = TRUE
-      sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+    if(length(x_scaled) == 0){
+      bx = 0
+    } else {
+      if(check_inv(S_x(x_scaled, q, kernel_type)/(n*h^d))[1]== TRUE){
+        sx_mat = solve(S_x(x_scaled, q, kernel_type)/(n*h^d))
+      } else{
+        singular_flag = TRUE
+        sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+      }
+      bx = b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
     }
-    bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
+
 
     # initialize matrix
     c_hat = matrix(0L, nrow=ng, ncol=ng)
 
-    for (i in 1:ng){
-      for (j in 1:i){
-        # relevant entries wrt y and y_prime
+    if (cov_flag == "diag"){
+      c_hat = matrix(NA, nrow=ng, ncol=ng)
+      for (i in 1:ng){
+        # relevant entries w.r.t. y and y_prime
         y = y_grid[i]
-        y_prime = y_grid[j]
+        y_prime = y_grid[i]
         y_scaled = (y_sorted - y)/h
         yp_scaled = (y_sorted-y_prime)/h
         y_elems = which(abs(y_scaled)<=1)
@@ -387,8 +410,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         elems = intersect(y_elems, yp_elems)
 
         if ( length(elems) <= 5){
-          c_hat[i, j] = 0
-          c_hat[j, i] = 0
+          c_hat[i, i] = 0
         } else{
           if (mu==0){
             if(check_inv(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))[1]== TRUE){
@@ -450,7 +472,7 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
             t_2 = (n-k) * a_yp[k] * aj[k]
             t_3 = (n-k) * a_y[k] * ak[k]
             t_4 = (n-k)^2 * a_y[k] * a_yp[k]
-            c_hat[i, j] = c_hat[i, j] + bx[1, elems[k]]^2 * (t_1 + t_2 + t_3 + t_4)
+            c_hat[i, i] = c_hat[i, i] + bx[1, elems[k]]^2 * (t_1 + t_2 + t_3 + t_4)
           }
         }
         # estimated means
@@ -468,17 +490,115 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
         }
 
         # filling matrix, using symmetry
-        c_hat[i, j] = c_hat[i, j]/(n*(n-1)^2) - theta_y*theta_yp/n^2
-        c_hat[j, i] = c_hat[i, j]
+        c_hat[i, i] = c_hat[i, i]/(n*(n-1)^2) - theta_y*theta_yp/n^2
 
+      }
+    } else if(cov_flag == "full"){
+      for (i in 1:ng){
+        for (j in 1:i){
+          # relevant entries w.r.t. y and y_prime
+          y = y_grid[i]
+          y_prime = y_grid[j]
+          y_scaled = (y_sorted - y)/h
+          yp_scaled = (y_sorted-y_prime)/h
+          y_elems = which(abs(y_scaled)<=1)
+          yp_elems = which(abs(yp_scaled)<=1)
+          elems = intersect(y_elems, yp_elems)
+
+          if ( length(elems) <= 5){
+            c_hat[i, j] = 0
+            c_hat[j, i] = 0
+          } else{
+            if (mu==0){
+              if(check_inv(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))[1]== TRUE){
+                sx_mat = solve(S_x(as.matrix(x_scaled[y_elems, ]/(n*h^d)), q, kernel_type))
+              } else{
+                singular_flag = TRUE
+                sx_mat = matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
+              }
+              bx = b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
+              # sy matrix
+              if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+                sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
+              } else{
+                singular_flag = TRUE
+                sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+              }
+              if(check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+                syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))
+              } else{
+                singular_flag = TRUE
+                syp_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+              }
+
+              # computing y and yprime vectors
+              a_y = b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
+              a_yp =  b_x(matrix(yp_scaled[elems]), syp_mat, e_mu, p, kernel_type)
+
+              # part 1 of the sum
+              aj = cumsum(a_y)
+              ak = cumsum(a_yp)
+
+            }else{
+              # sy matrix
+              if(check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+                sy_mat = solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type)/(n*h))
+              } else{
+                singular_flag = TRUE
+                sy_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+              }
+              if(check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))[1]== TRUE){
+                syp_mat = solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type)/(n*h))
+              } else{
+                singular_flag = TRUE
+                syp_mat = matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
+              }
+
+              # computing y and yprime vectors
+              a_y = b_x(as.matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
+              a_yp =  b_x(as.matrix(yp_scaled[elems]), syp_mat, e_mu, p, kernel_type)
+
+              # part 1 of the sum
+              aj = cumsum(a_y)
+              ak = cumsum(a_yp)
+            }
+
+            # populating matrix
+            for (k in 1:length(elems)){
+              t_1 = aj[k] * ak[k]
+              t_2 = (n-k) * a_yp[k] * aj[k]
+              t_3 = (n-k) * a_y[k] * ak[k]
+              t_4 = (n-k)^2 * a_y[k] * a_yp[k]
+              c_hat[i, j] = c_hat[i, j] + bx[1, elems[k]]^2 * (t_1 + t_2 + t_3 + t_4)
+            }
+          }
+          # estimated means
+          if (mu==0){
+            theta_y = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y, p=2,
+                           q=1, mu=0, nu=0, h=h, kernel_type=kernel_type)$est
+            theta_yp = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_prime,
+                            p=2, q=1, mu=0, nu=0, h=h, kernel_type=kernel_type)$est
+
+          }else{
+            theta_y = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y, p=p,
+                           q=q, mu=mu, nu=nu, h=h, kernel_type=kernel_type)$est
+            theta_yp = fhat(x_data=x_data, y_data=y_data, x=x, y_grid=y_prime,
+                            p=p, q=q, mu=mu, nu=nu, h=h, kernel_type=kernel_type)$est
+          }
+
+          # filling matrix, using symmetry
+          c_hat[i, j] = c_hat[i, j]/(n*(n-1)^2) - theta_y*theta_yp/n^2
+          c_hat[j, i] = c_hat[i, j]
+
+        }
       }
     }
     if(mu==0){
       c_hat = sweep(sweep(c_hat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+mu+nu))),
-                  MARGIN=2, FUN="*", STATS=1/(n*h^(d+mu+nu)))
+                    MARGIN=2, FUN="*", STATS=1/(n*h^(d+mu+nu)))
     }else{
       c_hat = sweep(sweep(c_hat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+mu+nu+1))),
-                  MARGIN=2, FUN="*", STATS=1/(n*h^(d+mu+nu+1)))
+                    MARGIN=2, FUN="*", STATS=1/(n*h^(d+mu+nu+1)))
       diag(c_hat) = diag(c_hat/2)
     }
 
@@ -610,10 +730,10 @@ cov_hat = function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type){
 
     if(mu==0){
       c_hat = sweep(sweep(c_hat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+mu+nu))),
-                  MARGIN=2, FUN="*", STATS=1/(n*h^(d+mu+nu)))
+                    MARGIN=2, FUN="*", STATS=1/(n*h^(d+mu+nu)))
     }else{
       c_hat = sweep(sweep(c_hat, MARGIN=1, FUN="*", STATS=1/(n*h^(d+mu+nu+1))),
-                  MARGIN=2, FUN="*", STATS=1/(n*h^(d+mu+nu+1)))
+                    MARGIN=2, FUN="*", STATS=1/(n*h^(d+mu+nu+1)))
       diag(c_hat) = diag(c_hat/2)
     }
   }

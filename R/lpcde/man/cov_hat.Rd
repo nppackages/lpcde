@@ -4,7 +4,7 @@
 \alias{cov_hat}
 \title{cov_hat: covariance estimator}
 \usage{
-cov_hat(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type)
+cov_hat(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov_flag)
 }
 \arguments{
 \item{x_data}{Covariate dataset, vector or matrix.}
@@ -28,6 +28,8 @@ y-direction.}
 \item{h}{Numeric, bandwidth vector.}
 
 \item{kernel_type}{Kernel function choice.}
+
+\item{cov_flag}{Flag for covariance estimation option.}
 }
 \value{
 Covariance matrix for all the grid points

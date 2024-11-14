@@ -2,7 +2,7 @@
 #' @title Data-driven bandwidth selection for local polynomial conditional density estimators
 #'
 #' @description  \code{\link{lpbwcde}} implements the bandwidth selection methods for local
-#'   polynomial based conditionaldensity (and derivatives) estimation proposed and studied
+#'   polynomial based conditional density (and derivatives) estimation proposed and studied
 #'   in \insertCite{bernoulli}{lpcde}.
 #'
 #'   Companion command: \code{\link{lpcde}} for estimation and robust bias-corrected inference.
@@ -73,7 +73,7 @@
 #'
 lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL, grid_spacing="", ng=NULL,
                     mu=NULL, nu=NULL, kernel_type=c("epanechnikov", "triangular", "uniform"),
-                    bw_type=c("mse-rot", "imse-rot"), regularize=NULL){
+                    bw_type=c("imse-rot", "mse-rot"), regularize=NULL){
   ################################################################################
   # Error Checking
   ################################################################################
@@ -262,7 +262,7 @@ lpbwcde <- function(y_data, x_data, x, y_grid=NULL, p=NULL, q=NULL, grid_spacing
   }
 
   Result = list(BW=BW,
-                 opt=list(x=x, p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type, n=n, ng=ng,
+                 opt=list(x=(x*sd_x + mx), p=p, q=q, mu=mu, nu=nu, kernel_type=kernel_type, n=n, ng=ng,
                           bw_type=bw_type,
                           data_min=min(y_data), data_max=max(y_data),
                           grid_min=min(y_grid), grid_max=max(y_grid)))

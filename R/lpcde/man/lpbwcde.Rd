@@ -16,7 +16,7 @@ lpbwcde(
   mu = NULL,
   nu = NULL,
   kernel_type = c("epanechnikov", "triangular", "uniform"),
-  bw_type = c("mse-rot", "imse-rot"),
+  bw_type = c("imse-rot", "mse-rot"),
   regularize = NULL
 )
 }
@@ -63,7 +63,7 @@ bandwidth selected for each grid point)}
 }
 \description{
 \code{\link{lpbwcde}} implements the bandwidth selection methods for local
-polynomial based conditionaldensity (and derivatives) estimation proposed and studied
+polynomial based conditional density (and derivatives) estimation proposed and studied
 in \insertCite{bernoulli}{lpcde}.
 
 Companion command: \code{\link{lpcde}} for estimation and robust bias-corrected inference.

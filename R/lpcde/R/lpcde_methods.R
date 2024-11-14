@@ -266,7 +266,7 @@ summary.lpcde = function(object, ...){
 #'
 #' @export
 coef.lpcde = function(object, ...) {
-  object$Estimate
+  object$Estimate[,c(1,3)]
 }
 #######################################################################################
 #' Vcov method for local polynomial density conditional estimation
@@ -812,7 +812,7 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
     if (type[i]%in%c("line", "both")) {
       temp_plot = temp_plot + ggplot2::geom_line(data=data_x,
                                                  ggplot2::aes(x=y_grid, y=est, colour=Sname,
-                                                              linetype=Sname), size=lwd[i])
+                                                              linetype=Sname), linewidth=lwd[i])
     }
 
     ########################################
@@ -820,7 +820,7 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
     if (type[i]%in%c("points", "both") & !is.null(plotIndex)) {
       temp_plot = temp_plot + ggplot2::geom_point(data=data_x[plotIndex, ],
                                                   ggplot2::aes(x=y_grid, y=est, colour=Sname,
-                                                               shape=Sname), size=pwd[i])
+                                                               shape=Sname), linewidth=pwd[i])
     }
 
     if (type[i] == "line") {

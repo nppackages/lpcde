@@ -3,9 +3,7 @@
 \name{S_exact}
 \alias{S_exact}
 \title{S matrix
-Internal Function
-
-Generate Matrix}
+Internal Function}
 \usage{
 S_exact(lower = -1, upper = 1, eval_pt, p, kernel_type)
 }
@@ -20,9 +18,6 @@ S_exact(lower = -1, upper = 1, eval_pt, p, kernel_type)
 a (p+1)-by-(p+1) matrix
 }
 \description{
-S matrix
-Internal Function
-
 Generate Matrix
 }
 \keyword{internal}
