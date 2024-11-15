@@ -5,9 +5,9 @@ Version: 0.1.5
 Authors@R: person(given = "Rajita",
            family = "Chandak",
            role = c("aut", "cre"),
-           email = "rchandak@princeton.edu" )
-Maintainer: Rajita Chandak <rchandak@princeton.edu>
-Description: Tools for estimation and inference of conditional densities, derivatives and functions. This is the companion software for Cattaneo, Chandak, Jansson and Ma (2024) <doi:10.48550/arXiv.2204.10359>.
+           email = "rajita.chandak@epfl.ch" )
+Maintainer: Rajita Chandak <rajita.chandak@epfl.ch>
+Description: Tools for estimation and inference of conditional densities, derivatives and functions. This is the companion software for Cattaneo, Chandak, Jansson and Ma (2024) <doi:10.3150/23-BEJ1711>.
 Depends: R (>= 3.3.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
