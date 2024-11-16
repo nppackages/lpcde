@@ -1,4 +1,4 @@
-  [![license: GPLv2](https://img.shields.io/badge/license-GPLv2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![CRAN version](https://img.shields.io/cran/v/lpcde?color=7733BB&label=CRAN)](https://cran.r-project.org/web/packages/lpcde/index.html)
 [![codecov](https://codecov.io/gh/nppackages/lpcde/branch/main/graph/badge.svg?token=DE4RI272QB)](https://codecov.io/gh/nppackages/lpcde)
 
