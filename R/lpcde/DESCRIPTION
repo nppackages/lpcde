@@ -1,7 +1,7 @@
 Package: lpcde
 Type: Package
 Title: Boundary Adaptive Local Polynomial Conditional Density Estimator
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: person(given = "Rajita",
            family = "Chandak",
            role = c("aut", "cre"),
