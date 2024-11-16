@@ -9,7 +9,7 @@ Authors@R: person(given = "Rajita",
 Maintainer: Rajita Chandak <rajita.chandak@epfl.ch>
 Description: Tools for estimation and inference of conditional densities, derivatives and functions. This is the companion software for Cattaneo, Chandak, Jansson and Ma (2024) <doi:10.3150/23-BEJ1711>.
 Depends: R (>= 3.3.0)
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: false
 SystemRequirements: GNU make
