@@ -3,10 +3,9 @@ The `lpcde` package provides R implementation for bandwidth selection,
 point estimation and inference for local polynomial conditional distribution
 and density methods.
 
-This work was supported by National Science Foundation through grant
-SES-1947662
-and the National Institute of Health through grant 
-R01 GM072611-16.
+This work was supported by the the National Science Foundation through grants
+SES-1947805, SES-1947662, DMS-2210561, and SES-2241575,
+and from the National Institute of Health (R01 GM072611-16).
 
 ## Website
 https://nppackages.github.io/lpcde
@@ -37,10 +36,9 @@ altered by providing the correct inputs to the optional variables for the `lpcde
 function.
 
 By default, the function provides estimates according to the original
-formulation of the estimator (see Cattaneo, Chandak, Jansson and Ma (2024) for
-all technical details).
+formulation of the estimator (see references below for all technical details).
 If a constrained density estimate that is non-negative and integrates to one is 
-desired (see Cattaneo, Chandak, Jansson and Ma (2025)), 
+desired (see references below), 
 the flags `nonneg` and `normalize` can be turned on:
 ```
 model_reg = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=1,

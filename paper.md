@@ -125,6 +125,7 @@ broadly, to the open source statistical community.
 
 # Acknowledgements
 
-Cattaneo gratefully acknowledges financial support from the National Science Foundation through grants SES-1947805, DMS-2210561, and SES-2241575, and from the National Institute of Health (R01 GM072611-16). Jansson gratefully acknowledges financial support from the National Science Foundation through grant SES-1947662.
+Cattaneo gratefully acknowledges financial support from the National Science Foundation through grants SES-1947805, DMS-2210561, and SES-2241575, and from the National Institute of Health (R01 GM072611-16).
+Jansson gratefully acknowledges financial support from the National Science Foundation through grant SES-1947662.
 
 # References
