@@ -73,17 +73,17 @@ available at \url{https://nppackages.github.io/}.
 }
 \examples{
 # Generate a random sample
-set.seed(42);
-x_data = rnorm(2000)
-y_data = rnorm(2000, mean=x_data)
-x = 0
+set.seed(42)
+x_data <- rnorm(2000)
+y_data <- rnorm(2000, mean = x_data)
+x <- 0
 
 # Construct bandwidth
-bw1 <- lpbwcde(y_data = y_data, x_data = x_data, x=x, bw_type = "mse-rot")
+bw1 <- lpbwcde(y_data = y_data, x_data = x_data, x = x, bw_type = "mse-rot")
 summary(bw1)
 
 # Display bandwidths for a subset of y_grid points
-summary(bw1, y_grid=bw1$BW[2:5, "y_grid"])
+summary(bw1, y_grid = bw1$BW[2:5, "y_grid"])
 
 }
 \references{

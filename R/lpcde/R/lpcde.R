@@ -41,8 +41,8 @@
 #' @param bw_type String, specifies the method for data-driven bandwidth selection. This option will be
 #'   ignored if \code{bw} is provided. Implementable with \code{"mse-dpi"} (default, mean squared error-optimal
 #'   bandwidth selected for each grid point)
-  # or (2) \code{"mse-rot"} (rule-of-thumb bandwidth with Gaussian
-  # reference model).
+# or (2) \code{"mse-rot"} (rule-of-thumb bandwidth with Gaussian
+# reference model).
 #' @param ng Int, number of grid points to be used. generates evenly space points over the support of the data.
 #' @param grid_spacing String, If equal to "quantile" will generate quantile-spaced grid evaluation points, otherwise will generate equally spaced points.
 #' @param normalize Boolean, False (default) returns original estimator, True normalizes estimates to integrate to 1.
@@ -94,13 +94,13 @@
 #'
 #'
 #' @examples
-#' #Density estimation example
-#' n=500
-#' x_data = matrix(rnorm(n, mean=0, sd=1))
-#' y_data = matrix(rnorm(n, mean=x_data, sd=1))
-#' y_grid = seq(from=-1, to=1, length.out=5)
-#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
-#' #summary of estimation
+#' # Density estimation example
+#' n <- 500
+#' x_data <- matrix(rnorm(n, mean = 0, sd = 1))
+#' y_data <- matrix(rnorm(n, mean = x_data, sd = 1))
+#' y_grid <- seq(from = -1, to = 1, length.out = 5)
+#' model1 <- lpcde::lpcde(x_data = x_data, y_data = y_data, y_grid = y_grid, x = 0, bw = 0.5)
+#' # summary of estimation
 #' summary(model1)
 #'
 #' @references
@@ -109,162 +109,167 @@
 #' \insertRef{rbc}{lpcde}\cr
 #' \insertRef{lpdensitypaper}{lpcde}
 #' @export
-lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
-                 p_RBC=NULL, q_RBC=NULL, mu=NULL, nu=NULL, rbc = TRUE, ng=NULL,
-                 cov_flag=c("full", "diag", "off"),
-                 normalize=FALSE, nonneg=FALSE, grid_spacing="",
-                 kernel_type=c("epanechnikov", "triangular", "uniform"),
-                 bw_type=NULL){
-
+lpcde <- function(x_data, y_data, y_grid = NULL, x = NULL, bw = NULL, p = NULL, q = NULL,
+                  p_RBC = NULL, q_RBC = NULL, mu = NULL, nu = NULL, rbc = TRUE, ng = NULL,
+                  cov_flag = c("full", "diag", "off"),
+                  normalize = FALSE, nonneg = FALSE, grid_spacing = "",
+                  kernel_type = c("epanechnikov", "triangular", "uniform"),
+                  bw_type = NULL) {
   ################################################################################
   # Error Checking
   ################################################################################
   # data
-  y_data = as.matrix(y_data)
+  y_data <- as.matrix(y_data)
   if (any(is.na(y_data))) {
-    warning(paste(sum(is.na(y_data)), " missing ", switch((sum(is.na(y_data))>1)+1, "observation is", "observations are"), " ignored.\n", sep=""))
-    y_data = y_data[!is.na(y_data)]
+    warning(paste(sum(is.na(y_data)), " missing ", switch((sum(is.na(y_data)) > 1) + 1,
+      "observation is",
+      "observations are"
+    ), " ignored.\n", sep = ""))
+    y_data <- y_data[!is.na(y_data)]
   }
 
-  n = length(y_data)
-  if (!is.numeric(y_data) | length(y_data)==0) {
+  n <- length(y_data)
+  if (!is.numeric(y_data) | length(y_data) == 0) {
     stop("Data should be numeric, and cannot be empty.\n")
   }
 
-  x_data = as.matrix(x_data)
+  x_data <- as.matrix(x_data)
   if (any(is.na(x_data))) {
-    warning(paste(sum(is.na(x_data)), " missing ", switch((sum(is.na(x_data))>1)+1, "observation is", "observations are"), " ignored.\n", sep=""))
-    x_data = x_data[!is.na(x_data)]
+    warning(paste(sum(is.na(x_data)), " missing ", switch((sum(is.na(x_data)) > 1) + 1,
+      "observation is",
+      "observations are"
+    ), " ignored.\n", sep = ""))
+    x_data <- x_data[!is.na(x_data)]
   }
 
-  n = ncol(x_data)
-  if (!is.numeric(x_data) | length(x_data)==0) {
+  n <- ncol(x_data)
+  if (!is.numeric(x_data) | length(x_data) == 0) {
     stop("Data should be numeric, and cannot be empty.\n")
   }
 
   if (length(cov_flag) == 0) {
-    cov_flag = "full"
+    cov_flag <- "full"
   } else {
-    cov_flag = cov_flag[1]
-    if (!cov_flag%in%c("full", "diag", "off")){
+    cov_flag <- cov_flag[1]
+    if (!cov_flag %in% c("full", "diag", "off")) {
       stop("Incorrect covariance estimation flag provided. Please see the documentation on available options.")
     }
   }
 
 
-  #sd_y = stats::sd(y_data)
-  #sd_x = apply(x_data, 2, stats::sd)
-  #mx = apply(x_data, 2, mean)
-  #my = mean(y_data)
-  #y_data = (y_data)/sd_y
-  #x_data = x_data/sd_x
+  # sd_y = stats::sd(y_data)
+  # sd_x = apply(x_data, 2, stats::sd)
+  # mx = apply(x_data, 2, mean)
+  # my = mean(y_data)
+  # y_data = (y_data)/sd_y
+  # x_data = x_data/sd_x
   # grid
   if (length(y_grid) == 0) {
-    if(grid_spacing=="quantile"){
-      if (length(bw)>=2){
-        y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = length(bw)))
-        ng = length(y_grid)
-      } else{
-        if (length(ng)==1){
-          y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = ng))
-        } else{
-          y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, length.out = 19))
-          ng =19
+    if (grid_spacing == "quantile") {
+      if (length(bw) >= 2) {
+        y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, length.out = length(bw)))
+        ng <- length(y_grid)
+      } else {
+        if (length(ng) == 1) {
+          y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, length.out = ng))
+        } else {
+          y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, length.out = 19))
+          ng <- 19
         }
       }
-    }else{
-        gmin = stats::quantile(y_data, probs=0.1)
-        gmax = stats::quantile(y_data, probs=0.9)
-      if (length(bw)>=2){
-        y_grid = seq(gmin, gmax, length.out=length(bw))
-        ng = length(y_grid)
-      } else{
-        if (length(ng)==1){
-          y_grid = seq(gmin, gmax, length.out=ng)
-        } else{
-          y_grid = seq(gmin, gmax, length.out=19)
-          ng =19
+    } else {
+      gmin <- stats::quantile(y_data, probs = 0.1)
+      gmax <- stats::quantile(y_data, probs = 0.9)
+      if (length(bw) >= 2) {
+        y_grid <- seq(gmin, gmax, length.out = length(bw))
+        ng <- length(y_grid)
+      } else {
+        if (length(ng) == 1) {
+          y_grid <- seq(gmin, gmax, length.out = ng)
+        } else {
+          y_grid <- seq(gmin, gmax, length.out = 19)
+          ng <- 19
         }
       }
     }
   } else {
-    y_grid = as.vector(y_grid)
-    ng = length(y_grid)
-    if(!is.numeric(y_grid)) {
+    y_grid <- as.vector(y_grid)
+    ng <- length(y_grid)
+    if (!is.numeric(y_grid)) {
       stop("Y grid points should be numeric.\n")
     }
   }
 
   # evaluation point
-  if(length(x)==0){
-    x = as.vector(apply(x_data, 2, stats::median))
-  }else {
-    x = as.vector(x)
-    if(!is.numeric(x)) {
+  if (length(x) == 0) {
+    x <- as.vector(apply(x_data, 2, stats::median))
+  } else {
+    x <- as.vector(x)
+    if (!is.numeric(x)) {
       stop("Evaluation point should be numeric.\n")
     }
   }
 
   # p
   if (length(p) == 0) {
-    if (length(mu) == 0){
-      p = 2
-    }else {
-      p = mu+1
+    if (length(mu) == 0) {
+      p <- 2
+    } else {
+      p <- mu + 1
     }
-  } else if ((length(p) != 1) | !(p[1]%in%0:20)) {
+  } else if ((length(p) != 1) | !(p[1] %in% 0:20)) {
     stop("Polynomial order p incorrectly specified.\n")
   }
 
   # q
   if (length(q) == 0) {
-    if (length(nu) == 0){
-      q = 1
-    }else {
-      q = nu+1
+    if (length(nu) == 0) {
+      q <- 1
+    } else {
+      q <- nu + 1
     }
-  } else if ((length(q) != 1) | !(q[1]%in%c(0:20))) {
+  } else if ((length(q) != 1) | !(q[1] %in% c(0:20))) {
     stop("Polynomial order (for bias correction) q incorrectly specified.\n")
   }
 
   # p_RBC
   if (length(p_RBC) == 0) {
-    p_RBC = p + 1
-  } else if ((length(p_RBC) != 1) | !(p_RBC[1]%in%c(0:20)) | (p_RBC[1]<p)) {
+    p_RBC <- p + 1
+  } else if ((length(p_RBC) != 1) | !(p_RBC[1] %in% c(0:20)) | (p_RBC[1] < p)) {
     stop("Polynomial order (for bias correction) q incorrectly specified.\n")
   }
   # q_RBC
   if (length(q_RBC) == 0) {
-    q_RBC = q + 1
-  } else if ((length(q_RBC) != 1) | !(q_RBC[1]%in%c(0:20)) | (q_RBC[1]<q)) {
+    q_RBC <- q + 1
+  } else if ((length(q_RBC) != 1) | !(q_RBC[1] %in% c(0:20)) | (q_RBC[1] < q)) {
     stop("Polynomial order (for bias correction) q incorrectly specified.\n")
   }
 
-  if (p_RBC == p && q_RBC==q){
+  if (p_RBC == p && q_RBC == q) {
     warning("RBC polynomial order same as estimation order. No Bias Correction Implemented.\n")
   }
 
   # mu
   if (length(mu) == 0) {
-    mu = min(1, p)
-  } else if ((length(mu) != 1) | !(mu[1]%in%c(0:20)) | (mu[1]>p)) {
+    mu <- min(1, p)
+  } else if ((length(mu) != 1) | !(mu[1] %in% c(0:20)) | (mu[1] > p)) {
     stop("Derivative order v incorrectly specified.\n")
   }
 
   # nu
   if (length(nu) == 0) {
-    nu = min(0, q)
-  } else if ((length(nu) != 1) | !(nu[1]%in%c(0:20)) | (nu[1]>q)) {
+    nu <- min(0, q)
+  } else if ((length(nu) != 1) | !(nu[1] %in% c(0:20)) | (nu[1] > q)) {
     stop("Derivative order v incorrectly specified.\n")
   }
 
   # kernel_type
   if (length(kernel_type) == 0) {
-    kernel_type = "epanechnikov"
+    kernel_type <- "epanechnikov"
   } else {
-    kernel_type = tolower(kernel_type)
-    kernel_type = kernel_type[1]
-    if (!kernel_type%in%c("triangular", "uniform", "epanechnikov")) {
+    kernel_type <- tolower(kernel_type)
+    kernel_type <- kernel_type[1]
+    if (!kernel_type %in% c("triangular", "uniform", "epanechnikov")) {
       stop("Kernel function incorrectly specified.\n")
     }
   }
@@ -272,77 +277,85 @@ lpcde = function(x_data, y_data, y_grid=NULL, x=NULL, bw=NULL, p=NULL, q=NULL,
   # bw
   if (length(bw) == 0) {
     if (length(bw_type) == 0) {
-      bw_type = "imse-rot"
-      bw = lpbwcde(y_data=y_data, x_data=x_data, x=x, y_grid=y_grid, p=p, q=q, mu=mu,
-                   nu=nu, kernel_type=kernel_type, bw_type=bw_type)$BW[,2]
+      bw_type <- "imse-rot"
+      bw <- lpbwcde(
+        y_data = y_data, x_data = x_data, x = x, y_grid = y_grid, p = p, q = q, mu = mu,
+        nu = nu, kernel_type = kernel_type, bw_type = bw_type
+      )$BW[, 2]
     } else {
-      bw_type = tolower(bw_type[1])
-      bw = lpbwcde(y_data=y_data, x_data=x_data, x=x, y_grid=y_grid, p=p, q=q, mu=mu,
-                   nu=nu, kernel_type=kernel_type, bw_type=bw_type)$BW[,2]
+      bw_type <- tolower(bw_type[1])
+      bw <- lpbwcde(
+        y_data = y_data, x_data = x_data, x = x, y_grid = y_grid, p = p, q = q, mu = mu,
+        nu = nu, kernel_type = kernel_type, bw_type = bw_type
+      )$BW[, 2]
     }
-    if (!bw_type%in%c("mse-rot", "imse-rot")) {
+    if (!bw_type %in% c("mse-rot", "imse-rot")) {
       stop("Incorrect bandwidth selection method specified.\n")
     }
   } else if (length(bw) == 1) {
     if (!is.numeric(bw) | bw <= 0) {
       stop("Bandwidth incorrectly specified.\n")
     } else {
-      bw = rep(bw, ng)
-      bw_type = "user provided"
+      bw <- rep(bw, ng)
+      bw_type <- "user provided"
     }
   } else {
-    bw = as.vector(bw)
+    bw <- as.vector(bw)
     if (!is.numeric(bw)) {
       stop("Bandwidth incorrectly specified.\n")
     } else if (length(bw) != ng) {
       stop("Bandwidth has to be the same length as grid.\n")
     } else {
-      bw_type = "user provided"
+      bw_type <- "user provided"
     }
   }
 
   ################################################################################
   # Point Estimation and Standard Error
-################################################################################
+  ################################################################################
 
-  lpcdest = lpcde_fn(y_data = y_data, x_data = x_data, y_grid = y_grid,
-                     x = x, p = p, q = q, p_RBC = p_RBC, q_RBC = q_RBC,
-                     bw = bw, mu = mu, nu = nu, cov_flag = cov_flag,
-                     kernel_type = kernel_type, rbc = rbc)
-  rownames(lpcdest$est) = 1:ng
+  lpcdest <- lpcde_fn(
+    y_data = y_data, x_data = x_data, y_grid = y_grid,
+    x = x, p = p, q = q, p_RBC = p_RBC, q_RBC = q_RBC,
+    bw = bw, mu = mu, nu = nu, cov_flag = cov_flag,
+    kernel_type = kernel_type, rbc = rbc
+  )
+  rownames(lpcdest$est) <- 1:ng
 
   ################################################################################
   # Normalizing
   ################################################################################
 
   if (nonneg == TRUE) {
-    lpcdest$est[, 3] = replace(lpcdest$est[, 3], lpcdest$est[, 3]<0, 0)
+    lpcdest$est[, 3] <- replace(lpcdest$est[, 3], lpcdest$est[, 3] < 0, 0)
   }
   if (normalize == TRUE) {
-    grid_diff = c(diff(y_grid), diff(utils::tail(y_grid, 2)))
-    c = sum(lpcdest$est[, 3]*grid_diff)
-    lpcdest$est[, 3] = lpcdest$est[, 3]/c
+    grid_diff <- c(diff(y_grid), diff(utils::tail(y_grid, 2)))
+    c <- sum(lpcdest$est[, 3] * grid_diff)
+    lpcdest$est[, 3] <- lpcdest$est[, 3] / c
   }
 
   ################################################################################
   # Return
   ################################################################################
-  Result <- list(Estimate=lpcdest$est,
-                 CovMat=lpcdest$CovMat,
-                 eff_n = lpcdest$eff_n,
-                 opt=list(
-                   p=p, q=q, p_RBC = p_RBC, q_RBC = q_RBC,
-                   mu=mu, nu=nu, kernel=kernel_type, n=length(y_data), ng=ng,
-                   bw_type=bw_type, bw = bw, xeval = x, cov_flag = cov_flag,
-                   y_data_min=min(y_data), y_data_max=max(y_data),
-                   x_data_min=min(x_data), x_data_max=max(x_data),
-                   grid_min=min(y_grid), grid_max=max(y_grid)
-                 ))
+  Result <- list(
+    Estimate = lpcdest$est,
+    CovMat = lpcdest$CovMat,
+    eff_n = lpcdest$eff_n,
+    opt = list(
+      p = p, q = q, p_RBC = p_RBC, q_RBC = q_RBC,
+      mu = mu, nu = nu, kernel = kernel_type, n = length(y_data), ng = ng,
+      bw_type = bw_type, bw = bw, xeval = x, cov_flag = cov_flag,
+      y_data_min = min(y_data), y_data_max = max(y_data),
+      x_data_min = min(x_data), x_data_max = max(x_data),
+      grid_min = min(y_grid), grid_max = max(y_grid)
+    )
+  )
 
-  if(any(lpcdest$eff_n<=5)) {
+  if (any(lpcdest$eff_n <= 5)) {
     warning("Some evaluation points do not have enough data to produce reliable results.")
   }
-  if(lpcdest$singular_flag == TRUE){
+  if (lpcdest$singular_flag == TRUE) {
     warning("Singular matrices encountered. May affect estimates.")
   }
 

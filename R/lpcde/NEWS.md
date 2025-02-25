@@ -1,3 +1,13 @@
+# lpcde 0.1.6
+- Formatted code
+- Added a small vignette in package README
+- Fixed package metadata
+
+# lpcde 0.1.5
+- Added covariance flag for restricting covariance estimation
+- Updated ggplot2 and roxygen2 commands for compatibility
+- Fixed instability in bandwidth calculation with very small datasets
+
 # lpcde 0.1.4
 - Cleaned up standard plot output
 - Consolidated level and alpha parameters for confint

@@ -3,4 +3,3 @@
 #' @importFrom Rcpp evalCpp
 ## usethis namespace: end
 NULL
-

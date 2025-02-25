@@ -3,7 +3,7 @@ test_that("polynomial vector generator works", {
 })
 
 test_that("polynomial vector", {
-  expect_equal(poly_base(2, 1), matrix(c(1, 2), nrow=1))
+  expect_equal(poly_base(2, 1), matrix(c(1, 2), nrow = 1))
 })
 
 test_that("multivariate polynomial vector", {

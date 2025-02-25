@@ -24,27 +24,27 @@
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 #'
 #' @examples
-#' n=100
-#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' n <- 100
+#' x_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, by = 0.1))
 #' # density estimation
-#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' model1 <- lpcde::lpcde(x_data = x_data, y_data = y_data, y_grid = y_grid, x = 0, bw = 0.5)
 #' print(model1)
 #'
 #' @export
 #'
-print.lpcde = function(x, ...){
+print.lpcde <- function(x, ...) {
   cat("Call: lpcde\n\n")
 
-  cat(paste("Sample size                                      ", x$opt$n,        "\n", sep=""))
-  cat(paste("Number of grid points                            ", x$opt$ng,       "\n", sep=""))
-  cat(paste("Polynomial order for Y point estimation  (p=)    ", x$opt$p,        "\n", sep=""))
-  cat(paste("Polynomial order for X point estimation  (q=)    ", x$opt$q,        "\n", sep=""))
-  cat(paste("Order of derivative estimated for Y     (mu=)    ", x$opt$mu,        "\n", sep=""))
-  cat(paste("Order of derivative estimated for X     (nu=)    ", x$opt$nu,        "\n", sep=""))
-  cat(paste("Kernel function                                  ", x$opt$kernel,   "\n", sep=""))
-  cat(paste("Bandwidth method                                 ", x$opt$bwselect, "\n", sep=""))
+  cat(paste("Sample size                                      ", x$opt$n, "\n", sep = ""))
+  cat(paste("Number of grid points                            ", x$opt$ng, "\n", sep = ""))
+  cat(paste("Polynomial order for Y point estimation  (p=)    ", x$opt$p, "\n", sep = ""))
+  cat(paste("Polynomial order for X point estimation  (q=)    ", x$opt$q, "\n", sep = ""))
+  cat(paste("Order of derivative estimated for Y     (mu=)    ", x$opt$mu, "\n", sep = ""))
+  cat(paste("Order of derivative estimated for X     (nu=)    ", x$opt$nu, "\n", sep = ""))
+  cat(paste("Kernel function                                  ", x$opt$kernel, "\n", sep = ""))
+  cat(paste("Bandwidth method                                 ", x$opt$bwselect, "\n", sep = ""))
   cat("\n")
 
   cat("Use summary(...) to show estimates.\n")
@@ -82,94 +82,115 @@ print.lpcde = function(x, ...){
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 #'
 #' @examples
-#' n=100
-#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' n <- 100
+#' x_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, by = 0.1))
 #' # density estimation
-#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' model1 <- lpcde::lpcde(x_data = x_data, y_data = y_data, y_grid = y_grid, x = 0, bw = 0.5)
 #' summary(model1)
 #'
 #' @export
-summary.lpcde = function(object, ...){
-  x = object
-  args = list(...)
-  if (is.null(args[['alpha']])) { alpha = 0.05 } else { alpha = args[['alpha']] }
-  if (is.null(args[['sep']]))   { sep = 5 } else { sep = args[['sep']] }
-  if (is.null(args[['CIuniform']]))   { CIuniform <- FALSE } else { CIuniform = args[['CIuniform']] }
-  if (is.null(args[['CIsimul']]))   { CIsimul <- 2000 } else { sep = args[['CIsimul']] }
+summary.lpcde <- function(object, ...) {
+  x <- object
+  args <- list(...)
+  if (is.null(args[["alpha"]])) {
+    alpha <- 0.05
+  } else {
+    alpha <- args[["alpha"]]
+  }
+  if (is.null(args[["sep"]])) {
+    sep <- 5
+  } else {
+    sep <- args[["sep"]]
+  }
+  if (is.null(args[["CIuniform"]])) {
+    CIuniform <- FALSE
+  } else {
+    CIuniform <- args[["CIuniform"]]
+  }
+  if (is.null(args[["CIsimul"]])) {
+    CIsimul <- 2000
+  } else {
+    sep <- args[["CIsimul"]]
+  }
 
-  if (is.null(args[['grid']]) & is.null(args[['gridIndex']])) {
-    gridIndex = 1:nrow(x$Estimate)
-  } else if (is.null(args[['grid']]) & !is.null(args[['gridIndex']])) {
-    gridIndex = args[['gridIndex']]
+  if (is.null(args[["grid"]]) & is.null(args[["gridIndex"]])) {
+    gridIndex <- 1:nrow(x$Estimate)
+  } else if (is.null(args[["grid"]]) & !is.null(args[["gridIndex"]])) {
+    gridIndex <- args[["gridIndex"]]
     if (is.null(gridIndex)) {
-      gridIndex = 1:nrow(x$Estimate)
+      gridIndex <- 1:nrow(x$Estimate)
     } else if (!all(gridIndex %in% 1:nrow(x$Estimate))) {
-      stop(paste("Option gridIndex incorrectly specified. Should be integers between 1 and ", nrow(x$Estimate), ".\n", sep=""))
+      stop(paste("Option gridIndex incorrectly specified. Should be integers between 1 and ", nrow(x$Estimate), ".\n", sep = ""))
     }
   } else {
-    grid = args[['grid']]
+    grid <- args[["grid"]]
     if (is.null(grid)) {
-      gridIndex = 1:nrow(x$Estimate)
+      gridIndex <- 1:nrow(x$Estimate)
     } else if (!is.numeric(grid)) {
       stop("Option grid incorrectly specified.\n")
     } else {
-      gridIndex = rep(NA, length(grid))
+      gridIndex <- rep(NA, length(grid))
       if (min(grid) < min(x$Estimate[, "grid"]) | max(grid) > max(x$Estimate[, "grid"])) {
         warning("The reporting range exceeds the original estimation range. Option summary(..., grid=) should be within the estimation range specified by lpcde(..., grid=).\n")
       }
       for (j in 1:length(grid)) {
-        gridIndex[j] = which.min(abs(x$Estimate[, "grid"]-grid[j]))
+        gridIndex[j] <- which.min(abs(x$Estimate[, "grid"] - grid[j]))
       }
     }
   }
 
   cat("Call: lpcde\n\n")
 
-  cat(paste("Sample size                                           ", x$opt$n,        "\n", sep=""))
-  cat(paste("Polynomial order for Y point estimation      (p=)     ", x$opt$p,        "\n", sep=""))
-  cat(paste("Polynomial order for X point estimation      (q=)     ", x$opt$q,        "\n", sep=""))
+  cat(paste("Sample size                                           ", x$opt$n, "\n", sep = ""))
+  cat(paste("Polynomial order for Y point estimation      (p=)     ", x$opt$p, "\n", sep = ""))
+  cat(paste("Polynomial order for X point estimation      (q=)     ", x$opt$q, "\n", sep = ""))
   if (x$opt$mu == 0) {
-    cat(paste("Distribution function estimated             (mu=)   ", x$opt$mu,        "\n", sep=""))
+    cat(paste("Distribution function estimated             (mu=)   ", x$opt$mu, "\n", sep = ""))
   } else if (x$opt$mu == 1) {
-    cat(paste("Density function estimated                   (mu=)    ", x$opt$mu,        "\n", sep=""))
+    cat(paste("Density function estimated                   (mu=)    ", x$opt$mu, "\n", sep = ""))
   } else {
-    cat(paste("Order of derivative estimated              (mu=)    ", x$opt$mu,        "\n", sep=""))
+    cat(paste("Order of derivative estimated              (mu=)    ", x$opt$mu, "\n", sep = ""))
   }
-  cat(paste("Order of derivative estimated for covariates (nu=)    ", x$opt$nu,        "\n", sep=""))
-  cat(paste("Kernel function                                       ", x$opt$kernel,   "\n", sep=""))
-  cat(paste("Bandwidth method                                      ", x$opt$bwselect, "\n", sep=""))
+  cat(paste("Order of derivative estimated for covariates (nu=)    ", x$opt$nu, "\n", sep = ""))
+  cat(paste("Kernel function                                       ", x$opt$kernel, "\n", sep = ""))
+  cat(paste("Bandwidth method                                      ", x$opt$bwselect, "\n", sep = ""))
   cat("\n")
 
   # compute CI
   if (CIuniform) {
-    if (length(CIsimul) == 0) { CIsimul = 2000 }
+    if (length(CIsimul) == 0) {
+      CIsimul <- 2000
+    }
     if (!is.numeric(CIsimul) | is.na(CIsimul)) {
       warning("Option CIsimul incorrectly specified. Will only plot pointwise confidence intervals.\n")
-      CIuniform = FALSE
-      z_val = stats::qnorm(1 - alpha/2)
-    }else if (ceiling(CIsimul)<2) {
+      CIuniform <- FALSE
+      z_val <- stats::qnorm(1 - alpha / 2)
+    } else if (ceiling(CIsimul) < 2) {
       warning("Option CIsimul incorrectly specified. Will only plot pointwise confidence intervals.\n")
-      CIuniform = FALSE
-      z_val = stats::qnorm(1 - alpha/2)
-    }else {
-      CIsimul = ceiling(CIsimul)
-      corrMat = sweep(sweep(x$CovMat$CovMat_RBC, MARGIN=1, FUN="*", STATS=1/x$Estimate[, "se_RBC"]), MARGIN=2, FUN="*", STATS=1/x$Estimate[, "se_RBC"])
-      normalSimu = try(
-        MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=Matrix::nearPD(corrMat)$mat),
-        silent=TRUE)
+      CIuniform <- FALSE
+      z_val <- stats::qnorm(1 - alpha / 2)
+    } else {
+      CIsimul <- ceiling(CIsimul)
+      corrMat <- sweep(sweep(x$CovMat$CovMat_RBC, MARGIN = 1, FUN = "*", STATS = 1 / x$Estimate[, "se_RBC"]), MARGIN = 2, FUN = "*", STATS = 1 / x$Estimate[, "se_RBC"])
+      normalSimu <- try(
+        MASS::mvrnorm(n = CIsimul, mu = rep(0, nrow(corrMat)), Sigma = Matrix::nearPD(corrMat)$mat),
+        silent = TRUE
+      )
       if (is.character(normalSimu)) {
         print(normalSimu)
         warning("Variance-Covariance is not positive semidefinite. Will only plot pointwise confidence intervals.\n")
-        CIuniform = FALSE
-        z_val = stats::qnorm(1 - alpha/2)
+        CIuniform <- FALSE
+        z_val <- stats::qnorm(1 - alpha / 2)
       } else {
-        z_val = stats::quantile(apply(normalSimu, MARGIN=1, FUN=function(x) {max(abs(x))}), 1 - alpha)
+        z_val <- stats::quantile(apply(normalSimu, MARGIN = 1, FUN = function(x) {
+          max(abs(x))
+        }), 1 - alpha)
       }
     }
-  }else {
-    z_val = stats::qnorm(1 - alpha/2)
+  } else {
+    z_val <- stats::qnorm(1 - alpha / 2)
   }
 
   CI_l <- x$Estimate[, "est_RBC"] - x$Estimate[, "se_RBC"] * z_val
@@ -178,53 +199,62 @@ summary.lpcde = function(object, ...){
   # flagNotAllLocalSampleSizeSame <- !all(x$Estimate[, "nh"] == x$Estimate[, "nhu"])
 
   ### print output
-  cat(paste(rep("=", 14 + 10 + 8 + 10 + 10 + 25), collapse="")); cat("\n")
-
-  cat(format(" ", width= 14 ))
-  cat(format(" ", width= 10 ))
-  cat(format(" ", width= 8 ))
-  cat(format("Point", width= 10, justify="right"))
-  cat(format("Std." , width= 10, justify="right"))
-  cat(format("Robust B.C." , width=25, justify="centre"))
+  cat(paste(rep("=", 14 + 10 + 8 + 10 + 10 + 25), collapse = ""))
   cat("\n")
 
-  cat(format("Index     Grid"            , width=14, justify="right"))
-  cat(format("B.W."              , width=10, justify="right"))
-  cat(format("Eff.n"           , width=8 , justify="right"))
+  cat(format(" ", width = 14))
+  cat(format(" ", width = 10))
+  cat(format(" ", width = 8))
+  cat(format("Point", width = 10, justify = "right"))
+  cat(format("Std.", width = 10, justify = "right"))
+  cat(format("Robust B.C.", width = 25, justify = "centre"))
+  cat("\n")
+
+  cat(format("Index     Grid", width = 14, justify = "right"))
+  cat(format("B.W.", width = 10, justify = "right"))
+  cat(format("Eff.n", width = 8, justify = "right"))
   # if (flagNotAllLocalSampleSizeSame) {
   #   cat(format("Uniq.n"           , width=8 , justify="right"))
   # }
-  cat(format("Est."            , width=10, justify="right"))
-  cat(format("Error"           , width=10, justify="right"))
+  cat(format("Est.", width = 10, justify = "right"))
+  cat(format("Error", width = 10, justify = "right"))
   if (CIuniform) {
-    cat(format(paste("[ Unif. ", floor((1-alpha)*100), "%", " C.I. ]", sep="")
-               , width=25, justify="centre"))
+    cat(format(paste("[ Unif. ", floor((1 - alpha) * 100), "%", " C.I. ]", sep = ""),
+      width = 25, justify = "centre"
+    ))
   } else {
-    cat(format(paste("[ ", floor((1-alpha)*100), "%", " C.I. ]", sep="")
-               , width=25, justify="centre"))
+    cat(format(paste("[ ", floor((1 - alpha) * 100), "%", " C.I. ]", sep = ""),
+      width = 25, justify = "centre"
+    ))
   }
   cat("\n")
-  cat(paste(rep("=", 14 + 10 + 8 + 10 + 10 + 25), collapse="")); cat("\n")
+  cat(paste(rep("=", 14 + 10 + 8 + 10 + 10 + 25), collapse = ""))
+  cat("\n")
 
   jj <- 1
   for (j in gridIndex) {
-    cat(format(toString(j), width=4))
-    cat(format(sprintf("%6.4f", x$Estimate[j, "y_grid"]), width=10, justify="right"))
-    cat(format(sprintf("%6.4f", x$Estimate[j, "bw"])  , width=10, justify="right"))
-    cat(format(sprintf("%8.0f", x$eff_n[j]), width=8 , justify="right"))
+    cat(format(toString(j), width = 4))
+    cat(format(sprintf("%6.4f", x$Estimate[j, "y_grid"]), width = 10, justify = "right"))
+    cat(format(sprintf("%6.4f", x$Estimate[j, "bw"]), width = 10, justify = "right"))
+    cat(format(sprintf("%8.0f", x$eff_n[j]), width = 8, justify = "right"))
     # cat(format(sprintf("%8.0f", x$Estimate[j, "nhu"]) , width=8 , justify="right"))
-    cat(format(sprintf("%6.4f", x$Estimate[j, "est"]) , width=10, justify="right"))
-    cat(format(paste(sprintf("%6.4f", x$Estimate[j, "se"]), sep=""), width=10, justify="right"))
-    cat(format(paste(sprintf("%7.4f", CI_l[j]), " , ", sep="")  , width=14, justify="right"))
-    cat(format(paste(sprintf("%7.4f", CI_r[j]), sep=""), width=11, justify="left"))
+    cat(format(sprintf("%6.4f", x$Estimate[j, "est"]), width = 10, justify = "right"))
+    cat(format(paste(sprintf("%6.4f", x$Estimate[j, "se"]), sep = ""), width = 10, justify = "right"))
+    cat(format(paste(sprintf("%7.4f", CI_l[j]), " , ", sep = ""), width = 14, justify = "right"))
+    cat(format(paste(sprintf("%7.4f", CI_r[j]), sep = ""), width = 11, justify = "left"))
     cat("\n")
-    if (is.numeric(sep)) if (sep > 0) if (jj %% sep == 0) {
-      cat(paste(rep("-", 14 + 10 + 8 + 10 + 10 + 25), collapse="")); cat("\n")
+    if (is.numeric(sep)) {
+      if (sep > 0) {
+        if (jj %% sep == 0) {
+          cat(paste(rep("-", 14 + 10 + 8 + 10 + 10 + 25), collapse = ""))
+          cat("\n")
+        }
+      }
     }
     jj <- jj + 1
   }
 
-  cat(paste(rep("=", 14 + 10 + 8 + 10 + 10 + 25), collapse=""));
+  cat(paste(rep("=", 14 + 10 + 8 + 10 + 10 + 25), collapse = ""))
   cat("\n")
 }
 
@@ -256,17 +286,17 @@ summary.lpcde = function(object, ...){
 #'
 #'
 #' @examples
-#' n=100
-#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' n <- 100
+#' x_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, by = 0.1))
 #' # density estimation
-#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' model1 <- lpcde::lpcde(x_data = x_data, y_data = y_data, y_grid = y_grid, x = 0, bw = 0.5)
 #' coef(model1)
 #'
 #' @export
-coef.lpcde = function(object, ...) {
-  object$Estimate[,c(1,3)]
+coef.lpcde <- function(object, ...) {
+  object$Estimate[, c(1, 3)]
 }
 #######################################################################################
 #' Vcov method for local polynomial density conditional estimation
@@ -298,20 +328,19 @@ coef.lpcde = function(object, ...) {
 #'
 #'
 #' @examples
-#' n=100
-#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' n <- 100
+#' x_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, by = 0.1))
 #' # density estimation
-#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' model1 <- lpcde::lpcde(x_data = x_data, y_data = y_data, y_grid = y_grid, x = 0, bw = 0.5)
 #' vcov(model1)
 #'
 #' @export
-vcov.lpcde = function(object, ...) {
-
+vcov.lpcde <- function(object, ...) {
   if (class(object)[1] == "lpbwcde") stop("The vcov method does not support \"lpbwcde\" objects.\n")
 
-  return(list(stdErr=object$Estimate[, c("y_grid", "se", "se_RBC")], CovMat=object$CovMat$CovMat, CovMat_RBC=object$CovMat$CovMat_RBC))
+  return(list(stdErr = object$Estimate[, c("y_grid", "se", "se_RBC")], CovMat = object$CovMat$CovMat, CovMat_RBC = object$CovMat$CovMat_RBC))
 }
 
 #######################################################################################
@@ -357,38 +386,48 @@ vcov.lpcde = function(object, ...) {
 #'
 #'
 #' @examples
-#' n=100
-#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' n <- 100
+#' x_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, by = 0.1))
 #' # density estimation
-#' model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
+#' model1 <- lpcde::lpcde(x_data = x_data, y_data = y_data, y_grid = y_grid, x = 0, bw = 0.5)
 #' confint(model1)
 #'
 #' @export
-confint.lpcde <- function(object, parm = NULL, level=0.95, CIuniform=FALSE, CIsimul=2000, ...){
-  x = object
+confint.lpcde <- function(object, parm = NULL, level = 0.95, CIuniform = FALSE, CIsimul = 2000, ...) {
+  x <- object
   if (class(x)[1] == "lpbwcde") {
     stop("The confint method does not support \"lpbwcde\" objects.\n")
   }
-  args = list(...)
-  alpha = 1-level
+  args <- list(...)
+  alpha <- 1 - level
 
-  if (!is.null(parm)) { args[['grid']] = parm }
-  if (is.null(args[['CIuniform']]))   { CIuniform = FALSE } else { CIuniform = args[['CIuniform']] }
-  if (is.null(args[['CIsimul']]))   { CIsimul = 2000 } else { sep = args[['CIsimul']] }
+  if (!is.null(parm)) {
+    args[["grid"]] <- parm
+  }
+  if (is.null(args[["CIuniform"]])) {
+    CIuniform <- FALSE
+  } else {
+    CIuniform <- args[["CIuniform"]]
+  }
+  if (is.null(args[["CIsimul"]])) {
+    CIsimul <- 2000
+  } else {
+    sep <- args[["CIsimul"]]
+  }
 
-  if (is.null(args[['grid']]) & is.null(args[['gridIndex']])) {
+  if (is.null(args[["grid"]]) & is.null(args[["gridIndex"]])) {
     gridIndex <- 1:nrow(x$Estimate)
-  } else if (is.null(args[['grid']]) & !is.null(args[['gridIndex']])) {
-    gridIndex <- args[['gridIndex']]
+  } else if (is.null(args[["grid"]]) & !is.null(args[["gridIndex"]])) {
+    gridIndex <- args[["gridIndex"]]
     if (is.null(gridIndex)) {
       gridIndex <- 1:nrow(x$Estimate)
     } else if (!all(gridIndex %in% 1:nrow(x$Estimate))) {
       stop("Option gridIndex incorrectly specified.\n")
     }
   } else {
-    grid <- args[['grid']]
+    grid <- args[["grid"]]
     if (is.null(grid)) {
       gridIndex <- 1:nrow(x$Estimate)
     } else if (!is.numeric(grid)) {
@@ -396,44 +435,49 @@ confint.lpcde <- function(object, parm = NULL, level=0.95, CIuniform=FALSE, CIsi
     } else {
       gridIndex <- rep(NA, length(grid))
       for (j in 1:length(grid)) {
-        gridIndex[j] <- which.min(abs(x$Estimate[, "y_grid"]-grid[j]))
+        gridIndex[j] <- which.min(abs(x$Estimate[, "y_grid"] - grid[j]))
       }
     }
   }
 
-  Estimate = matrix(NA, nrow=length(gridIndex), ncol=7)
-  Estimate[, 1] = x$Estimate[gridIndex, "y_grid"]
-  Estimate[, 2] = x$Estimate[gridIndex, "est"]
-  Estimate[, 3] = x$Estimate[gridIndex, "est_RBC"]
+  Estimate <- matrix(NA, nrow = length(gridIndex), ncol = 7)
+  Estimate[, 1] <- x$Estimate[gridIndex, "y_grid"]
+  Estimate[, 2] <- x$Estimate[gridIndex, "est"]
+  Estimate[, 3] <- x$Estimate[gridIndex, "est_RBC"]
 
   # critical valus calculations
   if (CIuniform) {
-    if (length(CIsimul) == 0) { CIsimul = 2000 }
+    if (length(CIsimul) == 0) {
+      CIsimul <- 2000
+    }
     if (!is.numeric(CIsimul) | is.na(CIsimul)) {
       warning("Option CIsimul incorrectly specified. Will only plot pointwise confidence intervals.\n")
-      CIuniform = FALSE
-      z_val = stats::qnorm(1 - alpha/2)
-    }else if (ceiling(CIsimul)<2) {
+      CIuniform <- FALSE
+      z_val <- stats::qnorm(1 - alpha / 2)
+    } else if (ceiling(CIsimul) < 2) {
       warning("Option CIsimul incorrectly specified. Will only plot pointwise confidence intervals.\n")
-      CIuniform = FALSE
-      z_val = stats::qnorm(1 - alpha/2)
-    }else {
-      CIsimul = ceiling(CIsimul)
-      corrMat = sweep(sweep(x$CovMat$CovMat_RBC, MARGIN=1, FUN="*", STATS=1/x$Estimate[, "se_RBC"]), MARGIN=2, FUN="*", STATS=1/x$Estimate[, "se_RBC"])
-      normalSimu = try(
-        MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=Matrix::nearPD(corrMat)$mat),
-        silent=TRUE)
+      CIuniform <- FALSE
+      z_val <- stats::qnorm(1 - alpha / 2)
+    } else {
+      CIsimul <- ceiling(CIsimul)
+      corrMat <- sweep(sweep(x$CovMat$CovMat_RBC, MARGIN = 1, FUN = "*", STATS = 1 / x$Estimate[, "se_RBC"]), MARGIN = 2, FUN = "*", STATS = 1 / x$Estimate[, "se_RBC"])
+      normalSimu <- try(
+        MASS::mvrnorm(n = CIsimul, mu = rep(0, nrow(corrMat)), Sigma = Matrix::nearPD(corrMat)$mat),
+        silent = TRUE
+      )
       if (is.character(normalSimu)) {
         print(normalSimu)
         warning("Variance-Covariance is not positive semidefinite. Will only plot pointwise confidence intervals.\n")
-        CIuniform = FALSE
-        z_val = stats::qnorm(1 - alpha/2)
+        CIuniform <- FALSE
+        z_val <- stats::qnorm(1 - alpha / 2)
       } else {
-        z_val = stats::quantile(apply(normalSimu, MARGIN=1, FUN=function(x) {max(abs(x))}), 1 - alpha)
+        z_val <- stats::quantile(apply(normalSimu, MARGIN = 1, FUN = function(x) {
+          max(abs(x))
+        }), 1 - alpha)
       }
     }
-  }else {
-    z_val = stats::qnorm(1 - alpha/2)
+  } else {
+    z_val <- stats::qnorm(1 - alpha / 2)
   }
 
 
@@ -445,10 +489,9 @@ confint.lpcde <- function(object, parm = NULL, level=0.95, CIuniform=FALSE, CIsi
 
   colnames(Estimate) <- c("y_grid", "Est", "Est_RBC", "CI_l", "CI_r", "CI_l_RBC", "CI_r_RBC")
 
-  returnlist = list("Estimate" = Estimate, "crit_val" = z_val)
+  returnlist <- list("Estimate" = Estimate, "crit_val" = z_val)
 
   return(returnlist)
-
 }
 
 #######################################################################################
@@ -533,141 +576,140 @@ confint.lpcde <- function(object, parm = NULL, level=0.95, CIuniform=FALSE, CIsi
 #' \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 #'
 #' @export
-plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
-                      pty=NULL, pwd=NULL, pcol=NULL, y_grid=NULL,CItype=NULL,
-                      CIuniform=FALSE, CIsimul=2000, CIshade=NULL, CIcol=NULL,
-                      title=NULL, xlabel=NULL, ylabel=NULL,
-                      legendTitle=NULL, legendGroups=NULL, rbc=FALSE) {
-
+plot.lpcde <- function(..., alpha = NULL, type = NULL, lty = NULL, lwd = NULL, lcol = NULL,
+                       pty = NULL, pwd = NULL, pcol = NULL, y_grid = NULL, CItype = NULL,
+                       CIuniform = FALSE, CIsimul = 2000, CIshade = NULL, CIcol = NULL,
+                       title = NULL, xlabel = NULL, ylabel = NULL,
+                       legendTitle = NULL, legendGroups = NULL, rbc = FALSE) {
   ########################################
   # check how many series are passed in
   ########################################
 
-  x = list(...)
-  nfig = length(x)
+  x <- list(...)
+  nfig <- length(x)
   if (nfig == 0) {
     stop("Nothing to plot.\n")
   }
 
-  flagToPlot = rep(TRUE, nfig)
+  flagToPlot <- rep(TRUE, nfig)
   # looping through each series
   for (i in 1:length(x)) {
     # check if is a lpbwcde object
     if (class(x[[i]])[1] == "lpbwcde") {
-      flagToPlot[i] = FALSE
-      warning(paste("Input ", i, " is an \"lpbwcde\" object, which is not supported by the plot method.\n", sep=""))
+      flagToPlot[i] <- FALSE
+      warning(paste("Input ", i, " is an \"lpbwcde\" object, which is not supported by the plot method.\n", sep = ""))
       next
     }
     # check if there is only one grid point
     if (nrow(x[[i]]$Estimate) < 2) {
-      flagToPlot[i] = FALSE
-      warning(paste("At least two grid points are needed to plot input ", i, ".\n", sep=""))
+      flagToPlot[i] <- FALSE
+      warning(paste("At least two grid points are needed to plot input ", i, ".\n", sep = ""))
       next
     }
   }
 
   # select on series that can be plotted
-  x = x[flagToPlot]
-  nfig = length(x)
+  x <- x[flagToPlot]
+  nfig <- length(x)
   if (nfig == 0) {
     stop("Nothing to plot.\n")
-    }
+  }
 
   ############################################################################
   # error handling
   ############################################################################
   # alpha
   if (length(alpha) == 0) {
-    alpha = rep(0.05, nfig)
-  } else if (!all(alpha>0 & alpha<1)) {
+    alpha <- rep(0.05, nfig)
+  } else if (!all(alpha > 0 & alpha < 1)) {
     stop("Significance level incorrectly specified.\n")
   } else {
-    alpha = rep(alpha, length.out=nfig)
+    alpha <- rep(alpha, length.out = nfig)
   }
 
   # plot type
   if (length(type) == 0) {
-    type = rep("line", nfig)
+    type <- rep("line", nfig)
   } else {
-    if (!all(type%in%c("line", "points", "both"))) {
+    if (!all(type %in% c("line", "points", "both"))) {
       stop("Plotting type incorrectly specified.\n")
     }
-    type = rep(type, length.out=nfig)
+    type <- rep(type, length.out = nfig)
   }
 
   # CI type
   if (length(CItype) == 0) {
-    CItype = rep("region", nfig)
+    CItype <- rep("region", nfig)
   } else {
-    if (!all(CItype%in%c("region", "line", "ebar", "all", "none"))) {
+    if (!all(CItype %in% c("region", "line", "ebar", "all", "none"))) {
       stop("Confidence interval type incorrectly specified.\n")
     }
-    CItype = rep(CItype, length.out=nfig)
+    CItype <- rep(CItype, length.out = nfig)
   }
 
   # line style
   if (length(lty) == 0) {
-    lty = rep(1, nfig)
+    lty <- rep(1, nfig)
   } else {
-    lty = rep(lty, length.out=nfig)
+    lty <- rep(lty, length.out = nfig)
   }
   # line width
   if (length(lwd) == 0) {
-    lwd = rep(0.5, nfig)
+    lwd <- rep(0.5, nfig)
   } else {
-    lwd = rep(lwd, length.out=nfig)
+    lwd <- rep(lwd, length.out = nfig)
   }
   # line color
   if (length(lcol) == 0) {
-    lcol = 1:nfig
+    lcol <- 1:nfig
   } else {
-    lcol = rep(lcol, length.out=nfig)
+    lcol <- rep(lcol, length.out = nfig)
   }
 
   # point style
   if (length(pty) == 0) {
-    pty = rep(1, nfig)
+    pty <- rep(1, nfig)
   } else {
-    pty = rep(pty, length.out=nfig)
+    pty <- rep(pty, length.out = nfig)
   }
   # point width
   if (length(pwd) == 0) {
-    pwd = rep(1, nfig)
+    pwd <- rep(1, nfig)
   } else {
-    pwd = rep(pwd, length.out=nfig)
+    pwd <- rep(pwd, length.out = nfig)
   }
   # point color
   if (length(pcol) == 0) {
-    pcol = lcol
+    pcol <- lcol
   } else {
-    pcol = rep(pcol, length.out=nfig)
+    pcol <- rep(pcol, length.out = nfig)
   }
 
   # CI shade
   if (length(CIshade) == 0) {
-    CIshade = rep(0.2, nfig)
+    CIshade <- rep(0.2, nfig)
   } else {
-    CIshade = rep(CIshade, length.out=nfig)
+    CIshade <- rep(CIshade, length.out = nfig)
   }
   # CI color
   if (length(CIcol) == 0) {
-    CIcol = lcol
+    CIcol <- lcol
   } else {
-    CIcol = rep(CIcol, length.out=nfig)
+    CIcol <- rep(CIcol, length.out = nfig)
   }
 
   # legend
   if (length(legendTitle) == 0) {
-    legendTitle = ""
+    legendTitle <- ""
   } else {
-    legendTitle = legendTitle[1]
+    legendTitle <- legendTitle[1]
   }
   # legend Groups
   if (length(legendGroups) > 0) {
-    legendGroups = rep(legendGroups, length.out=nfig)
-    legend_default = FALSE
+    legendGroups <- rep(legendGroups, length.out = nfig)
+    legend_default <- FALSE
   } else {
-    legend_default = TRUE
+    legend_default <- TRUE
   }
 
   # y_grid
@@ -691,16 +733,17 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
   # initializing plot
   ########################################
 
-  temp_plot = ggplot2::ggplot() + ggplot2::theme_bw()
+  temp_plot <- ggplot2::ggplot() +
+    ggplot2::theme_bw()
 
-  CI_l = CI_r = est = Sname = NULL
+  CI_l <- CI_r <- est <- Sname <- NULL
   ########################################
   # looping over input models
   ########################################
   # estimation range
-  estRangeL = estRangeR = c()
+  estRangeL <- estRangeR <- c()
 
-  col_all = lty_all = pty_all = v_all = c()
+  col_all <- lty_all <- pty_all <- v_all <- c()
 
   for (i in 1:nfig) {
     # get derivative order
@@ -708,7 +751,7 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
     # get ploting indices
     if (is.null(y_grid)) {
       plotIndex <- 1:nrow(x[[i]]$Estimate)
-    }else {
+    } else {
       # selecting grid points corresponding to estimate values computed
       gridTemp <- y_grid[y_grid >= min(x[[i]]$Estimate[, "y_grid"]) & y_grid <= max(x[[i]]$Estimate[, "y_grid"])]
       if (length(gridTemp) == 0) {
@@ -717,110 +760,127 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
         plotIndex <- rep(NA, length(gridTemp))
         for (ii in 1:length(gridTemp)) {
           # find minimum distance between grid point and grid values in lpcde object
-          plotIndex[ii] <- which.min(abs(gridTemp[ii]-x[[i]]$Estimate[, "y_grid"]))
+          plotIndex[ii] <- which.min(abs(gridTemp[ii] - x[[i]]$Estimate[, "y_grid"]))
         }
       }
     }
 
     # initialize lower and upper bound limits
-    estRangeL = min(estRangeL, min(x[[i]]$Estimate[, "y_grid"]))
-    estRangeR = max(estRangeR, max(x[[i]]$Estimate[, "y_grid"]))
+    estRangeL <- min(estRangeL, min(x[[i]]$Estimate[, "y_grid"]))
+    estRangeR <- max(estRangeR, max(x[[i]]$Estimate[, "y_grid"]))
 
     # dataset to plot
-    data_x = data.frame(x[[i]]$Estimate[, c("y_grid", "est", "est_RBC", "se", "se_RBC"), drop=FALSE])
+    data_x <- data.frame(x[[i]]$Estimate[, c("y_grid", "est", "est_RBC", "se", "se_RBC"), drop = FALSE])
 
     # critical values calculations
     if (CIuniform) {
       if (length(CIsimul) == 0) {
-        CIsimul = 2000
+        CIsimul <- 2000
       }
       if (!is.numeric(CIsimul) | is.na(CIsimul)) {
         warning("Option CIsimul incorrectly specified. Will only plot pointwise confidence intervals.\n")
-        CIuniform = FALSE
-        z_val = stats::qnorm(1 - alpha/2)
-      }else if (ceiling(CIsimul)<2) {
+        CIuniform <- FALSE
+        z_val <- stats::qnorm(1 - alpha / 2)
+      } else if (ceiling(CIsimul) < 2) {
         warning("Option CIsimul incorrectly specified. Will only plot pointwise confidence intervals.\n")
-        CIuniform = FALSE
-        z_val = stats::qnorm(1 - alpha/2)
-      }else {
-        CIsimul = ceiling(CIsimul)
-        corrMat = sweep(sweep(x[[i]]$CovMat$CovMat_RBC, MARGIN=1, FUN="*", STATS=1/x[[i]]$Estimate[, "se_RBC"], check.margin = FALSE), MARGIN=2, FUN="*", STATS=1/x[[i]]$Estimate[, "se_RBC"], check.margin = FALSE)
-        normalSimu = try(
-          MASS::mvrnorm(n=CIsimul, mu=rep(0,nrow(corrMat)), Sigma=Matrix::nearPD(corrMat)$mat),
-          silent=TRUE)
+        CIuniform <- FALSE
+        z_val <- stats::qnorm(1 - alpha / 2)
+      } else {
+        CIsimul <- ceiling(CIsimul)
+        corrMat <- sweep(sweep(x[[i]]$CovMat$CovMat_RBC, MARGIN = 1, FUN = "*", STATS = 1 / x[[i]]$Estimate[, "se_RBC"], check.margin = FALSE), MARGIN = 2, FUN = "*", STATS = 1 / x[[i]]$Estimate[, "se_RBC"], check.margin = FALSE)
+        normalSimu <- try(
+          MASS::mvrnorm(n = CIsimul, mu = rep(0, nrow(corrMat)), Sigma = Matrix::nearPD(corrMat)$mat),
+          silent = TRUE
+        )
         if (is.character(normalSimu)) {
           print(normalSimu)
           warning("Variance-Covariance is not positive semidefinite. Will only plot pointwise confidence intervals.\n")
-          CIuniform = FALSE
-          z_val = stats::qnorm(1 - alpha/2)
+          CIuniform <- FALSE
+          z_val <- stats::qnorm(1 - alpha / 2)
         } else {
-          z_val = stats::quantile(apply(normalSimu, MARGIN=1, FUN=function(x) {max(abs(x))}), 1 - alpha)
+          z_val <- stats::quantile(apply(normalSimu, MARGIN = 1, FUN = function(x) {
+            max(abs(x))
+          }), 1 - alpha)
         }
-        z_val = stats::confint(x[[i]], CIuniform=TRUE)$crit_val
+        z_val <- stats::confint(x[[i]], CIuniform = TRUE)$crit_val
       }
-    }else {
-      z_val = stats::qnorm(1 - alpha/2)
+    } else {
+      z_val <- stats::qnorm(1 - alpha / 2)
     }
 
     # computing and saving lower and upper confidence interval values
-    if(rbc){
+    if (rbc) {
       # use RBC values for computation
-      data_x$CI_l = data_x$est_RBC - z_val * data_x$se_RBC
-      data_x$CI_r = data_x$est_RBC + z_val * data_x$se_RBC
+      data_x$CI_l <- data_x$est_RBC - z_val * data_x$se_RBC
+      data_x$CI_r <- data_x$est_RBC + z_val * data_x$se_RBC
     } else {
       # use standard values for computation
-      data_x$CI_l = data_x$est - z_val * data_x$se
-      data_x$CI_r = data_x$est + z_val * data_x$se
+      data_x$CI_l <- data_x$est - z_val * data_x$se
+      data_x$CI_r <- data_x$est + z_val * data_x$se
     }
     # valid estimates
-    n_suff = 30
-    suff_idx = x[[i]]$eff_n<n_suff
-    data_x$CI_l[suff_idx] = 0
-    data_x$CI_r[suff_idx] = 0
+    n_suff <- 30
+    suff_idx <- x[[i]]$eff_n < n_suff
+    data_x$CI_l[suff_idx] <- 0
+    data_x$CI_r[suff_idx] <- 0
 
     # adding legend information to dataset
     if (legend_default) {
-      data_x$Sname = paste("Series", i, sep=" ")
-      legendGroups = c(legendGroups, data_x$Sname)
+      data_x$Sname <- paste("Series", i, sep = " ")
+      legendGroups <- c(legendGroups, data_x$Sname)
     }
 
     ########################################
     # add CI regions to the plot
-    if (CItype[i]%in%c("region", "all")){
-      temp_plot = temp_plot + ggplot2::geom_ribbon(data=data_x, ggplot2::aes(x=y_grid, ymin=CI_l, ymax=CI_r), alpha=CIshade[i], fill=CIcol[i])
+    if (CItype[i] %in% c("region", "all")) {
+      temp_plot <- temp_plot + ggplot2::geom_ribbon(data = data_x, ggplot2::aes(x = y_grid, ymin = CI_l, ymax = CI_r), alpha = CIshade[i], fill = CIcol[i])
     }
 
     ########################################
     # add CI lines to the plot
-    if (CItype[i]%in%c("line", "all")){
-      temp_plot = temp_plot + ggplot2::geom_line(data=data_x, ggplot2::aes(x=y_grid, y=CI_l),
-                                                  linetype=2, alpha=1, col=CIcol[i]) +
-        ggplot2::geom_line(data=data_x, ggplot2::aes(x=y_grid, y=CI_r), linetype=2,
-                           alpha=1, col=CIcol[i])
+    if (CItype[i] %in% c("line", "all")) {
+      temp_plot <- temp_plot + ggplot2::geom_line(
+        data = data_x, ggplot2::aes(x = y_grid, y = CI_l),
+        linetype = 2, alpha = 1, col = CIcol[i]
+      ) +
+        ggplot2::geom_line(
+          data = data_x, ggplot2::aes(x = y_grid, y = CI_r), linetype = 2,
+          alpha = 1, col = CIcol[i]
+        )
     }
 
     ########################################
     # add error bars to the plot
-    if (CItype[i]%in%c("ebar", "all") & !is.null(plotIndex)){
-      temp_plot = temp_plot + ggplot2::geom_errorbar(data=data_x[plotIndex, ],
-                                                      ggplot2::aes(x=y_grid, ymin=CI_l, ymax=CI_r),
-                                                      alpha=1, col=CIcol[i], linetype=1)
+    if (CItype[i] %in% c("ebar", "all") & !is.null(plotIndex)) {
+      temp_plot <- temp_plot + ggplot2::geom_errorbar(
+        data = data_x[plotIndex, ],
+        ggplot2::aes(x = y_grid, ymin = CI_l, ymax = CI_r),
+        alpha = 1, col = CIcol[i], linetype = 1
+      )
     }
 
     ########################################
     # add lines to the plot
-    if (type[i]%in%c("line", "both")) {
-      temp_plot = temp_plot + ggplot2::geom_line(data=data_x,
-                                                 ggplot2::aes(x=y_grid, y=est, colour=Sname,
-                                                              linetype=Sname), linewidth=lwd[i])
+    if (type[i] %in% c("line", "both")) {
+      temp_plot <- temp_plot + ggplot2::geom_line(
+        data = data_x,
+        ggplot2::aes(
+          x = y_grid, y = est, colour = Sname,
+          linetype = Sname
+        ), linewidth = lwd[i]
+      )
     }
 
     ########################################
     # add points to the plot
-    if (type[i]%in%c("points", "both") & !is.null(plotIndex)) {
-      temp_plot = temp_plot + ggplot2::geom_point(data=data_x[plotIndex, ],
-                                                  ggplot2::aes(x=y_grid, y=est, colour=Sname,
-                                                               shape=Sname), linewidth=pwd[i])
+    if (type[i] %in% c("points", "both") & !is.null(plotIndex)) {
+      temp_plot <- temp_plot + ggplot2::geom_point(
+        data = data_x[plotIndex, ],
+        ggplot2::aes(
+          x = y_grid, y = est, colour = Sname,
+          shape = Sname
+        ), linewidth = pwd[i]
+      )
     }
 
     if (type[i] == "line") {
@@ -836,20 +896,19 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
       lty_all <- c(lty_all, NA)
       pty_all <- c(pty_all, pty[i])
     }
-
   }
 
   ########################################
   # change color, line type and point shape back, and customize legend
   ########################################
   # New in v0.2.1 to handle legend
-  index <- sort.int(legendGroups, index.return=TRUE)$ix
+  index <- sort.int(legendGroups, index.return = TRUE)$ix
   temp_plot <- temp_plot + ggplot2::scale_color_manual(values = col_all[index]) +
     ggplot2::scale_linetype_manual(values = lty_all[index]) +
     ggplot2::scale_shape_manual(values = pty_all[index]) +
-    ggplot2::guides(colour=ggplot2::guide_legend(title=legendTitle)) +
-    ggplot2::guides(linetype=ggplot2::guide_legend(title=legendTitle)) +
-    ggplot2::guides(shape=ggplot2::guide_legend(title=legendTitle))
+    ggplot2::guides(colour = ggplot2::guide_legend(title = legendTitle)) +
+    ggplot2::guides(linetype = ggplot2::guide_legend(title = legendTitle)) +
+    ggplot2::guides(shape = ggplot2::guide_legend(title = legendTitle))
 
   ########################################
   # add title, x and y labs
@@ -861,7 +920,7 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
       } else if (v_all[1] == 1) {
         ylabel <- "Density"
       } else {
-        ylabel <- paste("Density derivative (mu=", v_all[1], ")", sep="")
+        ylabel <- paste("Density derivative (mu=", v_all[1], ")", sep = "")
       }
     } else {
       ylabel <- ""
@@ -876,10 +935,10 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
     title <- ""
   }
 
-  temp_plot <- temp_plot + ggplot2::labs(x=xlabel, y=ylabel) + ggplot2::ggtitle(title) +
+  temp_plot <- temp_plot + ggplot2::labs(x = xlabel, y = ylabel) + ggplot2::ggtitle(title) +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
 
-  if (nfig ==1){
+  if (nfig == 1) {
     temp_plot <- temp_plot + ggplot2::theme(legend.position = "none")
   }
 
@@ -893,6 +952,5 @@ plot.lpcde = function(..., alpha=NULL,type=NULL, lty=NULL, lwd=NULL, lcol=NULL,
   ########################################
   # return the plot
   ########################################
-  return (temp_plot)
-
+  return(temp_plot)
 }

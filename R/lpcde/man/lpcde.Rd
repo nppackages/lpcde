@@ -123,13 +123,13 @@ high curvature at some evaluation point(s). One possible solution in this case i
 increase the polynomial order \code{p} or to employ a smaller bandwidth.
 }
 \examples{
-#Density estimation example
-n=500
-x_data = matrix(rnorm(n, mean=0, sd=1))
-y_data = matrix(rnorm(n, mean=x_data, sd=1))
-y_grid = seq(from=-1, to=1, length.out=5)
-model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=0.5)
-#summary of estimation
+# Density estimation example
+n <- 500
+x_data <- matrix(rnorm(n, mean = 0, sd = 1))
+y_data <- matrix(rnorm(n, mean = x_data, sd = 1))
+y_grid <- seq(from = -1, to = 1, length.out = 5)
+model1 <- lpcde::lpcde(x_data = x_data, y_data = y_data, y_grid = y_grid, x = 0, bw = 0.5)
+# summary of estimation
 summary(model1)
 
 }

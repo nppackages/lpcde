@@ -9,7 +9,7 @@ n=1000
 #x_data = matrix(rnorm(2*n, mean=0, sd=1), ncol=2)
 x_data = matrix(rnorm(n, mean=0, sd=1))
 y_data = matrix(rnorm(n, mean=x_data, sd=1))
-y_grid = seq(from=-2, to=2, length.out=10)
+y_grid = seq(from=-2, to=2, by = 0.5)
 # density estimation
 #model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=matrix(c(0, 0), ncol=1), bw=0.5)
 model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, bw=1)
@@ -21,7 +21,7 @@ set.seed(42)
 n=1000
 x_data = matrix(rnorm(n, mean=0, sd=1))
 y_data = matrix(rnorm(n, mean=x_data, sd=1))
-y_grid = seq(from=-2, to=2, length.out=10)
+y_grid = seq(from=-2, to=2, by = 0.5)
 # density estimation
 model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0)
 model_reg = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, nonneg=TRUE, normalize=TRUE)

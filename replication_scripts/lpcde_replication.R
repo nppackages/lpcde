@@ -8,7 +8,7 @@ set.seed(30)
 n=1000
 x_data = matrix(rnorm(n, mean=0, sd=1))
 y_data = matrix(rnorm(n, mean=x_data, sd=1))
-y_grid = seq(from=-2, to=2, length.out=10)
+y_grid = seq(from=-2, to=2,by = 0.5)
 
 #Standard density estimation
 model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0, rbc = TRUE)
@@ -18,7 +18,7 @@ model2 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid)
 summary(model2)
 
 #Comparing standard and regularized estimate with true density (see Fig 1)
-y_grid = seq(from=-2, to=2, length.out=20)
+y_grid = seq(from=-2, to=2, by = 0.2)
 model1 = lpcde::lpcde(x_data=x_data, y_data=y_data, y_grid=y_grid, x=0,
                       bw=1, rbc = TRUE)
 #Regularized density estimation
