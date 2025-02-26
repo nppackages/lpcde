@@ -43,7 +43,7 @@ Details regarding package updates can be found in [NEWS.md](https://github.com/n
 
 - Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/web/packages/lpcde/index.html).
 
-- A simple replication file: [R-script](R/lpcde_illustration.R).
+- A simple replication file: [R-script](replication_scripts/lpcde_illustration.R).
 
 - Additional simulations using this package: [Technical Paper replication script](https://github.com/nppackages-replication/CCJM_2024_Bernoulli)
 
