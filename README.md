@@ -53,7 +53,7 @@ Details regarding package updates can be found in [NEWS.md](https://github.com/n
 ### Software and Implementation
 
 - Cattaneo, Chandak, Jansson and Ma (2025): [lpcde: Estimation and Inference for Local Polynomial Conditional Density Estimators](https://mdcattaneo.github.io/papers/Cattaneo-Chandak-Jansson-Ma_2025_JOSS.pdf).<br>
-_Journal of Open Source Software_ 10(107): 7241
+_Journal of Open Source Software_ 10(107): 7241.<br>
 [Companion arXiv version](https://mdcattaneo.github.io/papers/Cattaneo-Chandak-Jansson-Ma_2025_JOSS--arXiv.pdf)
 
 
