@@ -12,7 +12,7 @@ To install/update in R type:
 install.packages('lpcde')
 ```
 
-- Help: [CRAN repository](https://CRAN.R-project.org/package=lpcde).
+- Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://CRAN.R-project.org/package=lpcde).
 
 - Replication: [R illustration](replication/lpcde_illustration.R), [Python illustration](replication/lpcde_illustration.py), [Stata illustration](replication/lpcde_illustration.do), [software article replication](replication/lpcde_replication.R), [comparison illustration](replication/lpcde_comparison.R).
 
