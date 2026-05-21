@@ -12,20 +12,15 @@ To install/update in R type:
 install.packages('lpcde')
 ```
 
-- Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/package=lpcde).
+- Help: [CRAN repository](https://CRAN.R-project.org/package=lpcde).
 
 - Replication: [R illustration](replication/lpcde_illustration.R), [Python illustration](replication/lpcde_illustration.py), [Stata illustration](replication/lpcde_illustration.do), [software article replication](replication/lpcde_replication.R), [comparison illustration](replication/lpcde_comparison.R).
-
-- Development version:
-```
-devtools::install_github('nppackages/lpcde/R/lpcde')
-```
 
 ## Python Implementation
 
 To install/update locally from this repository:
 ```
-pip install -e Python/lpcde
+pip install lpcde
 ```
 
 - Help: [Python README](Python/lpcde/README.md), [illustration script](replication/lpcde_illustration.py).
@@ -71,7 +66,7 @@ Bernoulli 30(4): 3193-3223.<br>
 
 ## Funding
 
-This work was supported in part by the National Science Foundation through grants [SES-1947805](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1947805), SES-1947662, [DMS-2210561](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2210561), and [SES-2241575](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2241575), and by the National Institutes of Health through grant R01 GM072611-16.
+This work was supported in part by the National Science Foundation through grants [SES-1947805](https://www.nsf.gov/awardsearch/show-award/?AWD_ID=1947805), SES-1947662, [DMS-2210561](https://www.nsf.gov/awardsearch/show-award/?AWD_ID=2210561), and [SES-2241575](https://www.nsf.gov/awardsearch/show-award/?AWD_ID=2241575), and by the National Institutes of Health through grant R01 GM072611-16.
 
 
 <br><br>

@@ -12,7 +12,7 @@ To install/update in R type:
 install.packages('lpcde')
 ```
 
-- Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/package=lpcde).
+- Help: [CRAN repository](https://CRAN.R-project.org/package=lpcde).
 
 - Replication: [R-script](https://github.com/nppackages/lpcde/blob/main/replication/lpcde_illustration.R), [software article replication](https://github.com/nppackages/lpcde/blob/main/replication/lpcde_replication.R), [comparison illustration](https://github.com/nppackages/lpcde/blob/main/replication/lpcde_comparison.R), [Python illustration](https://github.com/nppackages/lpcde/blob/main/replication/lpcde_illustration.py), [Stata illustration](https://github.com/nppackages/lpcde/blob/main/replication/lpcde_illustration.do).
 
@@ -48,4 +48,4 @@ Bernoulli 30(4): 3193-3223.<br>
 
 ## Funding
 
-This work was supported in part by the National Science Foundation through grants [SES-1947805](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1947805), SES-1947662, [DMS-2210561](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2210561), and [SES-2241575](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2241575), and by the National Institutes of Health through grant R01 GM072611-16.
+This work was supported in part by the National Science Foundation through grants [SES-1947805](https://www.nsf.gov/awardsearch/show-award/?AWD_ID=1947805), SES-1947662, [DMS-2210561](https://www.nsf.gov/awardsearch/show-award/?AWD_ID=2210561), and [SES-2241575](https://www.nsf.gov/awardsearch/show-award/?AWD_ID=2241575), and by the National Institutes of Health through grant R01 GM072611-16.
