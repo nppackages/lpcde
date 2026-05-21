@@ -4,7 +4,7 @@ Notable project changes are listed from newest to oldest.
 
 ## 2026-05-21 - Version 1.0.0
 
-- Added a GitHub Actions workflow for PyPI Trusted Publishing of the Python package on published releases.
+- Added a GitHub Actions workflow for PyPI Trusted Publishing of the Python package on published releases and version tags.
 - Normalized author affiliations to university names only across package metadata and Stata help files.
 - Added Stata help-file author sections matching the LPDENSITY help-file style and removed the dependency section from the Stata help surface.
 - Added Stata help PDFs for `lpcde` and `lpbwcde`, generated from the `.sthlp` files using the LPDENSITY-style local build script.
