@@ -10,13 +10,13 @@
 #' \item{Display output}{A list of specified options provided to the function.}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}.
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpbwcde}} for data-driven bandwidth selection.
 #'
@@ -65,13 +65,13 @@ print.lpbwcde <- function(x, ...) {
 #' \item{Display output}{A list of specified options and a matrix of grid points, bandwidth, and effective sample size.}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}.
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpbwcde}} for data-driven bandwidth selection.
 #'
@@ -189,25 +189,27 @@ summary.lpbwcde <- function(object, ...) {
 #' \item{Matrix}{A matrix containing y_grid points and selected bandwidths.}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}.
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpbwcde}} for data-driven bandwidth selection.
 #'
 #' Supported methods: \code{\link{coef.lpbwcde}}, \code{\link{print.lpbwcde}}, \code{\link{summary.lpbwcde}}.
 #'
-#' n=100
-#' x_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_data = as.matrix(rnorm(n, mean=0, sd=1))
-#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
+#' @examples
+#' set.seed(42)
+#' n <- 100
+#' x_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
+#' y_data <- as.matrix(rnorm(n, mean = 0, sd = 1))
 #' # bandwidth selection
-#' y_grid = stats::quantile(y_data, seq(from=0.1, to=0.9, by=0.1))
-#' model2 = lpcde::lpbwcde(y_data=y_data, x_data=x_data, x=0, y_grid = y_grid, bw_type = "mse-rot")
+#' y_grid <- stats::quantile(y_data, seq(from = 0.1, to = 0.9, by = 0.1))
+#' model2 <- lpcde::lpbwcde(y_data = y_data, x_data = x_data, x = 0,
+#'                          y_grid = y_grid, bw_type = "mse-rot")
 #' coef(model2)
 #'
 #' @export

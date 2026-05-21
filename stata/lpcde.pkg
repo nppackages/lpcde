@@ -1,0 +1,16 @@
+v 3
+d STATA Package: LPCDE
+d
+d Authors: Matias D. Cattaneo, Princeton University, matias.d.cattaneo@gmail.com
+d          Rajita Chandak, University of Wisconsin-Madison, rajita.chandak@gmail.com
+d          Michael Jansson, University of California, Berkeley, michael.jansson.berkeley@gmail.com
+d          Xinwei Ma, University of California, San Diego, xinweima.pku@gmail.com
+d
+d Distribution-Date: 20260521
+d
+f lpbwcde.ado
+f lpbwcde.sthlp
+f lpcde.ado
+f lpcde.sthlp
+f lpcde_fun.do
+f lpcde_illustration.do

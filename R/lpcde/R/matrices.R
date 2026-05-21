@@ -11,6 +11,25 @@
 #' @return S_x matrix
 #' @keywords internal
 S_x <- function(x_data, q, kernel_type) {
+  x_data <- as.matrix(x_data)
+  if (ncol(x_data) == 1) {
+    x <- x_data[, 1]
+    r <- matrix(1, nrow = nrow(x_data), ncol = q + 1)
+    if (q > 0) {
+      for (j in 1:q) {
+        r[, j + 1] <- r[, j] * x / j
+      }
+    }
+    if (kernel_type == "uniform") {
+      k <- ifelse(abs(x) <= 1, 0.5, 0)
+    } else if (kernel_type == "triangular") {
+      k <- (1 - abs(x)) * ifelse(abs(x) <= 1, 1, 0)
+    } else if (kernel_type == "epanechnikov") {
+      k <- 0.75 * (1 - x^2) * ifelse(abs(x) <= 1, 1, 0)
+    }
+    return(t(r) %*% (r * k))
+  }
+
   # polynomial basis function
   poly_fun <- function(x) {
     poly_base(x, q)
@@ -126,6 +145,24 @@ T_x <- function(x_data, eval_pt, q, h, kernel_type) {
 
   # generating a unit vector to get size of polynomial basis expansion
   e_base <- basis_vec(eval_pt, q, 0)
+  if (d == 1) {
+    x_pol <- (x_data[, 1] - eval_pt[1]) / h
+    r <- matrix(1, nrow = n, ncol = length(e_base))
+    if (q > 0) {
+      for (j in 1:q) {
+        r[, j + 1] <- r[, j] * x_pol / j
+      }
+    }
+    if (kernel_type == "uniform") {
+      k <- ifelse(abs(x_pol) <= 1, 0.5, 0)
+    } else if (kernel_type == "triangular") {
+      k <- (1 - abs(x_pol)) * ifelse(abs(x_pol) <= 1, 1, 0)
+    } else if (kernel_type == "epanechnikov") {
+      k <- 0.75 * (1 - x_pol^2) * ifelse(abs(x_pol) <= 1, 1, 0)
+    }
+    rk <- r * k
+    return(t(rk) %*% rk / n)
+  }
 
   # initializing matrix
   t <- matrix(0L, nrow = length(e_base), ncol = length(e_base))

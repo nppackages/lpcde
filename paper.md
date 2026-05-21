@@ -28,14 +28,13 @@ authors:
 bibliography: paper.bib
 link-citations: yes
 affiliations:
-- name: Department of Operations Research and Financial Engineering, Princeton University,
-    USA
+- name: Princeton University
   index: 1
-- name: Institute of Mathematics, EPFL, Switzerland
+- name: University of Wisconsin-Madison
   index: 2
-- name: Department of Economics, University of California, Berkeley, USA
+- name: University of California, Berkeley
   index: 3
-- name: Department of Economics, University of California, San Diego, USA
+- name: University of California, San Diego
   index: 4
 ---
 

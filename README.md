@@ -1,52 +1,56 @@
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![DOI](https://joss.theoj.org/papers/10.21105/joss.07241/status.svg)](https://doi.org/10.21105/joss.07241)
-[![CRAN version](https://img.shields.io/cran/v/lpcde?color=7733BB&label=CRAN)](https://cran.r-project.org/web/packages/lpcde/index.html)
-[![codecov](https://codecov.io/gh/nppackages/lpcde/branch/main/graph/badge.svg?token=DE4RI272QB)](https://codecov.io/gh/nppackages/lpcde)
+# Local Polynomial Conditional Density Methods
 
-# lpcde
+The `lpcde` package implements bandwidth selection, point estimation, and inference procedures for local polynomial conditional distribution and density methods.
 
-The `lpcde` package provides R implementation of bandwidth selection, point estimation and inference procedures for local polynomial conditional distribution and density methods.
-
-This work was supported by the the National Science Foundation through grants SES-1947805, SES-1947662, DMS-2210561, and SES-2241575, and from the National Institute of Health (R01 GM072611-16).
-
-## Website
-
-https://nppackages.github.io/lpcde
-
-## Queries and Requests
-
-Please email: [lpcde@googlegroups.com](mailto:lpcde@googlegroups.com)
+- `lpcde`: local polynomial conditional CDF, PDF, and derivative estimation with pointwise and uniform inference.
+- `lpbwcde`: rule-of-thumb bandwidth selection for local polynomial conditional density estimation.
 
 ## R Implementation
 
-### Install from source
-
-Install the development version of the package by running
-
-```
-devtools::install_github('nppackages/lpcde/R/lpcde')
-```
-
-### Install from CRAN
 To install/update in R type:
-
 ```
 install.packages('lpcde')
 ```
 
-## Contributing
-If you have any contributions to help improve or increase the functionality of this package, then please feel free to contribute, by opening a PR or an issue if you have any suggestions.
+- Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/package=lpcde).
 
-## Major Updates
-Details regarding package updates can be found in [NEWS.md](https://github.com/nppackages/lpcde/blob/main/R/lpcde/NEWS.md).
+- Replication: [R illustration](replication/lpcde_illustration.R), [Python illustration](replication/lpcde_illustration.py), [Stata illustration](replication/lpcde_illustration.do), [software article replication](replication/lpcde_replication.R), [comparison illustration](replication/lpcde_comparison.R).
 
-## Additional Information
+- Development version:
+```
+devtools::install_github('nppackages/lpcde/R/lpcde')
+```
 
-- Help: [R Manual](https://cran.r-project.org/web/packages/lpcde/lpcde.pdf), [CRAN repository](https://cran.r-project.org/web/packages/lpcde/index.html).
+## Python Implementation
 
-- A simple replication file: [R-script](replication_scripts/lpcde_illustration.R).
+To install/update locally from this repository:
+```
+pip install -e Python/lpcde
+```
 
-- Additional simulations using this package: [Technical Paper replication script](https://github.com/nppackages-replication/CCJM_2024_Bernoulli)
+- Help: [Python README](Python/lpcde/README.md), [illustration script](replication/lpcde_illustration.py).
+
+- Development usage:
+```
+from lpcde import lpcde, lpbwcde
+```
+
+The Python implementation mirrors the R `lpcde` and `lpbwcde` numerical paths and includes cross-language regression tests against R-generated fixtures.
+
+## Stata Implementation
+
+To install/update in Stata type:
+```
+net install lpcde, from(https://raw.githubusercontent.com/nppackages/lpcde/main/stata) replace
+```
+
+- Commands: `lpcde` for estimation and inference, `lpbwcde` for bandwidth selection.
+
+- Help: [lpcde](stata/lpcde.pdf), [lpbwcde](stata/lpbwcde.pdf).
+
+- Replication: [do-file](replication/lpcde_illustration.do).
+
+The Stata implementation is standalone Stata/Mata code, with numerical smoke tests intended to keep it aligned with the R and Python baselines.
 
 
 ## References
@@ -63,3 +67,11 @@ _Journal of Open Source Software_ 10(107): 7241.<br>
 - Cattaneo, Chandak, Jansson and Ma (2024): [Boundary Adaptive Local Polynomial Conditional Density Estimators](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2024_Bernoulli.pdf).<br>
 Bernoulli 30(4): 3193-3223.<br>
 [Supplemental appendix](https://nppackages.github.io/references/Cattaneo-Chandak-Jansson-Ma_2024_Bernoulli--Supplemental.pdf).
+
+
+## Funding
+
+This work was supported in part by the National Science Foundation through grants [SES-1947805](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1947805), SES-1947662, [DMS-2210561](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2210561), and [SES-2241575](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2241575), and by the National Institutes of Health through grant R01 GM072611-16.
+
+
+<br><br>

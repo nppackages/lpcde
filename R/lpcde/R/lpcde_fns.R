@@ -168,6 +168,13 @@ fhat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type) {
   ng <- length(y_grid)
   x <- matrix(x, ncol = d)
   singular_flag <- FALSE
+  solve_checked <- function(mat, size) {
+    if (check_inv(mat)[1] == TRUE) {
+      return(solve(mat))
+    }
+    singular_flag <<- TRUE
+    matrix(0L, nrow = size, ncol = size)
+  }
 
   # x basis vector
   e_nu <- basis_vec(x, q, nu)
@@ -199,12 +206,7 @@ fhat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type) {
     if (length(x_scaled) == 0) {
       bx <- 0
     } else {
-      if (check_inv(S_x(x_scaled, q, kernel_type) / (n * h^d))[1] == TRUE) {
-        sx_mat <- solve(S_x(x_scaled, q, kernel_type) / (n * h^d))
-      } else {
-        singular_flag <- TRUE
-        sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
+      sx_mat <- solve_checked(S_x(x_scaled, q, kernel_type) / (n * h^d), length(e_nu))
       bx <- b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
     }
 
@@ -218,20 +220,10 @@ fhat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type) {
         nh_vec[j] <- length(y_elems)
       } else {
         if (mu == 0) {
-          if (check_inv(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type) / (n * h^d))[1] == TRUE) {
-            sx_mat <- solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type) / (n * h^d))
-          } else {
-            singular_flag <- TRUE
-            sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-          }
+          sx_mat <- solve_checked(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type) / (n * h^d), length(e_nu))
           bx <- b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
           # sy matrix
-          if (check_inv(S_x(as.matrix(y_scaled), p, kernel_type) / (n * h))[1] == TRUE) {
-            sy_mat <- solve(S_x(as.matrix(y_scaled), p, kernel_type) / (n * h))
-          } else {
-            singular_flag <- TRUE
-            sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-          }
+          sy_mat <- solve_checked(S_x(as.matrix(y_scaled), p, kernel_type) / (n * h), length(e_mu))
 
           # y constants
           ax <- b_x(y_scaled, sy_mat, e_mu, p, kernel_type)
@@ -243,12 +235,7 @@ fhat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type) {
           nh_vec[j] <- length(y_elems)
         } else {
           # sy matrix
-          if (check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-            sy_mat <- solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))
-          } else {
-            singular_flag <- TRUE
-            sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-          }
+          sy_mat <- solve_checked(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h), length(e_mu))
 
           # y constants
           ax <- b_x(as.matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -281,12 +268,7 @@ fhat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type) {
 
       # x constants
       x_scaled <- sweep(x_data_loc, 2, x) / (h[j]^d)
-      if (check_inv(S_x(as.matrix(x_scaled), q, kernel_type) / (n * h[j]^d))[1] == TRUE) {
-        sx_mat <- solve(S_x(as.matrix(x_scaled), q, kernel_type) / (n * h[j]^d))
-      } else {
-        singular_flag <- TRUE
-        sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
+      sx_mat <- solve_checked(S_x(as.matrix(x_scaled), q, kernel_type) / (n * h[j]^d), length(e_nu))
       bx <- b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
 
       y <- y_grid[j]
@@ -298,20 +280,10 @@ fhat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type) {
         nh_vec[j] <- length(y_elems)
       } else {
         if (mu == 0) {
-          if (check_inv(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type) / (n * h[j]^d))[1] == TRUE) {
-            sx_mat <- solve(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type) / (n * h[j]^d))
-          } else {
-            singular_flag <- TRUE
-            sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-          }
+          sx_mat <- solve_checked(S_x(as.matrix(x_scaled[y_elems, ]), q, kernel_type) / (n * h[j]^d), length(e_nu))
           bx <- b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
           # sy matrix
-          if (check_inv(S_x(as.matrix(y_scaled), p, kernel_type) / (n * h[j]))[1] == TRUE) {
-            sy_mat <- solve(S_x(as.matrix(y_scaled), p, kernel_type) / (n * h[j]))
-          } else {
-            singular_flag <- TRUE
-            sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-          }
+          sy_mat <- solve_checked(S_x(as.matrix(y_scaled), p, kernel_type) / (n * h[j]), length(e_mu))
 
           # y constants
           ax <- b_x(matrix(y_scaled), sy_mat, e_mu, p, kernel_type)
@@ -325,12 +297,7 @@ fhat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type) {
           nh_vec[j] <- length(y_elems)
         } else {
           # sy matrix
-          if (check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[j]))[1] == TRUE) {
-            sy_mat <- solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[j]))
-          } else {
-            singular_flag <- TRUE
-            sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-          }
+          sy_mat <- solve_checked(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[j]), length(e_mu))
 
           # y constants
           ax <- b_x(matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -373,11 +340,32 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
   ng <- length(y_grid)
 
   singular_flag <- FALSE
+  solve_checked <- function(mat, size) {
+    if (check_inv(mat)[1] == TRUE) {
+      return(solve(mat))
+    }
+    singular_flag <<- TRUE
+    matrix(0L, nrow = size, ncol = size)
+  }
   # x basis vector
   e_nu <- basis_vec(x, q, nu)
 
   # y basis vector
   e_mu <- basis_vec(1, p, mu)
+
+  theta_at <- function(y, h_val) {
+    if (mu == 0) {
+      fhat(
+        x_data = x_data, y_data = y_data, x = x, y_grid = y, p = 2,
+        q = 1, mu = 0, nu = 0, h = h_val, kernel_type = kernel_type
+      )$est
+    } else {
+      fhat(
+        x_data = x_data, y_data = y_data, x = x, y_grid = y, p = p,
+        q = q, mu = mu, nu = nu, h = h_val, kernel_type = kernel_type
+      )$est
+    }
+  }
 
   if (length(unique(h)) == 1) {
     h <- h[1]
@@ -399,18 +387,14 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
     if (length(x_scaled) == 0) {
       bx <- 0
     } else {
-      if (check_inv(S_x(x_scaled, q, kernel_type) / (n * h^d))[1] == TRUE) {
-        sx_mat <- solve(S_x(x_scaled, q, kernel_type) / (n * h^d))
-      } else {
-        singular_flag <- TRUE
-        sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-      }
+      sx_mat <- solve_checked(S_x(x_scaled, q, kernel_type) / (n * h^d), length(e_nu))
       bx <- b_x(x_scaled, sx_mat, e_nu, q, kernel_type)
     }
 
 
     # initialize matrix
     c_hat <- matrix(0L, nrow = ng, ncol = ng)
+    theta_vals <- vapply(y_grid, theta_at, numeric(1), h_val = h)
 
     if (cov_flag == "diag") {
       c_hat <- matrix(NA, nrow = ng, ncol = ng)
@@ -428,26 +412,11 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
           c_hat[i, i] <- 0
         } else {
           if (mu == 0) {
-            if (check_inv(S_x(as.matrix(x_scaled[y_elems, ] / (n * h^d)), q, kernel_type))[1] == TRUE) {
-              sx_mat <- solve(S_x(as.matrix(x_scaled[y_elems, ] / (n * h^d)), q, kernel_type))
-            } else {
-              singular_flag <- TRUE
-              sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-            }
+            sx_mat <- solve_checked(S_x(as.matrix(x_scaled[y_elems, ] / (n * h^d)), q, kernel_type), length(e_nu))
             bx <- b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
             # sy matrix
-            if (check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-              sy_mat <- solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))
-            } else {
-              singular_flag <- TRUE
-              sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-            }
-            if (check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-              syp_mat <- solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h))
-            } else {
-              singular_flag <- TRUE
-              syp_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-            }
+            sy_mat <- solve_checked(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h), length(e_mu))
+            syp_mat <- solve_checked(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h), length(e_mu))
 
             # computing y and yprime vectors
             a_y <- b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
@@ -458,18 +427,8 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
             ak <- cumsum(a_yp)
           } else {
             # sy matrix
-            if (check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-              sy_mat <- solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))
-            } else {
-              singular_flag <- TRUE
-              sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-            }
-            if (check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-              syp_mat <- solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h))
-            } else {
-              singular_flag <- TRUE
-              syp_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-            }
+            sy_mat <- solve_checked(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h), length(e_mu))
+            syp_mat <- solve_checked(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h), length(e_mu))
 
             # computing y and yprime vectors
             a_y <- b_x(as.matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -490,25 +449,8 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
           }
         }
         # estimated means
-        if (mu == 0) {
-          theta_y <- fhat(
-            x_data = x_data, y_data = y_data, x = x, y_grid = y, p = 2,
-            q = 1, mu = 0, nu = 0, h = h, kernel_type = kernel_type
-          )$est
-          theta_yp <- fhat(
-            x_data = x_data, y_data = y_data, x = x, y_grid = y_prime,
-            p = 2, q = 1, mu = 0, nu = 0, h = h, kernel_type = kernel_type
-          )$est
-        } else {
-          theta_y <- fhat(
-            x_data = x_data, y_data = y_data, x = x, y_grid = y, p = p,
-            q = q, mu = mu, nu = nu, h = h, kernel_type = kernel_type
-          )$est
-          theta_yp <- fhat(
-            x_data = x_data, y_data = y_data, x = x, y_grid = y_prime,
-            p = p, q = q, mu = mu, nu = nu, h = h, kernel_type = kernel_type
-          )$est
-        }
+        theta_y <- theta_vals[i]
+        theta_yp <- theta_vals[i]
 
         # filling matrix, using symmetry
         c_hat[i, i] <- c_hat[i, i] / (n * (n - 1)^2) - theta_y * theta_yp / n^2
@@ -530,26 +472,11 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
             c_hat[j, i] <- 0
           } else {
             if (mu == 0) {
-              if (check_inv(S_x(as.matrix(x_scaled[y_elems, ] / (n * h^d)), q, kernel_type))[1] == TRUE) {
-                sx_mat <- solve(S_x(as.matrix(x_scaled[y_elems, ] / (n * h^d)), q, kernel_type))
-              } else {
-                singular_flag <- TRUE
-                sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-              }
+              sx_mat <- solve_checked(S_x(as.matrix(x_scaled[y_elems, ] / (n * h^d)), q, kernel_type), length(e_nu))
               bx <- b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
               # sy matrix
-              if (check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-                sy_mat <- solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))
-              } else {
-                singular_flag <- TRUE
-                sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-              }
-              if (check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-                syp_mat <- solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h))
-              } else {
-                singular_flag <- TRUE
-                syp_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-              }
+              sy_mat <- solve_checked(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h), length(e_mu))
+              syp_mat <- solve_checked(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h), length(e_mu))
 
               # computing y and yprime vectors
               a_y <- b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
@@ -560,18 +487,8 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
               ak <- cumsum(a_yp)
             } else {
               # sy matrix
-              if (check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-                sy_mat <- solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h))
-              } else {
-                singular_flag <- TRUE
-                sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-              }
-              if (check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h))[1] == TRUE) {
-                syp_mat <- solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h))
-              } else {
-                singular_flag <- TRUE
-                syp_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-              }
+              sy_mat <- solve_checked(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h), length(e_mu))
+              syp_mat <- solve_checked(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h), length(e_mu))
 
               # computing y and yprime vectors
               a_y <- b_x(as.matrix(y_scaled[y_elems]), sy_mat, e_mu, p, kernel_type)
@@ -592,25 +509,8 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
             }
           }
           # estimated means
-          if (mu == 0) {
-            theta_y <- fhat(
-              x_data = x_data, y_data = y_data, x = x, y_grid = y, p = 2,
-              q = 1, mu = 0, nu = 0, h = h, kernel_type = kernel_type
-            )$est
-            theta_yp <- fhat(
-              x_data = x_data, y_data = y_data, x = x, y_grid = y_prime,
-              p = 2, q = 1, mu = 0, nu = 0, h = h, kernel_type = kernel_type
-            )$est
-          } else {
-            theta_y <- fhat(
-              x_data = x_data, y_data = y_data, x = x, y_grid = y, p = p,
-              q = q, mu = mu, nu = nu, h = h, kernel_type = kernel_type
-            )$est
-            theta_yp <- fhat(
-              x_data = x_data, y_data = y_data, x = x, y_grid = y_prime,
-              p = p, q = q, mu = mu, nu = nu, h = h, kernel_type = kernel_type
-            )$est
-          }
+          theta_y <- theta_vals[i]
+          theta_yp <- theta_vals[j]
 
           # filling matrix, using symmetry
           c_hat[i, j] <- c_hat[i, j] / (n * (n - 1)^2) - theta_y * theta_yp / n^2
@@ -631,6 +531,7 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
   } else {
     # initialize matrix
     c_hat <- matrix(0L, nrow = ng, ncol = ng)
+    theta_vals <- vapply(seq_len(ng), function(i) theta_at(y_grid[i], h[i]), numeric(1))
 
     for (i in 1:ng) {
       for (j in 1:i) {
@@ -650,12 +551,7 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
 
         # x constants
         x_scaled <- sweep(x_data_loc, 2, x) / (hx^d)
-        if (check_inv(S_x(matrix(x_scaled, ncol = d), q, kernel_type) / (n * hx^d))[1] == TRUE) {
-          sx_mat <- solve(S_x(matrix(x_scaled, ncol = d), q, kernel_type) / (n * hx^d))
-        } else {
-          singular_flag <- TRUE
-          sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-        }
+        sx_mat <- solve_checked(S_x(matrix(x_scaled, ncol = d), q, kernel_type) / (n * hx^d), length(e_nu))
         bx <- b_x(matrix(x_scaled, ncol = d), sx_mat, e_nu, q, kernel_type)
 
         # relevant entries wrt y and y_prime
@@ -672,26 +568,11 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
           c_hat[j, i] <- 0
         } else {
           if (mu == 0) {
-            if (check_inv(S_x(as.matrix(x_scaled[y_elems, ] / (n * hx^d)), q, kernel_type))[1] == TRUE) {
-              sx_mat <- solve(S_x(as.matrix(x_scaled[y_elems, ] / (n * hx^d)), q, kernel_type))
-            } else {
-              singular_flag <- TRUE
-              sx_mat <- matrix(0L, nrow = length(e_nu), ncol = length(e_nu))
-            }
+            sx_mat <- solve_checked(S_x(as.matrix(x_scaled[y_elems, ] / (n * hx^d)), q, kernel_type), length(e_nu))
             bx <- b_x(as.matrix(x_scaled), sx_mat, e_nu, q, kernel_type)
             # sy matrix
-            if (check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[i]))[1] == TRUE) {
-              sy_mat <- solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[i]))
-            } else {
-              singular_flag <- TRUE
-              sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-            }
-            if (check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h[j]))[1] == TRUE) {
-              syp_mat <- solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h[j]))
-            } else {
-              singular_flag <- TRUE
-              syp_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-            }
+            sy_mat <- solve_checked(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[i]), length(e_mu))
+            syp_mat <- solve_checked(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h[j]), length(e_mu))
 
             # computing y and yprime vectors
             a_y <- b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
@@ -702,18 +583,8 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
             ak <- cumsum(a_yp)
           } else {
             # sy matrix
-            if (check_inv(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[i]))[1] == TRUE) {
-              sy_mat <- solve(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[i]))
-            } else {
-              singular_flag <- TRUE
-              sy_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-            }
-            if (check_inv(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h[j]))[1] == TRUE) {
-              syp_mat <- solve(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h[j]))
-            } else {
-              singular_flag <- TRUE
-              syp_mat <- matrix(0L, nrow = length(e_mu), ncol = length(e_mu))
-            }
+            sy_mat <- solve_checked(S_x(as.matrix(y_scaled[y_elems]), p, kernel_type) / (n * h[i]), length(e_mu))
+            syp_mat <- solve_checked(S_x(as.matrix(yp_scaled[yp_elems]), p, kernel_type) / (n * h[j]), length(e_mu))
 
             # computing y and yprime vectors
             a_y <- b_x(matrix(y_scaled[elems]), sy_mat, e_mu, p, kernel_type)
@@ -734,25 +605,8 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
           }
         }
         # estimated means
-        if (mu == 0) {
-          theta_y <- fhat(
-            x_data = x_data, y_data = y_data, x = x, y_grid = y, p = 2,
-            q = 1, mu = 0, nu = 0, h = h[i], kernel_type = kernel_type
-          )$est
-          theta_yp <- fhat(
-            x_data = x_data, y_data = y_data, x = x, y_grid = y_prime,
-            p = 2, q = 1, mu = 0, nu = 0, h = h[j], kernel_type = kernel_type
-          )$est
-        } else {
-          theta_y <- fhat(
-            x_data = x_data, y_data = y_data, x = x, y_grid = y, p = p,
-            q = q, mu = mu, nu = nu, h = h[i], kernel_type = kernel_type
-          )$est
-          theta_yp <- fhat(
-            x_data = x_data, y_data = y_data, x = x, y_grid = y_prime,
-            p = p, q = q, mu = mu, nu = nu, h = h[j], kernel_type = kernel_type
-          )$est
-        }
+        theta_y <- theta_vals[i]
+        theta_yp <- theta_vals[j]
 
         # filling matrix, using symmetry
         c_hat[i, j] <- c_hat[i, j] / (n * (n - 1)^2) - theta_y * theta_yp / n^2
@@ -787,7 +641,26 @@ cov_hat <- function(x_data, y_data, x, y_grid, p, q, mu, nu, h, kernel_type, cov
 #' @return Vector of products for each data point.
 #' @keywords internal
 b_x <- function(datavec, s_mat, e_vec, q, kernel_type) {
+  datavec <- as.matrix(datavec)
   eff_n <- length(datavec[, 1])
+  if (ncol(datavec) == 1) {
+    x <- datavec[, 1]
+    r <- matrix(1, nrow = eff_n, ncol = q + 1)
+    if (q > 0) {
+      for (j in 1:q) {
+        r[, j + 1] <- r[, j] * x / j
+      }
+    }
+    if (kernel_type == "uniform") {
+      k <- ifelse(abs(x) <= 1, 0.5, 0)
+    } else if (kernel_type == "triangular") {
+      k <- (1 - abs(x)) * ifelse(abs(x) <= 1, 1, 0)
+    } else if (kernel_type == "epanechnikov") {
+      k <- 0.75 * (1 - x^2) * ifelse(abs(x) <= 1, 1, 0)
+    }
+    return(matrix(as.vector((r * k) %*% (s_mat %*% e_vec)), nrow = 1))
+  }
+
   Rq <- matrix(0L, ncol = eff_n)
   for (i in 1:eff_n) {
     Rq[i] <- (poly_base(datavec[i, ], q) * kernel_eval(datavec[i, ], kernel_type)) %*% (s_mat %*% e_vec)

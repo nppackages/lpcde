@@ -1,0 +1,5 @@
+v 3
+d LPCDE: Estimation and inference for local polynomial conditional density methods.
+d        https://nppackages.github.io/lpcde
+d
+p lpcde

@@ -40,11 +40,11 @@ Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
 \code{\link{summary.lpcde}}, \code{\link{vcov.lpcde}}
 }
 \author{
-Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 
-Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}
+Rajita Chandak. \email{rajita.chandak@gmail.com}.
 
-Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 
-Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+Xinwei Ma. \email{xinweima.pku@gmail.com}.
 }

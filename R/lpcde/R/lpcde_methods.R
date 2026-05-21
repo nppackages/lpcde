@@ -10,13 +10,13 @@
 #' \item{Display output}{summary of inputs to \code{lpcde}}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}.
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpcde}} for local polynomial conditional density estimation.
 #' Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
@@ -68,13 +68,13 @@ print.lpcde <- function(x, ...) {
 #' \item{Display output}{A list of specified options and a matrix of grid points and estimates.}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpcde}} for local polynomial conditional density estimation.
 #' Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},
@@ -270,13 +270,13 @@ summary.lpcde <- function(object, ...) {
 #' \item{outputs}{A matrix containing the estimates}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpcde}} for local polynomial conditional density estimation.
 #'
@@ -313,13 +313,13 @@ coef.lpcde <- function(object, ...) {
 #' \item{CovMat_RBC}{The variance-covariance matrix corresponding to \code{est_RBC}.}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}.
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpcde}} for local polynomial conditional density estimation.
 #'
@@ -370,13 +370,13 @@ vcov.lpcde <- function(object, ...) {
 #' \item{crit_val}{The critical value used in computing the confidence interval end points.}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}.
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpcde}} for local polynomial conditional density estimation.
 #'
@@ -562,13 +562,13 @@ confint.lpcde <- function(object, parm = NULL, level = 0.95, CIuniform = FALSE, 
 #' \item{Figure}{A standard \code{ggplot2} object is returned, hence can be used for further customization.}
 #'
 #' @author
-#' Matias D. Cattaneo, Princeton University. \email{cattaneo@princeton.edu}.
+#' Matias D. Cattaneo (maintainer). \email{matias.d.cattaneo@gmail.com}.
 #'
-#' Rajita Chandak (maintainer), Princeton University. \email{rchandak@princeton.edu}
+#' Rajita Chandak. \email{rajita.chandak@gmail.com}.
 #'
-#' Michael Jansson, University of California Berkeley. \email{mjansson@econ.berkeley.edu}.
+#' Michael Jansson. \email{michael.jansson.berkeley@gmail.com}.
 #'
-#' Xinwei Ma, University of California San Diego. \email{x1ma@ucsd.edu}.
+#' Xinwei Ma. \email{xinweima.pku@gmail.com}.
 #'
 #' @seealso \code{\link{lpcde}} for local polynomial density estimation.
 #' Supported methods: \code{\link{coef.lpcde}}, \code{\link{confint.lpcde}},

@@ -1,4 +1,9 @@
-# lpcde 0.1.6
+# lpcde 1.0.0
+- Bumped the R and Python package versions to 1.0.0 for the GitHub modernization and cross-language alignment checkpoint.
+- Updated maintainer and author metadata, GitHub URLs, and package-level README content for the GitHub workflow.
+- Added fixed-seed numerical regression tests for core `lpcde`, regularized `lpcde`, derivative, and `lpbwcde` outputs.
+- Improved selected internal matrix and covariance computations without changing the numerical regression baseline.
+- Cleaned portable package build metadata and regenerated roxygen help files.
 - Formatted code
 - Added a small vignette in package README
 - Fixed package metadata
