@@ -7,7 +7,7 @@ Please do not report security vulnerabilities through public GitHub issues.
 If you believe you have found a security issue in `lpcde`, email
 matias.d.cattaneo@gmail.com with:
 
-- the affected package interface
+- the affected component or package interface
 - the version, platform, and installation channel affected
 - steps to reproduce the issue
 - any proof-of-concept code or input data needed to understand the impact

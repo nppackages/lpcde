@@ -5,3 +5,9 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 3
+
+  - package-ecosystem: "pip"
+    directory: "/Python/lpcde"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5

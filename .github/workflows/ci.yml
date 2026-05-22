@@ -58,6 +58,34 @@ jobs:
           test -f stata/tests/test-numerical-baseline.do
           test -f stata/tests/fixtures/lpcde-fixed-baseline.csv
 
+  python-build:
+    name: Python build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - name: Install build tools
+        run: python -m pip install --upgrade pip build pytest
+
+      - name: Install Python package
+        run: python -m pip install -e Python/lpcde
+
+      - name: Check Python package
+        run: |
+          python -m compileall -q Python/lpcde/src/lpcde
+          python -c "import lpcde; print('lpcde import OK')"
+          python -m pytest Python/lpcde/tests
+
+      - name: Build Python package
+        run: python -m build Python/lpcde
+
   r-check:
     name: R CMD check
     runs-on: ubuntu-latest
@@ -100,22 +128,3 @@ jobs:
 
       - name: Check R package
         run: R CMD check lpcde_*.tar.gz --no-manual
-
-  python-check:
-    name: Python package tests
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v6
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Install Python package
-        run: python -m pip install -e Python/lpcde[dev]
-
-      - name: Test Python package
-        run: python -m pytest Python/lpcde/tests
