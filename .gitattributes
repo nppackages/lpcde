@@ -25,5 +25,7 @@ Makevars text eol=lf
 Makevars.win text eol=lf
 
 *.pdf binary
+*.mlib binary
+*.mo binary
 *.png binary
 *.tar.gz binary

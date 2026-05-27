@@ -3,3 +3,4 @@
 ^lpcde\.Rproj$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^tests$

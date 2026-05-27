@@ -159,12 +159,16 @@ program define lpcde, eclass
 		}
 	}
 
-	capture findfile lpcde_fun.do
+	capture mata: mata which lpcde_stata_run()
 	if (_rc) {
-		di as err "lpcde_fun.do not found"
+		capture quietly mata: mata mlib index
+		capture mata: mata which lpcde_stata_run()
+	}
+	if (_rc) {
+		di as err "lpcde.mlib not found or not indexed"
+		di as err `"rebuild with Stata 16: do "stata/build-lpcde-mlib.do""'
 		exit 601
 	}
-	quietly do "`r(fn)'"
 
 	tempvar temp_touse
 	qui gen byte `temp_touse' = `touse'

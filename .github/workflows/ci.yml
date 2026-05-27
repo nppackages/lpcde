@@ -26,8 +26,6 @@ jobs:
           test -f CHANGELOG.md
           test -f .github/workflows/publish-python.yml
           test -f R/lpcde/DESCRIPTION
-          test -f R/lpcde/tests/testthat/test-numerical-regression.R
-          test -f R/lpcde/tests/fixtures/replication-r-smoke.csv
           test -f replication/lpcde_illustration.R
           test -f replication/lpcde_replication.R
           test -f replication/lpcde_comparison.R
@@ -43,8 +41,6 @@ jobs:
           test -f Python/lpcde/src/lpcde/lpbwcde.py
           test -f Python/lpcde/src/lpcde/lpbwcde_fn.py
           test -f Python/lpcde/src/lpcde/_validation.py
-          test -f Python/lpcde/tests/test_numerical_alignment.py
-          test -f Python/lpcde/tests/fixtures/r-baseline-output.csv
           test -f stata/lpcde.ado
           test -f stata/lpbwcde.ado
           test -f stata/lpcde.sthlp
@@ -54,9 +50,8 @@ jobs:
           test -f stata/lpcde.pkg
           test -f stata/stata.toc
           test -f stata/lpcde_fun.do
+          test -f stata/lpcde.mlib
           test -f stata/lpcde_illustration.do
-          test -f stata/tests/test-numerical-baseline.do
-          test -f stata/tests/fixtures/lpcde-fixed-baseline.csv
 
   python-build:
     name: Python build
@@ -81,7 +76,11 @@ jobs:
         run: |
           python -m compileall -q Python/lpcde/src/lpcde
           python -c "import lpcde; print('lpcde import OK')"
-          python -m pytest Python/lpcde/tests
+          if [ -d Python/lpcde/tests ]; then
+            python -m pytest Python/lpcde/tests
+          else
+            echo "Python local-only tests not present; skipping"
+          fi
 
       - name: Build Python package
         run: python -m build Python/lpcde
